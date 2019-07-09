@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ustb/CLionProjects/latticePlanner/pathPlanner/latticePlanner.cpp
+latticePlanner.h
+/home/ustb/CLionProjects/latticePlanner/pathPlanner/latticePlanner.h
+
+/home/ustb/CLionProjects/latticePlanner/pathPlanner/latticePlanner.h
+vector
+-
+queue
+-
+iostream
+-
+iomanip
+-
+array
+-
+
