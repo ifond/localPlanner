@@ -8,28 +8,28 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/ustb/CLionProjects/latticePlanner/cmake-build-debug"/>
+				<Option working_dir="/home/ustb/桌面/latticePlanner/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/ustb/CLionProjects/latticePlanner/cmake-build-debug"/>
+				<Option working_dir="/home/ustb/桌面/latticePlanner/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="latticePlanner">
-				<Option output="/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/latticePlanner" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/ustb/CLionProjects/latticePlanner/cmake-build-debug"/>
+				<Option output="/home/ustb/桌面/latticePlanner/cmake-build-debug/latticePlanner" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ustb/桌面/latticePlanner/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -44,15 +44,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 latticePlanner"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 latticePlanner"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="latticePlanner/fast">
-				<Option output="/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/latticePlanner" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/ustb/CLionProjects/latticePlanner/cmake-build-debug"/>
+				<Option output="/home/ustb/桌面/latticePlanner/cmake-build-debug/latticePlanner" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ustb/桌面/latticePlanner/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -67,51 +67,57 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 latticePlanner/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 latticePlanner/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/ustb/CLionProjects/latticePlanner/cmake-build-debug"/>
+				<Option working_dir="/home/ustb/桌面/latticePlanner/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/ustb/桌面/latticePlanner/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/ustb/CLionProjects/latticePlanner/FrenetMath/calHeading.cpp">
+		<Unit filename="/home/ustb/桌面/latticePlanner/FrenetMath/calHeading.cpp">
 			<Option target="latticePlanner"/>
 		</Unit>
-		<Unit filename="/home/ustb/CLionProjects/latticePlanner/FrenetMath/calHeading.h">
+		<Unit filename="/home/ustb/桌面/latticePlanner/FrenetMath/calHeading.h">
 			<Option target="latticePlanner"/>
 		</Unit>
-		<Unit filename="/home/ustb/CLionProjects/latticePlanner/curves/cubicPolynomial.cpp">
+		<Unit filename="/home/ustb/桌面/latticePlanner/FrenetMath/calKappa.cpp">
 			<Option target="latticePlanner"/>
 		</Unit>
-		<Unit filename="/home/ustb/CLionProjects/latticePlanner/curves/cubicPolynomial.h">
+		<Unit filename="/home/ustb/桌面/latticePlanner/FrenetMath/calKappa.h">
 			<Option target="latticePlanner"/>
 		</Unit>
-		<Unit filename="/home/ustb/CLionProjects/latticePlanner/main.cpp">
+		<Unit filename="/home/ustb/桌面/latticePlanner/curves/cubicPolynomial.cpp">
 			<Option target="latticePlanner"/>
 		</Unit>
-		<Unit filename="/home/ustb/CLionProjects/latticePlanner/pathPlanner/costFunctions.cpp">
+		<Unit filename="/home/ustb/桌面/latticePlanner/curves/cubicPolynomial.h">
 			<Option target="latticePlanner"/>
 		</Unit>
-		<Unit filename="/home/ustb/CLionProjects/latticePlanner/pathPlanner/costFunctions.h">
+		<Unit filename="/home/ustb/桌面/latticePlanner/main.cpp">
 			<Option target="latticePlanner"/>
 		</Unit>
-		<Unit filename="/home/ustb/CLionProjects/latticePlanner/pathPlanner/latticePlanner.cpp">
+		<Unit filename="/home/ustb/桌面/latticePlanner/pathPlanner/costFunctions.cpp">
 			<Option target="latticePlanner"/>
 		</Unit>
-		<Unit filename="/home/ustb/CLionProjects/latticePlanner/pathPlanner/latticePlanner.h">
+		<Unit filename="/home/ustb/桌面/latticePlanner/pathPlanner/costFunctions.h">
 			<Option target="latticePlanner"/>
 		</Unit>
-		<Unit filename="/home/ustb/CLionProjects/latticePlanner/CMakeLists.txt">
+		<Unit filename="/home/ustb/桌面/latticePlanner/pathPlanner/latticePlanner.cpp">
+			<Option target="latticePlanner"/>
+		</Unit>
+		<Unit filename="/home/ustb/桌面/latticePlanner/pathPlanner/latticePlanner.h">
+			<Option target="latticePlanner"/>
+		</Unit>
+		<Unit filename="/home/ustb/桌面/latticePlanner/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

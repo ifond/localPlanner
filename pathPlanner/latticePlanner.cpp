@@ -27,7 +27,7 @@ void Node::PrintStatus(){
 Node Node::operator+(Node p){
     Node tmp;
     tmp.x_ = this->x_ + p.x_;
-    tmp.y_ = this->y_ + p.y_;
+    tmp.y_ = p.y_;
     tmp.cost_ = this->cost_ + p.cost_;
     return tmp;
 }
@@ -47,7 +47,7 @@ void Node::operator=(Node p){
     this->pid_ = p.pid_;
 }
 
-bool Node::operator==(Node p){
+bool Node::operator==(Node p) {
     if (this->x_ == p.x_ && this->y_ == p.y_) return true;
     return false;
 }
@@ -57,27 +57,24 @@ bool Node::operator!=(Node p){
     return false;
 }
 
-bool compare_cost::operator()(Node& p1, Node& p2){
-    // Can modify this to allow tie breaks based on heuristic cost if required
-    if (p1.cost_ >= p2.cost_) return true;
-    return false;
-}
 
-/**
- * Possible motion primitives in lattice
- */
-std::vector<std::array<double, 2>> GetMotion(){
+bool compare_cost(Node & p1, Node & p2){
+    return p1.cost_  < p2.cost_;
+};
 
-    std::vector<std::array<double, 2>> motion;
+
+std::vector<Node> GetMotion(){
+
+    std::vector<Node> motion;
     for(int i=0; i<lateral_num; i++){
-        std::array<double, 2> tmp_motion = {longi_step, (i - LeftSampleNum) * latera_step + refLineRho};
+        Node tmp_motion(longi_step, (i - LeftSampleNum) * latera_step + refLineRho, 0.0, 0, 0);
         motion.push_back(tmp_motion);
     }
 
     return motion;
 }
 
-
+/**
 void PrintPath(std::vector<Node> path_vector, Node start, Node goal, std::vector<std::vector<int>> &grid){
     if(path_vector[0].id_ == -1){
         std::cout << "No path exists" << std::endl;
@@ -104,6 +101,7 @@ void PrintPath(std::vector<Node> path_vector, Node start, Node goal, std::vector
     grid[start.x_][start.y_] = 3;
 
 }
+**/
 
 void PrintCost(std::vector<std::vector<int>> &grid, std::vector<Node> point_list){
     int n = grid.size();
@@ -131,41 +129,88 @@ int Dijkstra::calIndex(Node p) {
 }
 
 
+bool Dijkstra::nodeIsInClosed(Node &p){
+    for(auto k:closed_list_){
+        if (k.id_== p.id_)  return true;
+
+    }
+    return false;
+}
+
+
+bool Dijkstra::nodeIsInOpen(Node &p) {
+    for(auto q:open_list_){
+        if (q.id_== p.id_)  return true;
+
+    }
+    return false;
+}
+
+std::vector<Node>::iterator Dijkstra::changeOpenNode(Node &p) {
+    auto it=open_list_.end();
+
+    for(auto z=open_list_.begin(); z!=open_list_.end();z++){
+        if (z->id_== p.id_) {
+            it = z;
+            return it;
+        }
+    }
+    return it;
+}
+
+Node * Dijkstra::findMinCost() {
+    Node * n0 = & open_list_[0];
+    for (auto l:open_list_){
+        if (l.cost_ < n0->cost_)
+            n0 = &l;
+    }
+    return n0;
+
+}
+
 std::vector<Node> Dijkstra::dijkstra(Node start_in){
     start_ = start_in;
 
-    // Get possible motions
-    std::vector<std::array<double, 2>> motion = GetMotion();
-    open_list_.push(start_);
+    // Get possible motions, child nodes
+    std::vector<Node> motion = GetMotion();
+    open_list_.push_back(start_);
 
     // Main loop
     Node temp;
     while(!open_list_.empty()){
-        Node current = open_list_.top();
-        open_list_.pop();
-        current.id_ = calIndex(current);
+        Node current = *findMinCost();
 
-        for(auto it = motion.begin(); it!=motion.end(); ++it){
+        current.id_ = calIndex(current);
+        open_list_.erase(current);
+        closed_list_.push_back(current);
+
+        for(auto i:motion){
             Node new_point;
-            new_point = current + *it;
-            new_point.id_ = n*new_point.x_+new_point.y_;
+            new_point = current + i;
+            new_point.id_ = calIndex(new_point);
             new_point.pid_ = current.id_;
 
-            if(new_point == goal_){
-                open_list_.push(new_point);
-                break;
+            if (new_point.x_ > s_end) break;
+
+            bool flag=nodeIsInClosed(new_point);
+            if (flag) continue;
+//            std::find(closed_list_.begin(), closed_list_.end(), new_point);
+
+            else if (nodeIsInOpen(new_point)){
+                auto it = changeOpenNode(new_point);
+                if (it->cost_ > new_point.cost_) {
+                    it->cost_ = new_point.cost_;
+                    it->pid_ = current.id_;
+                }
             }
-            if(new_point.x_ < 0 || new_point.y_ < 0 || new_point.x_ >= n || new_point.y_ >= n) continue; // Check boundaries
-            if(grid[new_point.x_][new_point.y_]!=0){
-                continue; //obstacle or visited
-            }
-            open_list_.push(new_point);
+
+
+            else
+            open_list_.push_back(new_point);
+
         }
-        closed_list_.push_back(current);
+
     }
-    closed_list_.clear();
-    Node no_path_node(-1,-1,-1,-1,-1);
-    closed_list_.push_back(no_path_node);
     return closed_list_;
 }
 

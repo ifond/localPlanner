@@ -10,6 +10,7 @@
 #include <iostream>
 #include <iomanip>
 #include <array>
+#include <algorithm>
 
 #define PI 3.1415926
 
@@ -35,8 +36,10 @@ double obstacleHeading=0.0 * PI / 180.0;
 
 /**
 * @brief Node class
-* @param x_ X value
-* @param y_ Y value
+* @param x_: X value, when we make planning in the frenet coordinate system,
+*            x_ represents the longitudinal station
+* @param y_ Y value, when we make planning in the frenet coordinate system,
+*           y_ represents the lateral offset
 * @param cost_ Cost to get to this node
 * @param id_ Node's id
 * @param pid_ Node's parent's id
@@ -94,11 +97,12 @@ public:
     void operator=(Node p);
 
     /**
-    * @brief Overloading operator == for Node class
+    * @brief Overloading operator == for searching the id of the Node class
     * @param p node
     * @return bool whether current node equals input node
     */
     bool operator==(Node p);
+
 
     /**
     * @brief Overloading operator != for Node class
@@ -109,24 +113,15 @@ public:
 };
 
 /**
-* @brief Struct created to encapsulate function compare cost between 2 nodes. Used in with multiple algorithms and classes
+* @brief Struct created to encapsulate function compare cost between 2 nodes. 升序
 */
-struct compare_cost{
-
-    /**
-    * @brief Compare cost between 2 nodes
-    * @param p1 Node 1
-    * @param p2 Node 2
-    * @return Returns whether cost to get to node 1 is greater than the cost to get to node 2
-    */
-    bool operator()(Node& p1, Node& p2);
-};
+bool compare_cost(const Node & p1, const Node & p2);
 
 /**
 * @brief Get permissible motion primatives for the bot
 * @return vector of permissible motions
 */
-std::vector<std::array<double, 2>> GetMotion();
+std::vector<Node> GetMotion();
 
 /**
 * @brief Prints the grid passed
@@ -162,9 +157,13 @@ public:
     * @return
     */
     int calIndex(Node p);
+    bool nodeIsInClosed(Node &p);
+    bool nodeIsInOpen(Node &p);
+    std::vector<Node>::iterator changeOpenNode(Node &p);
+    Node * findMinCost();
 
 private:
-    std::priority_queue<Node, std::vector<Node>, compare_cost> open_list_;
+    std::vector<Node> open_list_;
     std::vector<Node> closed_list_;
     Node start_, goal_;
     int n;

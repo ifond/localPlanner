@@ -43,10 +43,10 @@ RM = /home/ustb/clion-2019.1.4/bin/cmake/linux/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ustb/CLionProjects/latticePlanner
+CMAKE_SOURCE_DIR = /home/ustb/桌面/latticePlanner
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ustb/CLionProjects/latticePlanner/cmake-build-debug
+CMAKE_BINARY_DIR = /home/ustb/桌面/latticePlanner/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/latticePlanner.dir/depend.make
@@ -59,68 +59,81 @@ include CMakeFiles/latticePlanner.dir/flags.make
 
 CMakeFiles/latticePlanner.dir/main.cpp.o: CMakeFiles/latticePlanner.dir/flags.make
 CMakeFiles/latticePlanner.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/latticePlanner.dir/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/latticePlanner.dir/main.cpp.o -c /home/ustb/CLionProjects/latticePlanner/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ustb/桌面/latticePlanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/latticePlanner.dir/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/latticePlanner.dir/main.cpp.o -c /home/ustb/桌面/latticePlanner/main.cpp
 
 CMakeFiles/latticePlanner.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/latticePlanner.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ustb/CLionProjects/latticePlanner/main.cpp > CMakeFiles/latticePlanner.dir/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ustb/桌面/latticePlanner/main.cpp > CMakeFiles/latticePlanner.dir/main.cpp.i
 
 CMakeFiles/latticePlanner.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/latticePlanner.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ustb/CLionProjects/latticePlanner/main.cpp -o CMakeFiles/latticePlanner.dir/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ustb/桌面/latticePlanner/main.cpp -o CMakeFiles/latticePlanner.dir/main.cpp.s
 
 CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.o: CMakeFiles/latticePlanner.dir/flags.make
 CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.o: ../curves/cubicPolynomial.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.o -c /home/ustb/CLionProjects/latticePlanner/curves/cubicPolynomial.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ustb/桌面/latticePlanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.o -c /home/ustb/桌面/latticePlanner/curves/cubicPolynomial.cpp
 
 CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ustb/CLionProjects/latticePlanner/curves/cubicPolynomial.cpp > CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ustb/桌面/latticePlanner/curves/cubicPolynomial.cpp > CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.i
 
 CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ustb/CLionProjects/latticePlanner/curves/cubicPolynomial.cpp -o CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ustb/桌面/latticePlanner/curves/cubicPolynomial.cpp -o CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.s
 
 CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.o: CMakeFiles/latticePlanner.dir/flags.make
 CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.o: ../pathPlanner/latticePlanner.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.o -c /home/ustb/CLionProjects/latticePlanner/pathPlanner/latticePlanner.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ustb/桌面/latticePlanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.o -c /home/ustb/桌面/latticePlanner/pathPlanner/latticePlanner.cpp
 
 CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ustb/CLionProjects/latticePlanner/pathPlanner/latticePlanner.cpp > CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ustb/桌面/latticePlanner/pathPlanner/latticePlanner.cpp > CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.i
 
 CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ustb/CLionProjects/latticePlanner/pathPlanner/latticePlanner.cpp -o CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ustb/桌面/latticePlanner/pathPlanner/latticePlanner.cpp -o CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.s
 
 CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.o: CMakeFiles/latticePlanner.dir/flags.make
 CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.o: ../pathPlanner/costFunctions.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.o -c /home/ustb/CLionProjects/latticePlanner/pathPlanner/costFunctions.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ustb/桌面/latticePlanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.o -c /home/ustb/桌面/latticePlanner/pathPlanner/costFunctions.cpp
 
 CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ustb/CLionProjects/latticePlanner/pathPlanner/costFunctions.cpp > CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ustb/桌面/latticePlanner/pathPlanner/costFunctions.cpp > CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.i
 
 CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ustb/CLionProjects/latticePlanner/pathPlanner/costFunctions.cpp -o CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ustb/桌面/latticePlanner/pathPlanner/costFunctions.cpp -o CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.s
 
 CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.o: CMakeFiles/latticePlanner.dir/flags.make
 CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.o: ../FrenetMath/calHeading.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.o -c /home/ustb/CLionProjects/latticePlanner/FrenetMath/calHeading.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ustb/桌面/latticePlanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.o -c /home/ustb/桌面/latticePlanner/FrenetMath/calHeading.cpp
 
 CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ustb/CLionProjects/latticePlanner/FrenetMath/calHeading.cpp > CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ustb/桌面/latticePlanner/FrenetMath/calHeading.cpp > CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.i
 
 CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ustb/CLionProjects/latticePlanner/FrenetMath/calHeading.cpp -o CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ustb/桌面/latticePlanner/FrenetMath/calHeading.cpp -o CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.s
+
+CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.o: CMakeFiles/latticePlanner.dir/flags.make
+CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.o: ../FrenetMath/calKappa.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ustb/桌面/latticePlanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.o -c /home/ustb/桌面/latticePlanner/FrenetMath/calKappa.cpp
+
+CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ustb/桌面/latticePlanner/FrenetMath/calKappa.cpp > CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.i
+
+CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ustb/桌面/latticePlanner/FrenetMath/calKappa.cpp -o CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.s
 
 # Object files for target latticePlanner
 latticePlanner_OBJECTS = \
@@ -128,7 +141,8 @@ latticePlanner_OBJECTS = \
 "CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.o" \
 "CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.o" \
 "CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.o" \
-"CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.o"
+"CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.o" \
+"CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.o"
 
 # External object files for target latticePlanner
 latticePlanner_EXTERNAL_OBJECTS =
@@ -138,9 +152,10 @@ latticePlanner: CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.o
 latticePlanner: CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.o
 latticePlanner: CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.o
 latticePlanner: CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.o
+latticePlanner: CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.o
 latticePlanner: CMakeFiles/latticePlanner.dir/build.make
 latticePlanner: CMakeFiles/latticePlanner.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ustb/CLionProjects/latticePlanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable latticePlanner"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ustb/桌面/latticePlanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable latticePlanner"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/latticePlanner.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -153,6 +168,6 @@ CMakeFiles/latticePlanner.dir/clean:
 .PHONY : CMakeFiles/latticePlanner.dir/clean
 
 CMakeFiles/latticePlanner.dir/depend:
-	cd /home/ustb/CLionProjects/latticePlanner/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ustb/CLionProjects/latticePlanner /home/ustb/CLionProjects/latticePlanner /home/ustb/CLionProjects/latticePlanner/cmake-build-debug /home/ustb/CLionProjects/latticePlanner/cmake-build-debug /home/ustb/CLionProjects/latticePlanner/cmake-build-debug/CMakeFiles/latticePlanner.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/ustb/桌面/latticePlanner/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ustb/桌面/latticePlanner /home/ustb/桌面/latticePlanner /home/ustb/桌面/latticePlanner/cmake-build-debug /home/ustb/桌面/latticePlanner/cmake-build-debug /home/ustb/桌面/latticePlanner/cmake-build-debug/CMakeFiles/latticePlanner.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/latticePlanner.dir/depend
 

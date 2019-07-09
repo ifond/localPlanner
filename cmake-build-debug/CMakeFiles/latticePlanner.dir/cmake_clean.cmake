@@ -4,6 +4,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.o"
   "CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.o"
   "CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.o"
+  "CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.o"
   "latticePlanner.pdb"
   "latticePlanner"
 )

@@ -43,7 +43,7 @@ void CubicPolynomial::computeCoefficients() {
 
 }
 
-void CubicPolynomial::computeFrenetCoordinates() {
+std::vector<std::vector<double >> CubicPolynomial::computeFrenetCoordinates() {
 
     double step = 0.1;
     double s0 = *(start_condition_.begin());
@@ -70,5 +70,11 @@ void CubicPolynomial::computeFrenetCoordinates() {
     }
     cout<<s.size()<<"rho size:"<<rho.size()<<"theta size:"<<theta.size()<<endl;
     cout<<*(s.cend()-1)<<"rho size:"<<*(rho.cend()-1)<<"theta size:"<<*(theta.cend()-1)<<endl;
+
+    std::vector<std::vector<double >> set;
+    set.push_back(s);
+    set.push_back(rho);
+    set.push_back(theta);
+    return set;
 
 }

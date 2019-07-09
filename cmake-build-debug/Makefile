@@ -48,10 +48,10 @@ RM = /home/ustb/clion-2019.1.4/bin/cmake/linux/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ustb/CLionProjects/latticePlanner
+CMAKE_SOURCE_DIR = /home/ustb/桌面/latticePlanner
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ustb/CLionProjects/latticePlanner/cmake-build-debug
+CMAKE_BINARY_DIR = /home/ustb/桌面/latticePlanner/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ustb/CLionProjects/latticePlanner/cmake-build-debug/CMakeFiles /home/ustb/CLionProjects/latticePlanner/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ustb/桌面/latticePlanner/cmake-build-debug/CMakeFiles /home/ustb/桌面/latticePlanner/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ustb/CLionProjects/latticePlanner/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ustb/桌面/latticePlanner/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -149,6 +149,33 @@ FrenetMath/calHeading.s: FrenetMath/calHeading.cpp.s
 FrenetMath/calHeading.cpp.s:
 	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.s
 .PHONY : FrenetMath/calHeading.cpp.s
+
+FrenetMath/calKappa.o: FrenetMath/calKappa.cpp.o
+
+.PHONY : FrenetMath/calKappa.o
+
+# target to build an object file
+FrenetMath/calKappa.cpp.o:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.o
+.PHONY : FrenetMath/calKappa.cpp.o
+
+FrenetMath/calKappa.i: FrenetMath/calKappa.cpp.i
+
+.PHONY : FrenetMath/calKappa.i
+
+# target to preprocess a source file
+FrenetMath/calKappa.cpp.i:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.i
+.PHONY : FrenetMath/calKappa.cpp.i
+
+FrenetMath/calKappa.s: FrenetMath/calKappa.cpp.s
+
+.PHONY : FrenetMath/calKappa.s
+
+# target to generate assembly for a file
+FrenetMath/calKappa.cpp.s:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.s
+.PHONY : FrenetMath/calKappa.cpp.s
 
 curves/cubicPolynomial.o: curves/cubicPolynomial.cpp.o
 
@@ -270,6 +297,9 @@ help:
 	@echo "... FrenetMath/calHeading.o"
 	@echo "... FrenetMath/calHeading.i"
 	@echo "... FrenetMath/calHeading.s"
+	@echo "... FrenetMath/calKappa.o"
+	@echo "... FrenetMath/calKappa.i"
+	@echo "... FrenetMath/calKappa.s"
 	@echo "... curves/cubicPolynomial.o"
 	@echo "... curves/cubicPolynomial.i"
 	@echo "... curves/cubicPolynomial.s"

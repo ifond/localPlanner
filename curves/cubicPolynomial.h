@@ -31,13 +31,13 @@ public:
      * f(x = param) = x1
      */
 
-    void computeFrenetCoordinates();
+    std::vector<std::vector<double >> computeFrenetCoordinates();
+
 
 private:
     std::array<double, 4> coeffients_ = {{0.0, 0.0, 0.0, 0.0}};
     std::array<double, 3> start_condition_ = {{0.0, 0.0, 0.0}};
     std::array<double, 3> end_condition_ = {{0.0, 0.0, 0.0}};
-
     std::vector<double> s;
     std::vector<double> rho;
     std::vector<double> theta;
