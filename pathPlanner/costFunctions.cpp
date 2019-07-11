@@ -5,8 +5,20 @@
 #include "costFunctions.h"
 
 
-double kappa_cost(Node start_node, Node next_node) {
-    double mean_kappa = trajectory_kappa(start_node, next_node);
+
+struct kappaParameter {
+    double r_circle = 1.0;
+    double d_circle = 2.0;
+    double obstacle_inflation = 1.5;
+    double alpha1 = 100;
+    double alpha2 = 1;
+    double alpha3 = 10;
+    double alpha4 = 0.0;
+} kp;
+
+
+double kappa_cost(Node & node, Node & next_node) {
+    double mean_kappa = trajectory_kappa(node, next_node);
 
     return mean_kappa;
 }
@@ -36,7 +48,7 @@ double collision_risk(Node start_node, Node next_node, const std::vector<std::ve
     for(size_t i=0; i < (s.size()-1); i=i+5){
         for (size_t j=0; j!=obstacle.size(); j++ ){
             double TmpDis =sqrt(pow((s[i]-obstacle[j][0]), 2) + pow((rho[i] - obstacle[j][1]), 2));
-            if (TmpDis < (r_circle + obstacle_inflation)){
+            if (TmpDis < (kp.r_circle + kp.obstacle_inflation)){
                 if (TmpDis<dis) dis = TmpDis;
             }
         }
@@ -46,14 +58,14 @@ double collision_risk(Node start_node, Node next_node, const std::vector<std::ve
 }
 
 
-double total_cost(Node start_node, Node next_node, double & refline, const std::vector<std::vector<double>>& obstacle) {
+double total_cost(Node node, Node next_node, double & refline, const std::vector<std::vector<double>>& obstacle) {
 
-    double cost1 = kappa_cost(start_node, next_node);
-    double cost2 = reference_line_cost(start_node, next_node, refline);
-    double cost3 = collision_risk(start_node, next_node, obstacle);
+    double cost1 = kappa_cost(node, next_node);
+    double cost2 = reference_line_cost(node, next_node, refline);
+    double cost3 = collision_risk(node, next_node, obstacle);
 
     cout<<"cost1:"<< cost1<<"cost2:"<<cost2<<"cost3:"<<cost3<<endl;
-    double cost = alpha1 * cost1 + alpha2 * cost2 + alpha3 * cost3;
+    double cost = kp.alpha1 * cost1 + kp.alpha2 * cost2 + kp.alpha3 * cost3;
     return cost;
 }
 

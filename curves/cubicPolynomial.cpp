@@ -49,11 +49,13 @@ std::vector<std::vector<double >> CubicPolynomial::computeFrenetCoordinates() {
     double s0 = *(start_condition_.begin());
     double sg = *(end_condition_.begin());
     int length_s = int((sg-s0)/step);
+    cout<<"------------------cubic sampling points-------------"<<endl;
+    cout<<length_s<<endl;
 
-    double coeff0 = *(coeffients_.cbegin());
-    double coeff1 = *(coeffients_.cbegin()+1);
-    double coeff2 = *(coeffients_.cbegin()+2);
-    double coeff3 = *(coeffients_.cbegin()+3);
+    double coeff0 = *(coeffients_.begin());
+    double coeff1 = *(coeffients_.begin()+1);
+    double coeff2 = *(coeffients_.begin()+2);
+    double coeff3 = *(coeffients_.begin()+3);
     double tmp_s = s0;
     for (int i=0; i<length_s; i++){
         tmp_s = tmp_s+step;
@@ -68,8 +70,8 @@ std::vector<std::vector<double >> CubicPolynomial::computeFrenetCoordinates() {
         rho.push_back(tmp_rho);
         theta.push_back(tmp_theta);
     }
-    cout<<s.size()<<"rho size:"<<rho.size()<<"theta size:"<<theta.size()<<endl;
-    cout<<*(s.cend()-1)<<"rho size:"<<*(rho.cend()-1)<<"theta size:"<<*(theta.cend()-1)<<endl;
+//    cout<<s.size()<<"rho size:"<<rho.size()<<"theta size:"<<theta.size()<<endl;
+//    cout<<*(s.cend()-1)<<"rho size:"<<*(rho.cend()-1)<<"theta size:"<<*(theta.cend()-1)<<endl;
 
     std::vector<std::vector<double >> set;
     set.push_back(s);

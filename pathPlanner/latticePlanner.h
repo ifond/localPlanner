@@ -11,28 +11,13 @@
 #include <iomanip>
 #include <array>
 #include <algorithm>
+#include "costFunctions.h"
+#include <typeinfo>
 
 #define PI 3.1415926
 
-double s_max = 100.0;
-int longi_num = 5;
-int lateral_num = 9;  // 横向采样个数
-double longi_step = 20.0;
-double latera_step = 0.5;
-double lane_width = 3.75;
-int LeftSampleNum = lateral_num/2;    // sampling number on one side of the reference line
-double s0 = 0.0;
-double s_end=s0+s_max;
-double refLineRho = lane_width*0.5;
-std::array<double, 4> start_SRho = {{s0, refLineRho, 0.0 * PI / 180.0}};
 
-// 障碍物的frenet坐标,
-std::vector<std::vector<double >>  obs= {{20, refLineRho - 1},
-                                         {40, refLineRho + 2},
-                                         {70, refLineRho + 2}};
-double obstacleHeading=0.0 * PI / 180.0;
 
-//last_column_id = [lateral_num * longi_num, lateral_num * (longi_num-1) + 1];  // 最后一列的编号
 
 /**
 * @brief Node class
@@ -67,7 +52,7 @@ public:
     * @param id Node's id
     * @param pid Node's parent's id
     */
-    Node(double x = 0, double y = 0, double cost = 0, int id = 0, int pid = 0);
+    Node(double x = 0.0, double y = 0.0, double cost = 0.0, int id = 0, int pid = 0);
 
     /**
     * @brief Prints the values of the variables in the node
@@ -115,29 +100,15 @@ public:
 /**
 * @brief Struct created to encapsulate function compare cost between 2 nodes. 升序
 */
-bool compare_cost(const Node & p1, const Node & p2);
+struct compare_cost{
+    bool operator()(Node& p1, Node& p2);
+};
 
 /**
 * @brief Get permissible motion primatives for the bot
 * @return vector of permissible motions
 */
 std::vector<Node> GetMotion();
-
-/**
-* @brief Prints the grid passed
-* @param grid Modify this grid
-* @return void
-*/
-
-void PrintPath(std::vector<Node> path_vector, Node start_, Node goal_, std::vector<std::vector<int>> &grid);
-
-/**
-* @brief Prints out the cost for reaching points on the grid in the grid shape
-* @param grid Grid on which algorithm is running
-* @param point_list Vector of all points that have been considered. Nodes in vector contain cost.
-* @return void
-*/
-void PrintCost(std::vector<std::vector<int>> &grid, std::vector<Node> point_list);
 
 
 /**
@@ -158,16 +129,36 @@ public:
     */
     int calIndex(Node p);
     bool nodeIsInClosed(Node &p);
-    bool nodeIsInOpen(Node &p);
-    std::vector<Node>::iterator changeOpenNode(Node &p);
-    Node * findMinCost();
+    std::vector<Node>::iterator minCost();
+//    void OpenDelet(std::vector<Node>::iterator it);
+    bool NodeInOpen(Node &p);
+    std::vector<Node>::iterator costUpdateInOpen(Node &p);
 
-private:
+    Node determineGoal();
+    std::vector<Node> pathTrace(Node & p);
+
+
+        private:
     std::vector<Node> open_list_;
     std::vector<Node> closed_list_;
     Node start_, goal_;
-    int n;
+
 };
+
+/**
+ * get the minimum cost in a vector
+ * @param nodeVector
+ * @return
+ */
+Node minCostInVector(std::vector<Node> & nodeVector);
+
+/**
+ *
+ * @param nodeVector
+ * @param ptr
+ * @return
+ */
+std::vector<Node>::iterator searchInvector(std::vector<Node> & nodeVector, int ptr);
 
 
 #endif //LATTICEPLANNER_LATTICEPLANNER_H

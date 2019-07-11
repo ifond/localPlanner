@@ -5,6 +5,29 @@
 #include "latticePlanner.h"
 
 
+struct plannerParameter {
+    double s_max = 100.0;
+    int longi_num = 5;
+    int lateral_num = 9;  // 横向采样个数
+    double longi_step = 20.0;
+    double latera_step = 0.5;
+    double lane_width = 3.75;
+    int LeftSampleNum = lateral_num / 2;    // sampling number on one side of the reference line
+    double s0 = 0.0;
+    double s_end = s0 + s_max;
+    double refLineRho = lane_width * 0.5;
+    std::array<double, 4> start_SRho = {{s0, refLineRho, 0.0 * PI / 180.0}};
+
+// 障碍物的frenet坐标,
+    std::vector<std::vector<double> > obs = {{20, refLineRho - 1},
+                                             {40, refLineRho + 2},
+                                             {70, refLineRho + 2}};
+    double obstacleHeading = 0.0 * PI / 180.0;
+
+    std::vector<int> last_column_id = {lateral_num * longi_num, lateral_num * (longi_num - 1) + 1};  // 最后一列的编号
+}plannerpara;
+
+
 Node::Node(double x, double y, double cost, int id, int pid){
     this->x_ = x;
     this->y_ = y;
@@ -58,73 +81,29 @@ bool Node::operator!=(Node p){
 }
 
 
-bool compare_cost(Node & p1, Node & p2){
-    return p1.cost_  < p2.cost_;
+bool compare_cost::operator()(Node & p1, Node & p2){
+    if (p1.cost_ >= p2.cost_) return true;
+    return false;
 };
 
 
 std::vector<Node> GetMotion(){
 
     std::vector<Node> motion;
-    for(int i=0; i<lateral_num; i++){
-        Node tmp_motion(longi_step, (i - LeftSampleNum) * latera_step + refLineRho, 0.0, 0, 0);
+    for(int i=0; i<plannerpara.lateral_num; i++){
+        Node tmp_motion(plannerpara.longi_step, (i - plannerpara.LeftSampleNum) * plannerpara.latera_step
+        + plannerpara.refLineRho, 0.0, 0, 0);
         motion.push_back(tmp_motion);
     }
 
     return motion;
 }
 
-/**
-void PrintPath(std::vector<Node> path_vector, Node start, Node goal, std::vector<std::vector<int>> &grid){
-    if(path_vector[0].id_ == -1){
-        std::cout << "No path exists" << std::endl;
-
-        return;
-    }
-    std::cout << "Path (goal to start):" << std::endl;
-    int i = 0;
-    for(i = 0; i < path_vector.size(); i++){
-        if(goal == path_vector[i]) break;
-    }
-    path_vector[i].PrintStatus();
-    grid[path_vector[i].x_][path_vector[i].y_] = 3;
-    while(path_vector[i].id_!=start.id_){
-        if(path_vector[i].id_ == path_vector[i].pid_) break;
-        for(int j = 0; j < path_vector.size(); j++){
-            if(path_vector[i].pid_ == path_vector[j].id_){
-                i=j;
-                path_vector[j].PrintStatus();
-                grid[path_vector[j].x_][path_vector[j].y_] = 3;
-            }
-        }
-    }
-    grid[start.x_][start.y_] = 3;
-
-}
-**/
-
-void PrintCost(std::vector<std::vector<int>> &grid, std::vector<Node> point_list){
-    int n = grid.size();
-    std::vector<Node>::iterator it_v;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            for(it_v = point_list.begin(); it_v != point_list.end(); ++it_v){
-                if(i == it_v->x_ && j== it_v->y_){
-                    std::cout << std::setw(10) <<it_v->cost_ << " , ";
-                    break;
-                }
-            }
-            if(it_v == point_list.end())
-                std::cout << std::setw(10) << "  , ";
-        }
-        std::cout << std::endl << std::endl;
-    }
-}
-
 
 int Dijkstra::calIndex(Node p) {
 
-    double id = (p.y_ - (refLineRho-LeftSampleNum*latera_step)) / latera_step + ((p.x_ - start_.x_) / longi_step - 1.0) * lateral_num + 1.0;
+    double id = (p.y_ - (plannerpara.refLineRho- plannerpara.LeftSampleNum*plannerpara.latera_step)) / plannerpara.latera_step
+            + ((p.x_ - start_.x_) /plannerpara.longi_step - 1.0) *plannerpara.lateral_num + 1.0;
     return int(id);
 }
 
@@ -138,75 +117,72 @@ bool Dijkstra::nodeIsInClosed(Node &p){
 }
 
 
-bool Dijkstra::nodeIsInOpen(Node &p) {
-    for(auto q:open_list_){
-        if (q.id_== p.id_)  return true;
+std::vector<Node>::iterator Dijkstra::minCost() {
+    auto it = open_list_.begin();
+    for (auto o=open_list_.begin();o!=open_list_.end();o++){
+        if(it->cost_ > o->cost_)
+            it = o;
+    }
+    return it;
+}
+
+
+bool Dijkstra::NodeInOpen(Node &p) {
+    for(auto k:open_list_){
+        if (k.id_== p.id_)  return true;
 
     }
     return false;
 }
 
-std::vector<Node>::iterator Dijkstra::changeOpenNode(Node &p) {
-    auto it=open_list_.end();
+std::vector<Node>::iterator Dijkstra::costUpdateInOpen(Node &p) {
 
-    for(auto z=open_list_.begin(); z!=open_list_.end();z++){
-        if (z->id_== p.id_) {
-            it = z;
-            return it;
-        }
+    for (auto o=open_list_.begin();o!=open_list_.end();o++){
+        if(o->id_ == p.id_)
+            return o;
     }
-    return it;
-}
-
-Node * Dijkstra::findMinCost() {
-    Node * n0 = & open_list_[0];
-    for (auto l:open_list_){
-        if (l.cost_ < n0->cost_)
-            n0 = &l;
-    }
-    return n0;
-
 }
 
 std::vector<Node> Dijkstra::dijkstra(Node start_in){
     start_ = start_in;
-
+    cout<<typeid(start_.x_).name()<<endl;
+    cout<<"start:"<<start_.x_ << " " << start_.y_<<endl;
     // Get possible motions, child nodes
     std::vector<Node> motion = GetMotion();
+    cout<<"size:"<<motion.size()<<endl;
     open_list_.push_back(start_);
+    cout<<open_list_.size()<<endl;
 
     // Main loop
-    Node temp;
     while(!open_list_.empty()){
-        Node current = *findMinCost();
-
-        current.id_ = calIndex(current);
+        auto current = minCost();
+        cout<<"-------------current id-------------"<<endl;
+        cout<<current->id_<<endl;
+//        current->id_ = calIndex(*current);
         open_list_.erase(current);
-        closed_list_.push_back(current);
+        closed_list_.push_back(*current);
 
         for(auto i:motion){
             Node new_point;
-            new_point = current + i;
-            new_point.id_ = calIndex(new_point);
-            new_point.pid_ = current.id_;
 
-            if (new_point.x_ > s_end) break;
+            new_point.x_ = current->x_ + i.x_;
+            new_point.y_ = i.y_;
+            new_point.id_ = calIndex(new_point);
+            new_point.pid_ = current->id_;
+            new_point.cost_ = total_cost(*current, new_point, plannerpara.refLineRho, plannerpara.obs);
+
+            if (new_point.x_ > plannerpara.s_end) break;
 
             bool flag=nodeIsInClosed(new_point);
             if (flag) continue;
-//            std::find(closed_list_.begin(), closed_list_.end(), new_point);
-
-            else if (nodeIsInOpen(new_point)){
-                auto it = changeOpenNode(new_point);
+            else if (NodeInOpen(new_point)){
+                auto it = costUpdateInOpen(new_point);
                 if (it->cost_ > new_point.cost_) {
                     it->cost_ = new_point.cost_;
-                    it->pid_ = current.id_;
+                    it->pid_ = current->id_;
                 }
             }
-
-
-            else
-            open_list_.push_back(new_point);
+            else open_list_.push_back(new_point);
 
         }
 
@@ -214,40 +190,72 @@ std::vector<Node> Dijkstra::dijkstra(Node start_in){
     return closed_list_;
 }
 
+
+Node minCostInVector(std::vector<Node> & nodeVector) {
+    auto it = nodeVector.begin();
+    for (auto o:nodeVector){
+        if(it->cost_ < o.cost_)
+            *it = o;
+    }
+    return *it;
+}
+
+
+Node Dijkstra::determineGoal() {
+    std::vector<Node> temVector;
+
+    for (int i=plannerpara.last_column_id[1]; i!=plannerpara.last_column_id[0] + 1; i++) {
+        temVector.push_back(closed_list_[i]);
+    }
+    Node goal = minCostInVector(temVector);
+
+    return goal;
+}
+
+
+std::vector<Node>::iterator searchInvector(std::vector<Node> & nodeVector, int ptr){
+
+    for (auto i=nodeVector.begin();i!=nodeVector.end();i++){
+        if(i->id_ == ptr)
+            return i;
+    }
+}
+
+std::vector<Node> Dijkstra::pathTrace(Node & p) {
+    std::vector<Node> path;
+    path.push_back(p);
+
+    int ptr = p.pid_;
+    while (ptr != -1) {
+        auto it = searchInvector(closed_list_, ptr);
+        path.push_back(*it);
+
+        ptr = it->pid_;
+    }
+
+    return path;
+}
+
+
 #ifdef BUILD_INDIVIDUAL
 /**
 * @brief Script main function. Generates start and end nodes as well as grid, then creates the algorithm object and calls the main algorithm function.
 * @return 0
 */
 int main(){
-  int n = 11;
 
-  std::vector<std::vector<int>> grid(n);
-  std::vector<int> tmp(n);
-  for (int i = 0; i < n; i++){
-    grid[i] = tmp;
-  }
-  MakeGrid(grid);
-  std::random_device rd; // obtain a random number from hardware
-  std::mt19937 eng(rd()); // seed the generator
-  std::uniform_int_distribution<int> distr(0,n-1); // define the range
+    Node initState(0.0, 0.0, 0.0, 0, -1);
 
-  Node start(distr(eng),distr(eng),0,0,0,0);
-  Node goal(distr(eng),distr(eng),0,0,0,0);
+    //Make sure start and goal are not obstacles and their ids are correctly assigned.
 
-  start.id_ = start.x_ * n + start.y_;
-  start.pid_ = start.x_ * n + start.y_;
-  goal.id_ = goal.x_ * n + goal.y_;
-  start.h_cost_ = abs(start.x_ - goal.x_) + abs(start.y_ - goal.y_);
-  //Make sure start and goal are not obstacles and their ids are correctly assigned.
-  grid[start.x_][start.y_] = 0;
-  grid[goal.x_][goal.y_] = 0;
-  PrintGrid(grid);
+    Dijkstra new_dijkstra;
+    std::vector<Node> closed = new_dijkstra.dijkstra(start);
+    Node goal= planning.determineGoal();
+    std::vector<Node> pathNode = planning.pathTrace(goal);
+    for (auto i:pathNode){
+        std::cout << "node:" << i.x_ << "-" << i.y_ << std::endl;
+    }
 
-  Dijkstra new_dijkstra;
-  std::vector<Node> path_vector = new_dijkstra.dijkstra(grid, start, goal);
-  PrintPath(path_vector, start, goal, grid);
-
-  return 0;
+    return 0;
 }
 #endif
