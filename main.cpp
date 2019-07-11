@@ -24,6 +24,8 @@ int main() {
     Dijkstra planner;
     std::vector<Node> closed = planner.dijkstra(initState);
     Node goal= planner.determineGoal();
+    cout<<"==============goal================="<<endl;
+    cout<<goal.x_<<"-"<<goal.y_<<endl;
     std::vector<Node> pathNode = planner.pathTrace(goal);
     for (auto i:pathNode){
         std::cout << "node:" << i.x_ << "-" << i.y_ << std::endl;

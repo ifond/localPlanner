@@ -18,7 +18,7 @@ struct plannerParameter {
     double refLineRho = lane_width * 0.5;
     std::array<double, 4> start_SRho = {{s0, refLineRho, 0.0 * PI / 180.0}};
 
-// 障碍物的frenet坐标,
+    // the frenet coordinates of obstacles
     std::vector<std::vector<double> > obs = {{20, refLineRho - 1},
                                              {40, refLineRho + 2},
                                              {70, refLineRho + 2}};
@@ -127,21 +127,17 @@ std::vector<Node>::iterator Dijkstra::minCost() {
 }
 
 
-bool Dijkstra::NodeInOpen(Node &p) {
-    for(auto k:open_list_){
-        if (k.id_== p.id_)  return true;
+bool Dijkstra::NodeInOpen(Node &p, std::vector<Node>::iterator &it) {
 
+    for (auto o=open_list_.begin();o!=open_list_.end();o++){
+        if(o->id_ == p.id_){
+            it = o;
+            return true;
+        }
     }
     return false;
 }
 
-std::vector<Node>::iterator Dijkstra::costUpdateInOpen(Node &p) {
-
-    for (auto o=open_list_.begin();o!=open_list_.end();o++){
-        if(o->id_ == p.id_)
-            return o;
-    }
-}
 
 std::vector<Node> Dijkstra::dijkstra(Node start_in){
     start_ = start_in;
@@ -158,6 +154,7 @@ std::vector<Node> Dijkstra::dijkstra(Node start_in){
         auto current = minCost();
         cout<<"-------------current id-------------"<<endl;
         cout<<current->id_<<endl;
+        cout<<"open_size:"<<open_list_.size()<<endl;
 //        current->id_ = calIndex(*current);
         open_list_.erase(current);
         closed_list_.push_back(*current);
@@ -173,10 +170,10 @@ std::vector<Node> Dijkstra::dijkstra(Node start_in){
 
             if (new_point.x_ > plannerpara.s_end) break;
 
+            auto it = open_list_.begin();
             bool flag=nodeIsInClosed(new_point);
             if (flag) continue;
-            else if (NodeInOpen(new_point)){
-                auto it = costUpdateInOpen(new_point);
+            else if (NodeInOpen(new_point, it)){
                 if (it->cost_ > new_point.cost_) {
                     it->cost_ = new_point.cost_;
                     it->pid_ = current->id_;

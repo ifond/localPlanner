@@ -131,8 +131,7 @@ public:
     bool nodeIsInClosed(Node &p);
     std::vector<Node>::iterator minCost();
 //    void OpenDelet(std::vector<Node>::iterator it);
-    bool NodeInOpen(Node &p);
-    std::vector<Node>::iterator costUpdateInOpen(Node &p);
+    bool NodeInOpen(Node &p, std::vector<Node>::iterator &it);
 
     Node determineGoal();
     std::vector<Node> pathTrace(Node & p);
