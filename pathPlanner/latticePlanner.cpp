@@ -168,6 +168,8 @@ std::vector<Node> Dijkstra::dijkstra(Node start_in){
             new_point.pid_ = current->id_;
             new_point.cost_ = total_cost(*current, new_point, plannerpara.refLineRho, plannerpara.obs);
 
+            cout<<"------------------newpoint.x--------"<<endl;
+            cout<<new_point.x_<<endl;
             if (new_point.x_ > plannerpara.s_end) break;
 
             auto it = open_list_.begin();

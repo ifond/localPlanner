@@ -23,6 +23,8 @@ int main() {
     Node initState(0.0, 0.0, 0.0, 0, -1);
     Dijkstra planner;
     std::vector<Node> closed = planner.dijkstra(initState);
+    cout<<"---------------closed_size---------------"<<endl;
+    cout<<closed.size()<<endl;
     Node goal= planner.determineGoal();
     cout<<"==============goal================="<<endl;
     cout<<goal.x_<<"-"<<goal.y_<<endl;
