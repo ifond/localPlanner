@@ -6,6 +6,9 @@ file(REMOVE_RECURSE
   "CMakeFiles/latticePlanner.dir/FrenetMath/calHeading.cpp.o"
   "CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.o"
   "CMakeFiles/latticePlanner.dir/config/parameters.cpp.o"
+  "CMakeFiles/latticePlanner.dir/FrenetMath/cartesianToFrenet.cpp.o"
+  "CMakeFiles/latticePlanner.dir/FrenetMath/frenetToCartesian.cpp.o"
+  "CMakeFiles/latticePlanner.dir/referenceLine/referenceLine.cpp.o"
   "latticePlanner.pdb"
   "latticePlanner"
 )

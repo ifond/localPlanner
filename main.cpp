@@ -25,12 +25,12 @@ int main() {
 //    cout<<closed.size()<<endl;
     Node goal= planner.determineGoal();
     cout<<"==============goal================="<<endl;
-    cout<<goal.x_<<"-"<<goal.y_<<endl;
+    cout<<"["<<goal.x_<<","<<goal.y_<<"]"<<endl;
     std::vector<Node> pathNode = planner.pathTrace(goal);
 
     cout<<"------------path node-----------------"<<endl;
     for (auto i:pathNode){
-        std::cout << "node: " << i.x_ << " - " << i.y_ << std::endl;
+        std::cout << "[" << i.x_ << "," << i.y_ <<"]"<< std::endl;
     }
 
     return 0;

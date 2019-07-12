@@ -177,6 +177,60 @@ FrenetMath/calKappa.cpp.s:
 	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.s
 .PHONY : FrenetMath/calKappa.cpp.s
 
+FrenetMath/cartesianToFrenet.o: FrenetMath/cartesianToFrenet.cpp.o
+
+.PHONY : FrenetMath/cartesianToFrenet.o
+
+# target to build an object file
+FrenetMath/cartesianToFrenet.cpp.o:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/FrenetMath/cartesianToFrenet.cpp.o
+.PHONY : FrenetMath/cartesianToFrenet.cpp.o
+
+FrenetMath/cartesianToFrenet.i: FrenetMath/cartesianToFrenet.cpp.i
+
+.PHONY : FrenetMath/cartesianToFrenet.i
+
+# target to preprocess a source file
+FrenetMath/cartesianToFrenet.cpp.i:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/FrenetMath/cartesianToFrenet.cpp.i
+.PHONY : FrenetMath/cartesianToFrenet.cpp.i
+
+FrenetMath/cartesianToFrenet.s: FrenetMath/cartesianToFrenet.cpp.s
+
+.PHONY : FrenetMath/cartesianToFrenet.s
+
+# target to generate assembly for a file
+FrenetMath/cartesianToFrenet.cpp.s:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/FrenetMath/cartesianToFrenet.cpp.s
+.PHONY : FrenetMath/cartesianToFrenet.cpp.s
+
+FrenetMath/frenetToCartesian.o: FrenetMath/frenetToCartesian.cpp.o
+
+.PHONY : FrenetMath/frenetToCartesian.o
+
+# target to build an object file
+FrenetMath/frenetToCartesian.cpp.o:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/FrenetMath/frenetToCartesian.cpp.o
+.PHONY : FrenetMath/frenetToCartesian.cpp.o
+
+FrenetMath/frenetToCartesian.i: FrenetMath/frenetToCartesian.cpp.i
+
+.PHONY : FrenetMath/frenetToCartesian.i
+
+# target to preprocess a source file
+FrenetMath/frenetToCartesian.cpp.i:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/FrenetMath/frenetToCartesian.cpp.i
+.PHONY : FrenetMath/frenetToCartesian.cpp.i
+
+FrenetMath/frenetToCartesian.s: FrenetMath/frenetToCartesian.cpp.s
+
+.PHONY : FrenetMath/frenetToCartesian.s
+
+# target to generate assembly for a file
+FrenetMath/frenetToCartesian.cpp.s:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/FrenetMath/frenetToCartesian.cpp.s
+.PHONY : FrenetMath/frenetToCartesian.cpp.s
+
 config/parameters.o: config/parameters.cpp.o
 
 .PHONY : config/parameters.o
@@ -312,6 +366,33 @@ pathPlanner/latticePlanner.cpp.s:
 	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.s
 .PHONY : pathPlanner/latticePlanner.cpp.s
 
+referenceLine/referenceLine.o: referenceLine/referenceLine.cpp.o
+
+.PHONY : referenceLine/referenceLine.o
+
+# target to build an object file
+referenceLine/referenceLine.cpp.o:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/referenceLine/referenceLine.cpp.o
+.PHONY : referenceLine/referenceLine.cpp.o
+
+referenceLine/referenceLine.i: referenceLine/referenceLine.cpp.i
+
+.PHONY : referenceLine/referenceLine.i
+
+# target to preprocess a source file
+referenceLine/referenceLine.cpp.i:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/referenceLine/referenceLine.cpp.i
+.PHONY : referenceLine/referenceLine.cpp.i
+
+referenceLine/referenceLine.s: referenceLine/referenceLine.cpp.s
+
+.PHONY : referenceLine/referenceLine.s
+
+# target to generate assembly for a file
+referenceLine/referenceLine.cpp.s:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/referenceLine/referenceLine.cpp.s
+.PHONY : referenceLine/referenceLine.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -327,6 +408,12 @@ help:
 	@echo "... FrenetMath/calKappa.o"
 	@echo "... FrenetMath/calKappa.i"
 	@echo "... FrenetMath/calKappa.s"
+	@echo "... FrenetMath/cartesianToFrenet.o"
+	@echo "... FrenetMath/cartesianToFrenet.i"
+	@echo "... FrenetMath/cartesianToFrenet.s"
+	@echo "... FrenetMath/frenetToCartesian.o"
+	@echo "... FrenetMath/frenetToCartesian.i"
+	@echo "... FrenetMath/frenetToCartesian.s"
 	@echo "... config/parameters.o"
 	@echo "... config/parameters.i"
 	@echo "... config/parameters.s"
@@ -342,6 +429,9 @@ help:
 	@echo "... pathPlanner/latticePlanner.o"
 	@echo "... pathPlanner/latticePlanner.i"
 	@echo "... pathPlanner/latticePlanner.s"
+	@echo "... referenceLine/referenceLine.o"
+	@echo "... referenceLine/referenceLine.i"
+	@echo "... referenceLine/referenceLine.s"
 .PHONY : help
 
 

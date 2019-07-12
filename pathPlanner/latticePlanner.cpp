@@ -70,7 +70,7 @@ std::vector<Node> GetMotion(){
 
     std::vector<Node> motion;
     for(int i=0; i<parameter.lateral_num; i++){
-        Node tmp_motion(parameter.longi_step, (i - parameter.LeftSampleNum) * parameter.latera_step+ parameter.refLineRho, 0.0, 0, 0);
+        Node tmp_motion(parameter.longitudinal_step, (i - parameter.SampleNumberOnOneSide) * parameter.lateral_step+ parameter.refLineRho, 0.0, 0, 0);
         motion.push_back(tmp_motion);
     }
 
@@ -84,7 +84,7 @@ std::vector<Node> GetMotion(){
 
 int Dijkstra::calIndex(Node p) {
 
-    double id = (p.y_ - (parameter.refLineRho- parameter.LeftSampleNum * parameter.latera_step)) / parameter.latera_step + ((p.x_ - start_.x_) /parameter.longi_step - 1.0) *parameter.lateral_num + 1.0;
+    double id = (p.y_ - (parameter.refLineRho- parameter.SampleNumberOnOneSide * parameter.lateral_step)) / parameter.lateral_step + ((p.x_ - start_.x_) /parameter.longitudinal_step - 1.0) *parameter.lateral_num + 1.0;
     return int(id);
 }
 

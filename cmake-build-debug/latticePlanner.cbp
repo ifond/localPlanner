@@ -96,6 +96,18 @@
 		<Unit filename="/home/ustb/桌面/latticePlanner/FrenetMath/calKappa.h">
 			<Option target="latticePlanner"/>
 		</Unit>
+		<Unit filename="/home/ustb/桌面/latticePlanner/FrenetMath/cartesianToFrenet.cpp">
+			<Option target="latticePlanner"/>
+		</Unit>
+		<Unit filename="/home/ustb/桌面/latticePlanner/FrenetMath/cartesianToFrenet.h">
+			<Option target="latticePlanner"/>
+		</Unit>
+		<Unit filename="/home/ustb/桌面/latticePlanner/FrenetMath/frenetToCartesian.cpp">
+			<Option target="latticePlanner"/>
+		</Unit>
+		<Unit filename="/home/ustb/桌面/latticePlanner/FrenetMath/frenetToCartesian.h">
+			<Option target="latticePlanner"/>
+		</Unit>
 		<Unit filename="/home/ustb/桌面/latticePlanner/config/parameters.cpp">
 			<Option target="latticePlanner"/>
 		</Unit>
@@ -121,6 +133,12 @@
 			<Option target="latticePlanner"/>
 		</Unit>
 		<Unit filename="/home/ustb/桌面/latticePlanner/pathPlanner/latticePlanner.h">
+			<Option target="latticePlanner"/>
+		</Unit>
+		<Unit filename="/home/ustb/桌面/latticePlanner/referenceLine/referenceLine.cpp">
+			<Option target="latticePlanner"/>
+		</Unit>
+		<Unit filename="/home/ustb/桌面/latticePlanner/referenceLine/referenceLine.h">
 			<Option target="latticePlanner"/>
 		</Unit>
 		<Unit filename="/home/ustb/桌面/latticePlanner/CMakeLists.txt">
