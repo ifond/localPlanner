@@ -1,10 +1,10 @@
 # latticePlanner
+author:ming.ustb@outlook.com
 
----
 ## Requirements
    eigen3
 
----
+
 ## algorithms
 1 calculate kappa
 
