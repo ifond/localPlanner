@@ -1,5 +1,4 @@
 #include <iostream>
-#include <Eigen/Dense>
 #include <array>
 #include "curves/cubicPolynomial.h"
 #include "pathPlanner/latticePlanner.h"

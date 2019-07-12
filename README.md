@@ -1,1 +1,6 @@
 # latticePlanner
+
+## Requirements
+   eigen3
+
+
