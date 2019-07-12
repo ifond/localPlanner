@@ -8,9 +8,13 @@ CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.o
  /home/ustb/桌面/latticePlanner/FrenetMath/calHeading.h
  /home/ustb/桌面/latticePlanner/FrenetMath/calKappa.cpp
  /home/ustb/桌面/latticePlanner/FrenetMath/calKappa.h
+ /home/ustb/桌面/latticePlanner/config/parameters.h
  /home/ustb/桌面/latticePlanner/curves/cubicPolynomial.h
  /home/ustb/桌面/latticePlanner/pathPlanner/costFunctions.h
  /home/ustb/桌面/latticePlanner/pathPlanner/latticePlanner.h
+CMakeFiles/latticePlanner.dir/config/parameters.cpp.o
+ /home/ustb/桌面/latticePlanner/config/parameters.cpp
+ /home/ustb/桌面/latticePlanner/config/parameters.h
 CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.o
  /home/ustb/桌面/latticePlanner/FrenetMath/calHeading.h
  /home/ustb/桌面/latticePlanner/curves/cubicPolynomial.cpp
@@ -18,6 +22,7 @@ CMakeFiles/latticePlanner.dir/curves/cubicPolynomial.cpp.o
 CMakeFiles/latticePlanner.dir/main.cpp.o
  /home/ustb/桌面/latticePlanner/FrenetMath/calHeading.h
  /home/ustb/桌面/latticePlanner/FrenetMath/calKappa.h
+ /home/ustb/桌面/latticePlanner/config/parameters.h
  /home/ustb/桌面/latticePlanner/curves/cubicPolynomial.h
  /home/ustb/桌面/latticePlanner/main.cpp
  /home/ustb/桌面/latticePlanner/pathPlanner/costFunctions.h
@@ -25,6 +30,7 @@ CMakeFiles/latticePlanner.dir/main.cpp.o
 CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.o
  /home/ustb/桌面/latticePlanner/FrenetMath/calHeading.h
  /home/ustb/桌面/latticePlanner/FrenetMath/calKappa.h
+ /home/ustb/桌面/latticePlanner/config/parameters.h
  /home/ustb/桌面/latticePlanner/curves/cubicPolynomial.h
  /home/ustb/桌面/latticePlanner/pathPlanner/costFunctions.cpp
  /home/ustb/桌面/latticePlanner/pathPlanner/costFunctions.h
@@ -32,6 +38,7 @@ CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.o
 CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.o
  /home/ustb/桌面/latticePlanner/FrenetMath/calHeading.h
  /home/ustb/桌面/latticePlanner/FrenetMath/calKappa.h
+ /home/ustb/桌面/latticePlanner/config/parameters.h
  /home/ustb/桌面/latticePlanner/curves/cubicPolynomial.h
  /home/ustb/桌面/latticePlanner/pathPlanner/costFunctions.h
  /home/ustb/桌面/latticePlanner/pathPlanner/latticePlanner.cpp

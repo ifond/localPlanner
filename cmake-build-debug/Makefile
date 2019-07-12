@@ -177,6 +177,33 @@ FrenetMath/calKappa.cpp.s:
 	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/FrenetMath/calKappa.cpp.s
 .PHONY : FrenetMath/calKappa.cpp.s
 
+config/parameters.o: config/parameters.cpp.o
+
+.PHONY : config/parameters.o
+
+# target to build an object file
+config/parameters.cpp.o:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/config/parameters.cpp.o
+.PHONY : config/parameters.cpp.o
+
+config/parameters.i: config/parameters.cpp.i
+
+.PHONY : config/parameters.i
+
+# target to preprocess a source file
+config/parameters.cpp.i:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/config/parameters.cpp.i
+.PHONY : config/parameters.cpp.i
+
+config/parameters.s: config/parameters.cpp.s
+
+.PHONY : config/parameters.s
+
+# target to generate assembly for a file
+config/parameters.cpp.s:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/config/parameters.cpp.s
+.PHONY : config/parameters.cpp.s
+
 curves/cubicPolynomial.o: curves/cubicPolynomial.cpp.o
 
 .PHONY : curves/cubicPolynomial.o
@@ -300,6 +327,9 @@ help:
 	@echo "... FrenetMath/calKappa.o"
 	@echo "... FrenetMath/calKappa.i"
 	@echo "... FrenetMath/calKappa.s"
+	@echo "... config/parameters.o"
+	@echo "... config/parameters.i"
+	@echo "... config/parameters.s"
 	@echo "... curves/cubicPolynomial.o"
 	@echo "... curves/cubicPolynomial.i"
 	@echo "... curves/cubicPolynomial.s"

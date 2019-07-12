@@ -49,8 +49,8 @@ std::vector<std::vector<double >> CubicPolynomial::computeFrenetCoordinates() {
     double s0 = *(start_condition_.begin());
     double sg = *(end_condition_.begin());
     int length_s = int((sg-s0)/step);
-    cout<<"------------------cubic sampling points-------------"<<endl;
-    cout<<length_s<<endl;
+//    cout<<"------------------cubic sampling points-------------"<<endl;
+//    cout<<length_s<<endl;
 
     double coeff0 = *(coeffients_.begin());
     double coeff1 = *(coeffients_.begin()+1);

@@ -18,7 +18,7 @@ class Node;
  * @param next_node
  * @return
  */
-double trajectory_kappa(Node & node, Node & next_node);
+double trajectory_kappa(const Node node, const Node next_node);
 
 
 #endif //LATTICEPLANNER_CALKAPPA_H

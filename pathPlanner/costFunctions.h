@@ -16,7 +16,7 @@ class Node;
  * @param next_node
  * @return
  */
-double kappa_cost(Node & node, Node & next_node);
+double kappa_cost(const Node node, const Node & next_node);
 
 
 /**
@@ -26,7 +26,7 @@ double kappa_cost(Node & node, Node & next_node);
  * @param refline
  * @return
  */
-double reference_line_cost(Node start_node, Node next_node, double & refline);
+double reference_line_cost(const Node start_node, const Node next_node, double & refline);
 
 
 /**
@@ -36,10 +36,10 @@ double reference_line_cost(Node start_node, Node next_node, double & refline);
  * @param obstacle
  * @return
  */
-double collision_risk(Node start_node, Node next_node, const std::vector<std::vector<double>>& obstacle);
+double collision_risk(const Node start_node, const Node next_node, const std::vector<std::vector<double>>& obstacle);
 
 
-double total_cost(Node node, Node next_node, double & refline, const std::vector<std::vector<double>>& obstacle);
+double total_cost(const Node node, const Node next_node, double & refline, const std::vector<std::vector<double>>& obstacle);
 
 
 #endif //LATTICEPLANNER_COSTFUNCTIONS_H

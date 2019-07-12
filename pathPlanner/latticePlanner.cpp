@@ -4,28 +4,7 @@
 
 #include "latticePlanner.h"
 
-
-struct plannerParameter {
-    double s_max = 100.0;
-    int longi_num = 5;
-    int lateral_num = 9;  // 横向采样个数
-    double longi_step = 20.0;
-    double latera_step = 0.5;
-    double lane_width = 3.75;
-    int LeftSampleNum = lateral_num / 2;    // sampling number on one side of the reference line
-    double s0 = 0.0;
-    double s_end = s0 + s_max;
-    double refLineRho = lane_width * 0.5;
-    std::array<double, 4> start_SRho = {{s0, refLineRho, 0.0 * PI / 180.0}};
-
-    // the frenet coordinates of obstacles
-    std::vector<std::vector<double> > obs = {{20, refLineRho - 1},
-                                             {40, refLineRho + 2},
-                                             {70, refLineRho + 2}};
-    double obstacleHeading = 0.0 * PI / 180.0;
-
-    std::vector<int> last_column_id = {lateral_num * longi_num, lateral_num * (longi_num - 1) + 1};  // 最后一列的编号
-}plannerpara;
+plannerParameter parameter;
 
 
 Node::Node(double x, double y, double cost, int id, int pid){
@@ -90,20 +69,22 @@ bool compare_cost::operator()(Node & p1, Node & p2){
 std::vector<Node> GetMotion(){
 
     std::vector<Node> motion;
-    for(int i=0; i<plannerpara.lateral_num; i++){
-        Node tmp_motion(plannerpara.longi_step, (i - plannerpara.LeftSampleNum) * plannerpara.latera_step
-        + plannerpara.refLineRho, 0.0, 0, 0);
+    for(int i=0; i<parameter.lateral_num; i++){
+        Node tmp_motion(parameter.longi_step, (i - parameter.LeftSampleNum) * parameter.latera_step+ parameter.refLineRho, 0.0, 0, 0);
         motion.push_back(tmp_motion);
     }
 
+//    cout<<"-------output motion-------------"<<endl;
+//    for(auto m:motion){
+//        cout<<m.x_<<"-"<<m.y_<<endl;
+//    }
     return motion;
 }
 
 
 int Dijkstra::calIndex(Node p) {
 
-    double id = (p.y_ - (plannerpara.refLineRho- plannerpara.LeftSampleNum*plannerpara.latera_step)) / plannerpara.latera_step
-            + ((p.x_ - start_.x_) /plannerpara.longi_step - 1.0) *plannerpara.lateral_num + 1.0;
+    double id = (p.y_ - (parameter.refLineRho- parameter.LeftSampleNum * parameter.latera_step)) / parameter.latera_step + ((p.x_ - start_.x_) /parameter.longi_step - 1.0) *parameter.lateral_num + 1.0;
     return int(id);
 }
 
@@ -117,13 +98,13 @@ bool Dijkstra::nodeIsInClosed(Node &p){
 }
 
 
-std::vector<Node>::iterator Dijkstra::minCost() {
-    auto it = open_list_.begin();
-    for (auto o=open_list_.begin();o!=open_list_.end();o++){
-        if(it->cost_ > o->cost_)
-            it = o;
+Node Dijkstra::minCostInOpen() {
+    auto p = *open_list_.begin();
+    for (auto o:open_list_){
+        if(p.cost_ > o.cost_)
+            p = o;
     }
-    return it;
+    return p;
 }
 
 
@@ -138,39 +119,45 @@ bool Dijkstra::NodeInOpen(Node &p, std::vector<Node>::iterator &it) {
     return false;
 }
 
+void Dijkstra::DeleteOpenNode(Node p) {
+    for (auto o=open_list_.begin();o!=open_list_.end();o++){
+        if(o->id_ == p.id_){
+            open_list_.erase(o);
+            break;
+        }
+    }
+}
 
 std::vector<Node> Dijkstra::dijkstra(Node start_in){
     start_ = start_in;
-    cout<<typeid(start_.x_).name()<<endl;
-    cout<<"start:"<<start_.x_ << " " << start_.y_<<endl;
+//    cout<<typeid(start_.x_).name()<<endl;
+//    cout<<"start:"<<start_.x_ << " " << start_.y_<<endl;
     // Get possible motions, child nodes
     std::vector<Node> motion = GetMotion();
-    cout<<"size:"<<motion.size()<<endl;
+//    cout<<"motion_size:"<<motion.size()<<endl;
     open_list_.push_back(start_);
-    cout<<open_list_.size()<<endl;
+//    cout<<open_list_.size()<<endl;
 
     // Main loop
     while(!open_list_.empty()){
-        auto current = minCost();
+        Node current = minCostInOpen();
         cout<<"-------------current id-------------"<<endl;
-        cout<<current->id_<<endl;
-        cout<<"open_size:"<<open_list_.size()<<endl;
-//        current->id_ = calIndex(*current);
-        open_list_.erase(current);
-        closed_list_.push_back(*current);
-
+        cout<<current.id_<<endl;
+//        cout<<"open_size:"<<open_list_.size()<<endl;
+        closed_list_.push_back(current);
         for(auto i:motion){
             Node new_point;
-
-            new_point.x_ = current->x_ + i.x_;
+//            cout<<"current "<<current.x_<<endl;
+//            cout<<"current address "<<&(current)<<endl;
+            new_point.x_ = current.x_ + i.x_;
             new_point.y_ = i.y_;
             new_point.id_ = calIndex(new_point);
-            new_point.pid_ = current->id_;
-            new_point.cost_ = total_cost(*current, new_point, plannerpara.refLineRho, plannerpara.obs);
+            new_point.pid_ = current.id_;
+            new_point.cost_ = total_cost(current, new_point, parameter.refLineRho, parameter.obs);
 
-            cout<<"------------------newpoint.x--------"<<endl;
-            cout<<new_point.x_<<endl;
-            if (new_point.x_ > plannerpara.s_end) break;
+//            cout<<"------------------newpoint.x--------"<<endl;
+//            cout<<new_point.x_<<endl;
+            if (new_point.x_ > parameter.s_end) break;
 
             auto it = open_list_.begin();
             bool flag=nodeIsInClosed(new_point);
@@ -178,47 +165,37 @@ std::vector<Node> Dijkstra::dijkstra(Node start_in){
             else if (NodeInOpen(new_point, it)){
                 if (it->cost_ > new_point.cost_) {
                     it->cost_ = new_point.cost_;
-                    it->pid_ = current->id_;
+                    it->pid_ = current.id_;
                 }
             }
             else open_list_.push_back(new_point);
-
         }
-
+        DeleteOpenNode(current);
     }
     return closed_list_;
 }
 
 
-Node minCostInVector(std::vector<Node> & nodeVector) {
-    auto it = nodeVector.begin();
-    for (auto o:nodeVector){
-        if(it->cost_ < o.cost_)
-            *it = o;
-    }
-    return *it;
-}
-
-
 Node Dijkstra::determineGoal() {
-    std::vector<Node> temVector;
+    std::vector<Node> tmpVector;
 
-    for (int i=plannerpara.last_column_id[1]; i!=plannerpara.last_column_id[0] + 1; i++) {
-        temVector.push_back(closed_list_[i]);
+    for (int i=*(parameter.last_column_id.cbegin()); i!=*(parameter.last_column_id.cbegin()+1) + 1; i++) {
+        for (auto j:closed_list_){
+            if (i == j.id_) {
+                tmpVector.push_back(j);
+                break;
+            }
+        }
     }
-    Node goal = minCostInVector(temVector);
 
+    Node goal = *tmpVector.begin();
+    for (auto t:tmpVector){
+        if(goal.cost_ > t.cost_)
+            goal = t;
+    }
     return goal;
 }
 
-
-std::vector<Node>::iterator searchInvector(std::vector<Node> & nodeVector, int ptr){
-
-    for (auto i=nodeVector.begin();i!=nodeVector.end();i++){
-        if(i->id_ == ptr)
-            return i;
-    }
-}
 
 std::vector<Node> Dijkstra::pathTrace(Node & p) {
     std::vector<Node> path;
@@ -226,10 +203,13 @@ std::vector<Node> Dijkstra::pathTrace(Node & p) {
 
     int ptr = p.pid_;
     while (ptr != -1) {
-        auto it = searchInvector(closed_list_, ptr);
-        path.push_back(*it);
-
-        ptr = it->pid_;
+        for (auto c:closed_list_){
+            if(c.id_ == ptr){
+                path.push_back(c);
+                ptr = c.pid_;
+                break;
+            }
+        }
     }
 
     return path;

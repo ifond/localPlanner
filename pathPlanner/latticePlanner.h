@@ -14,8 +14,7 @@
 #include "costFunctions.h"
 #include <typeinfo>
 
-#define PI 3.1415926
-
+#include "../config/parameters.h"
 
 
 
@@ -129,10 +128,9 @@ public:
     */
     int calIndex(Node p);
     bool nodeIsInClosed(Node &p);
-    std::vector<Node>::iterator minCost();
-//    void OpenDelet(std::vector<Node>::iterator it);
+    Node minCostInOpen();
     bool NodeInOpen(Node &p, std::vector<Node>::iterator &it);
-
+    void DeleteOpenNode(Node p);
     Node determineGoal();
     std::vector<Node> pathTrace(Node & p);
 
@@ -144,20 +142,6 @@ public:
 
 };
 
-/**
- * get the minimum cost in a vector
- * @param nodeVector
- * @return
- */
-Node minCostInVector(std::vector<Node> & nodeVector);
-
-/**
- *
- * @param nodeVector
- * @param ptr
- * @return
- */
-std::vector<Node>::iterator searchInvector(std::vector<Node> & nodeVector, int ptr);
 
 
 #endif //LATTICEPLANNER_LATTICEPLANNER_H

@@ -22,6 +22,14 @@ array
 ../curves/cubicPolynomial.h
 /home/ustb/桌面/latticePlanner/curves/cubicPolynomial.h
 
+/home/ustb/桌面/latticePlanner/config/parameters.h
+iostream
+-
+vector
+-
+array
+-
+
 /home/ustb/桌面/latticePlanner/curves/cubicPolynomial.h
 array
 -
@@ -36,13 +44,23 @@ vector
 ../FrenetMath/calHeading.h
 /home/ustb/桌面/latticePlanner/FrenetMath/calHeading.h
 
+/home/ustb/桌面/latticePlanner/main.cpp
+iostream
+-
+Eigen/Dense
+-
+array
+-
+curves/cubicPolynomial.h
+/home/ustb/桌面/latticePlanner/curves/cubicPolynomial.h
+pathPlanner/latticePlanner.h
+/home/ustb/桌面/latticePlanner/pathPlanner/latticePlanner.h
+config/parameters.h
+/home/ustb/桌面/latticePlanner/config/parameters.h
+
 /home/ustb/桌面/latticePlanner/pathPlanner/costFunctions.h
 ../FrenetMath/calKappa.h
 /home/ustb/桌面/latticePlanner/FrenetMath/calKappa.h
-
-/home/ustb/桌面/latticePlanner/pathPlanner/latticePlanner.cpp
-latticePlanner.h
-/home/ustb/桌面/latticePlanner/pathPlanner/latticePlanner.h
 
 /home/ustb/桌面/latticePlanner/pathPlanner/latticePlanner.h
 vector
@@ -61,4 +79,6 @@ costFunctions.h
 /home/ustb/桌面/latticePlanner/pathPlanner/costFunctions.h
 typeinfo
 -
+../config/parameters.h
+/home/ustb/桌面/latticePlanner/config/parameters.h
 

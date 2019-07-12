@@ -5,7 +5,7 @@
 #include "calKappa.h"
 
 
-double trajectory_kappa(Node & node, Node & next_node){
+double trajectory_kappa(const Node node, const Node next_node){
 
     std::array<double, 3> start= {{node.x_, node.y_, 0.0 * PI / 180.0}};
     std::array<double, 3> end = {{next_node.x_, next_node.y_, 0.0 * PI / 180.0}};
@@ -15,8 +15,8 @@ double trajectory_kappa(Node & node, Node & next_node){
     std::vector<double> rho = *(set.begin()+1);
     std::vector<double> theta = *(set.begin()+2);
 
-    cout<<"-------------------s,rho,theta-size()-------------"<<endl;
-    cout<<s.size()<<"-"<<rho.size()<<"-"<<theta.size()<<endl;
+//    cout<<"-------------------s,rho,theta-size()-------------"<<endl;
+//    cout<<s.size()<<"-"<<rho.size()<<"-"<<theta.size()<<endl;
 
     std::vector<double> kappa_set;
     for (int i=0; i < (s.size()-2); i=i+5){
@@ -36,8 +36,8 @@ double trajectory_kappa(Node & node, Node & next_node){
         else kappa_set.push_back((k1 - k2) / k3);
     }
 
-    cout<<"--------------------kappa_size-----------"<<endl;
-    cout<<kappa_set.size()<<endl;
+//    cout<<"--------------------kappa_size-----------"<<endl;
+//    cout<<kappa_set.size()<<endl;
 
     double sum_kappa = 0.0;
     for (auto i:kappa_set){
@@ -45,8 +45,8 @@ double trajectory_kappa(Node & node, Node & next_node){
     }
     double mean_kappa = sum_kappa/kappa_set.size();
 
-    cout<<"---------------mean kappa-----------"<<endl;
-    cout<<mean_kappa<<endl;
+//    cout<<"---------------mean kappa-----------"<<endl;
+//    cout<<mean_kappa<<endl;
 
     return mean_kappa;
 

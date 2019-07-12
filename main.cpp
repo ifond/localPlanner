@@ -3,6 +3,7 @@
 #include <array>
 #include "curves/cubicPolynomial.h"
 #include "pathPlanner/latticePlanner.h"
+#include "config/parameters.h"
 
 
 using Eigen::MatrixXd;
@@ -20,19 +21,23 @@ int main() {
     std::cout << "--------------------- lattice planner ---------------------" << std::endl;
     std::cout << "----------------------search algorithm: Dijkstra-----------" << std::endl;
 
-    Node initState(0.0, 0.0, 0.0, 0, -1);
+    plannerParameter pp;
+    Node initState(pp.start_SRho[0], pp.start_SRho[1], pp.start_SRho[2], 0, -1);
     Dijkstra planner;
     std::vector<Node> closed = planner.dijkstra(initState);
-    cout<<"---------------closed_size---------------"<<endl;
-    cout<<closed.size()<<endl;
+//    cout<<"---------------closed_size---------------"<<endl;
+//    cout<<closed.size()<<endl;
     Node goal= planner.determineGoal();
     cout<<"==============goal================="<<endl;
     cout<<goal.x_<<"-"<<goal.y_<<endl;
     std::vector<Node> pathNode = planner.pathTrace(goal);
+
+    cout<<"------------path node-----------------"<<endl;
     for (auto i:pathNode){
-        std::cout << "node:" << i.x_ << "-" << i.y_ << std::endl;
+        std::cout << "node: " << i.x_ << " - " << i.y_ << std::endl;
     }
 
+    //1.875, 1.375, 1.375, 1.375, 3.875, 1.875
 
 
 //    std::vector<int> a={0,1,2};

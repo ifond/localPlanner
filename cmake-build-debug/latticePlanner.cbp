@@ -96,6 +96,12 @@
 		<Unit filename="/home/ustb/桌面/latticePlanner/FrenetMath/calKappa.h">
 			<Option target="latticePlanner"/>
 		</Unit>
+		<Unit filename="/home/ustb/桌面/latticePlanner/config/parameters.cpp">
+			<Option target="latticePlanner"/>
+		</Unit>
+		<Unit filename="/home/ustb/桌面/latticePlanner/config/parameters.h">
+			<Option target="latticePlanner"/>
+		</Unit>
 		<Unit filename="/home/ustb/桌面/latticePlanner/curves/cubicPolynomial.cpp">
 			<Option target="latticePlanner"/>
 		</Unit>
