@@ -6,9 +6,6 @@
 #include "config/parameters.h"
 
 
-using Eigen::MatrixXd;
-
-
 int main() {
 
 //    std::array<double, 3> start= {{0.0, 0.0, 0.0}};
@@ -36,14 +33,6 @@ int main() {
     for (auto i:pathNode){
         std::cout << "node: " << i.x_ << " - " << i.y_ << std::endl;
     }
-
-    //1.875, 1.375, 1.375, 1.375, 3.875, 1.875
-
-
-//    std::vector<int> a={0,1,2};
-//    cout<<a.size()<<endl;
-//    a.erase(a.begin());
-//    cout<<a.size()<<endl;
 
     return 0;
 }
