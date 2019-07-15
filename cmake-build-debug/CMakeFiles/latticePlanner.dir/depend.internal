@@ -33,6 +33,8 @@ CMakeFiles/latticePlanner.dir/main.cpp.o
  /home/ustb/桌面/latticePlanner/main.cpp
  /home/ustb/桌面/latticePlanner/pathPlanner/costFunctions.h
  /home/ustb/桌面/latticePlanner/pathPlanner/latticePlanner.h
+ /home/ustb/桌面/latticePlanner/referenceLine/cubicSpline.h
+ /home/ustb/桌面/latticePlanner/referenceLine/referenceLine.h
 CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.o
  /home/ustb/桌面/latticePlanner/FrenetMath/calHeading.h
  /home/ustb/桌面/latticePlanner/FrenetMath/calKappa.h
@@ -53,5 +55,7 @@ CMakeFiles/latticePlanner.dir/referenceLine/cubicSpline.cpp.o
  /home/ustb/桌面/latticePlanner/referenceLine/cubicSpline.cpp
  /home/ustb/桌面/latticePlanner/referenceLine/cubicSpline.h
 CMakeFiles/latticePlanner.dir/referenceLine/referenceLine.cpp.o
+ /home/ustb/桌面/latticePlanner/config/parameters.h
+ /home/ustb/桌面/latticePlanner/referenceLine/cubicSpline.h
  /home/ustb/桌面/latticePlanner/referenceLine/referenceLine.cpp
  /home/ustb/桌面/latticePlanner/referenceLine/referenceLine.h

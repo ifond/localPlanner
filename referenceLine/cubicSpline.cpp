@@ -7,17 +7,16 @@
 
 namespace cubicSpline{
 
-
-    Vec_f vec_diff(Vec_f input){
-        Vec_f output;
+    Vec_d vec_diff(Vec_d input){
+        Vec_d output;
         for(unsigned int i=1; i<input.size(); i++){
             output.push_back(input[i] - input[i-1]);
         }
         return output;
     }
 
-    Vec_f cum_sum(const Vec_f & input){
-        Vec_f output;
+    Vec_d calculate_sum(const Vec_d &input){
+        Vec_d output;
         float temp = 0;
         for(auto i:input){
             temp += i;
@@ -26,12 +25,11 @@ namespace cubicSpline{
         return output;
     }
 
-
-    Spline::Spline(Vec_f x, Vec_f y):x(x), y(y), nx(x.size()), h(vec_diff(x)), a(y){
-        Eigen::MatrixXf A = calc_A();
-        Eigen::VectorXf B = calc_B();
-        Eigen::VectorXf c_eigen = A.colPivHouseholderQr().solve(B);
-        float * c_pointer = c_eigen.data();
+    Spline::Spline(Vec_d x, Vec_d y):x(x), y(y), nx(x.size()), h(vec_diff(x)), a(y){
+        Eigen::MatrixXd A = calc_A();
+        Eigen::VectorXd B = calc_B();
+        Eigen::VectorXd c_eigen = A.colPivHouseholderQr().solve(B);
+        double * c_pointer = c_eigen.data();
         //Eigen::Map<Eigen::VectorXf>(c, c_eigen.rows(), 1) = c_eigen;
         c.assign(c_pointer, c_pointer+c_eigen.rows());
 
@@ -41,35 +39,35 @@ namespace cubicSpline{
         }
     }
 
-    float Spline::calc(float t){
+    double Spline::calc(double t){
         if(t<x.front() || t>x.back()){
             throw std::invalid_argument( "received value out of the pre-defined range" );
         }
-        int seg_id = bisect(t, 0, nx);
-        float dx = t - x[seg_id];
+        int seg_id = binarySearch(t, 0, nx);
+        double dx = t - x[seg_id];
         return a[seg_id] + b[seg_id] * dx + c[seg_id] * dx * dx + d[seg_id] * dx * dx * dx;
     }
 
-    float Spline::calc_d(float t){
+    double Spline::calc_d(double t){
         if(t<x.front() || t>x.back()){
             throw std::invalid_argument( "received value out of the pre-defined range" );
         }
-        int seg_id = bisect(t, 0, nx-1);
-        float dx = t - x[seg_id];
+        int seg_id = binarySearch(t, 0, nx - 1);
+        double dx = t - x[seg_id];
         return b[seg_id]  + 2 * c[seg_id] * dx + 3 * d[seg_id] * dx * dx;
     }
 
-    float Spline::calc_dd(float t){
+    double Spline::calc_dd(double t){
         if(t<x.front() || t>x.back()){
             throw std::invalid_argument( "received value out of the pre-defined range" );
         }
-        int seg_id = bisect(t, 0, nx);
-        float dx = t - x[seg_id];
+        int seg_id = binarySearch(t, 0, nx);
+        double dx = t - x[seg_id];
         return 2 * c[seg_id] + 6 * d[seg_id] * dx;
     }
 
-    Eigen::MatrixXf Spline::calc_A(){
-        Eigen::MatrixXf A = Eigen::MatrixXf::Zero(nx, nx);
+    Eigen::MatrixXd Spline::calc_A(){
+        Eigen::MatrixXd A = Eigen::MatrixXd::Zero(nx, nx);
         A(0, 0) = 1;
         for(int i=0; i<nx-1; i++){
             if (i != nx-2){
@@ -82,79 +80,79 @@ namespace cubicSpline{
         A(nx-1, nx-2) = 0.0;
         A(nx-1, nx-1) = 1.0;
         return A;
-    };
-    Eigen::VectorXf Spline::calc_B(){
-        Eigen::VectorXf B = Eigen::VectorXf::Zero(nx);
+    }
+
+    Eigen::VectorXd Spline::calc_B(){
+        Eigen::VectorXd B = Eigen::VectorXd::Zero(nx);
         for(int i=0; i<nx-2; i++){
             B(i+1) = 3.0*(a[i+2]-a[i+1])/h[i+1] - 3.0*(a[i+1]-a[i])/h[i];
         }
         return B;
-    };
+    }
 
-    int Spline::bisect(float t, int start, int end){
+    int Spline::binarySearch(double t, int start, int end){
         int mid = (start+end)/2;
         if (t==x[mid] || end-start<=1){
             return mid;
         }else if (t>x[mid]){
-            return bisect(t, mid, end);
+            return binarySearch(t, mid, end);
         }else{
-            return bisect(t, start, mid);
+            return binarySearch(t, start, mid);
         }
     }
 
-
-    Spline2D::Spline2D(Vec_f x, Vec_f y){
+    Spline2D::Spline2D(Vec_d x, Vec_d y){
     s = calc_s(x, y);
     sx = Spline(s, x);
     sy = Spline(s, y);
     }
 
-    Poi_f Spline2D::calc_postion(float s_t){
-        float x = sx.calc(s_t);
-        float y = sy.calc(s_t);
+    Poi_d Spline2D::calculatePosition(double s_t){
+        double x = sx.calc(s_t);
+        double y = sy.calc(s_t);
         return {{x, y}};
     }
 
-    float Spline2D::calc_curvature(float s_t){
-        float dx = sx.calc_d(s_t);
-        float ddx = sx.calc_dd(s_t);
-        float dy = sy.calc_d(s_t);
-        float ddy = sy.calc_dd(s_t);
+    double Spline2D::calculateCurvature(double s_t){
+        double dx = sx.calc_d(s_t);
+        double ddx = sx.calc_dd(s_t);
+        double dy = sy.calc_d(s_t);
+        double ddy = sy.calc_dd(s_t);
         return (ddy * dx - ddx * dy)/(dx * dx + dy * dy);
     }
 
-    float Spline2D::calc_yaw(float s_t){
-        float dx = sx.calc_d(s_t);
-        float dy = sy.calc_d(s_t);
+    double Spline2D::calculateHeading(double s_t){
+        double dx = sx.calc_d(s_t);
+        double dy = sy.calc_d(s_t);
         return std::atan2(dy, dx);
     }
 
-    Vec_f Spline2D::calc_s(Vec_f x, Vec_f y) {
-        Vec_f ds;
-        Vec_f out_s{0};
-        Vec_f dx = vec_diff(x);
-        Vec_f dy = vec_diff(y);
+    Vec_d Spline2D::calc_s(Vec_d x, Vec_d y) {
+        Vec_d ds;
+        Vec_d out_s{0};
+        Vec_d dx = vec_diff(x);
+        Vec_d dy = vec_diff(y);
 
         for (unsigned int i = 0; i < dx.size(); i++) {
             ds.push_back(std::sqrt(dx[i] * dx[i] + dy[i] * dy[i]));
         }
 
-        Vec_f cum_ds = cum_sum(ds);
+        Vec_d cum_ds = calculate_sum(ds);
         out_s.insert(out_s.end(), cum_ds.begin(), cum_ds.end());
         return out_s;
     }
 
-};
+}
 
 #ifdef BUILD_INDIVIDUAL
 int main(){
-    Vec_f x{-2.5, 0.0, 2.5, 5.0, 7.5, 3.0, -1.0};
-    Vec_f y{0.7, -6,   5,   6.5, 0.0, 5.0, -2.0};
-    Vec_f r_x;
-    Vec_f r_y;
-    Vec_f ryaw;
-    Vec_f rcurvature;
-    Vec_f rs;
+    Vec_d x{-2.5, 0.0, 2.5, 5.0, 7.5, 3.0, -1.0};
+    Vec_d y{0.7, -6,   5,   6.5, 0.0, 5.0, -2.0};
+    Vec_d r_x;
+    Vec_d r_y;
+    Vec_d ryaw;
+    Vec_d rcurvature;
+    Vec_d rs;
 
     Spline2D csp_obj(x, y);
     for(float i=0; i<csp_obj.s.back(); i+=0.1){

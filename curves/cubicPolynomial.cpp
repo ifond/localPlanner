@@ -37,7 +37,7 @@ void CubicPolynomial::computeCoefficients() {
             0.0, 1.0, 2.0 * sg, 3 * sg * sg;
 
     Vector4d TmpCoefficients = A.colPivHouseholderQr().solve(B);
-//    std::cout<<"print coefficients:"<<TmpCoefficients<<std::endl;
+//    std::cout<<"print refLine_coefficients:"<<TmpCoefficients<<std::endl;
 
     for (int i=0; i<TmpCoefficients.size();i++){
         *(coeffients_.begin()+i) = TmpCoefficients[i];
@@ -67,7 +67,7 @@ std::vector<std::vector<double >> CubicPolynomial::computeFrenetCoordinates() {
         double next_s = tmp_s + step;
         double next_rho = coeff0 + coeff1 * next_s + coeff2 * pow(next_s, 2) + coeff3 * pow(next_s, 3);
         std::array<double, 2> state1 = {{next_s, next_rho}};
-        double tmp_theta = calFrenetHeading(state0, state1);
+        double tmp_theta = cal_FrenetHeading(state0, state1);
 
         s.push_back(tmp_s);
         rho.push_back(tmp_rho);

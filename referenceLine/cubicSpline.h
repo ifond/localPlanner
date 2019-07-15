@@ -14,59 +14,73 @@
 #include <Eigen/Eigen>
 #include <stdexcept>
 
-using Vec_f=std::vector<float>;
-using Poi_f=std::array<float, 2>;
-using Vec_Poi=std::vector<Poi_f>;
+using Vec_d=std::vector<double >;
+using Poi_d=std::array<double, 2>;
+using Vec_Poi=std::vector<Poi_d>;
 
 
 namespace cubicSpline{
 
-Vec_f vec_diff(Vec_f input);
-Vec_f cum_sum(const Vec_f & input);
+/**
+ * calculate the first order difference
+ * @param input
+ * @return
+ */
+Vec_d vec_diff(Vec_d input);
+
+/**
+ * calculate the sum of a vector
+ * @param input
+ * @return
+ */
+Vec_d calculate_sum(const Vec_d &input);
+
 
 class Spline{
 public:
-    Vec_f x;
-    Vec_f y;
+    Vec_d x;
+    Vec_d y;
     int nx;
-    Vec_f h;
-    Vec_f a;
-    Vec_f b;
-    Vec_f c;
+    Vec_d h;
+    Vec_d a;
+    Vec_d b;
+    Vec_d c;
     //Eigen::VectorXf c;
-    Vec_f d;
+    Vec_d d;
 
     Spline(){};
     // d_i * (x-x_i)^3 + c_i * (x-x_i)^2 + b_i * (x-x_i) + a_i
-    Spline(Vec_f x, Vec_f y);
+    Spline(Vec_d x, Vec_d y);
 
-    float calc(float t);
+    double calc(double t);
 
-    float calc_d(float t);
+    double calc_d(double t);
 
-    float calc_dd(float t);
+    double calc_dd(double t);
 
 private:
-    Eigen::MatrixXf calc_A();
+    Eigen::MatrixXd calc_A();
 
-    Eigen::VectorXf calc_B();
+    Eigen::VectorXd calc_B();
 
-    int bisect(float t, int start, int end);
+    int binarySearch(double t, int start, int end);
 };
 
 class Spline2D{
 public:
     Spline sx;
     Spline sy;
-    Vec_f s;
+    Vec_d s;
 
-    Spline2D(Vec_f x, Vec_f y);
-    Poi_f calc_postion(float s_t);
-    float calc_curvature(float s_t);
-    float calc_yaw(float s_t);
+    Spline2D(Vec_d x, Vec_d y);
+    Poi_d calculatePosition(double s_t);
+
+    double calculateCurvature(double s_t);
+
+    double calculateHeading(double s_t);
 
 private:
-    Vec_f calc_s(Vec_f x, Vec_f y);
+    Vec_d calc_s(Vec_d x, Vec_d y);
 };
 }
 

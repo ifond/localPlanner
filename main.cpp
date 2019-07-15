@@ -3,6 +3,7 @@
 #include "curves/cubicPolynomial.h"
 #include "pathPlanner/latticePlanner.h"
 #include "config/parameters.h"
+#include "referenceLine/referenceLine.h"
 
 
 int main() {
@@ -32,6 +33,9 @@ int main() {
     for (auto i:pathNode){
         std::cout << "[" << i.x_ << "," << i.y_ <<"]"<< std::endl;
     }
+
+    std::vector<std::vector<Vec_d > > coefficients = referenceLine::refLine_coefficients();
+    cout<<"coefficients:"<<coefficients[10][1][0]<<endl;
 
     return 0;
 }

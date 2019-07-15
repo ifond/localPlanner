@@ -5,11 +5,6 @@
 #ifndef LATTICEPLANNER_CALHEADING_H
 #define LATTICEPLANNER_CALHEADING_H
 
-#include <vector>
-#include <array>
-#include <math.h>
-
-
-double calFrenetHeading(std::array<double, 2> state0, std::array<double, 2> state1);
+double cal_FrenetHeading(std::array<double, 2> pose0, std::array<double, 2> pose1);
 
 #endif //LATTICEPLANNER_CALHEADING_H

@@ -46,6 +46,12 @@ namespace latticeParameter{
         std::vector<int> last_column_id = {lateral_num * (longitudinal_num - 1) + 1, lateral_num * longitudinal_num};  // 最后一列的编号
     };
 
+    struct referenceLineWayPoints{
+        std::vector<double > x={{-2.5, 0.0, 2.5, 5.0, 7.5, 3.0, -1.0}};
+        std::vector<double > y={{0.7, -6,   5,   6.5, 0.0, 5.0, -2.0}};
+    };
+
+
 } //namespace latticeParameter
 
 #endif //LATTICEPLANNER_PARAMETERS_H

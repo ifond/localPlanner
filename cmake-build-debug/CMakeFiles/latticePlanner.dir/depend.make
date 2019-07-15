@@ -32,6 +32,8 @@ CMakeFiles/latticePlanner.dir/main.cpp.o: ../curves/cubicPolynomial.h
 CMakeFiles/latticePlanner.dir/main.cpp.o: ../main.cpp
 CMakeFiles/latticePlanner.dir/main.cpp.o: ../pathPlanner/costFunctions.h
 CMakeFiles/latticePlanner.dir/main.cpp.o: ../pathPlanner/latticePlanner.h
+CMakeFiles/latticePlanner.dir/main.cpp.o: ../referenceLine/cubicSpline.h
+CMakeFiles/latticePlanner.dir/main.cpp.o: ../referenceLine/referenceLine.h
 
 CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.o: ../FrenetMath/calHeading.h
 CMakeFiles/latticePlanner.dir/pathPlanner/costFunctions.cpp.o: ../FrenetMath/calKappa.h
@@ -52,6 +54,8 @@ CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.o: ../pathPlanner/l
 CMakeFiles/latticePlanner.dir/referenceLine/cubicSpline.cpp.o: ../referenceLine/cubicSpline.cpp
 CMakeFiles/latticePlanner.dir/referenceLine/cubicSpline.cpp.o: ../referenceLine/cubicSpline.h
 
+CMakeFiles/latticePlanner.dir/referenceLine/referenceLine.cpp.o: ../config/parameters.h
+CMakeFiles/latticePlanner.dir/referenceLine/referenceLine.cpp.o: ../referenceLine/cubicSpline.h
 CMakeFiles/latticePlanner.dir/referenceLine/referenceLine.cpp.o: ../referenceLine/referenceLine.cpp
 CMakeFiles/latticePlanner.dir/referenceLine/referenceLine.cpp.o: ../referenceLine/referenceLine.h
 
