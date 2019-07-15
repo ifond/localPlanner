@@ -4,7 +4,7 @@
 
 #include "costFunctions.h"
 
-costParameter cp;
+latticeParameter::costParameter cp;
 
 
 double kappa_cost(const Node node, const Node & next_node) {

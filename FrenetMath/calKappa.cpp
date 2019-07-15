@@ -3,7 +3,7 @@
 //
 
 #include "calKappa.h"
-
+#include <array>
 
 double trajectory_kappa(const Node node, const Node next_node){
 

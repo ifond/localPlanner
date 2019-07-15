@@ -7,8 +7,6 @@
 
 #include "../FrenetMath/calKappa.h"
 
-
-
 class Node;
 /**
  * calculate the average curvature of a motion primitive

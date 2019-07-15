@@ -4,6 +4,9 @@
 
 #include <iostream>
 #include "cubicPolynomial.h"
+#include <string>
+#include <Eigen/Dense>
+#include <math.h>
 
 using namespace Eigen;
 

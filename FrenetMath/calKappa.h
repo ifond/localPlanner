@@ -6,8 +6,6 @@
 #ifndef LATTICEPLANNER_CALKAPPA_H
 #define LATTICEPLANNER_CALKAPPA_H
 
-
-#include <array>
 #include "../pathPlanner/latticePlanner.h"
 #include "../curves/cubicPolynomial.h"
 

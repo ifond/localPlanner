@@ -366,6 +366,33 @@ pathPlanner/latticePlanner.cpp.s:
 	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/pathPlanner/latticePlanner.cpp.s
 .PHONY : pathPlanner/latticePlanner.cpp.s
 
+referenceLine/cubicSpline.o: referenceLine/cubicSpline.cpp.o
+
+.PHONY : referenceLine/cubicSpline.o
+
+# target to build an object file
+referenceLine/cubicSpline.cpp.o:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/referenceLine/cubicSpline.cpp.o
+.PHONY : referenceLine/cubicSpline.cpp.o
+
+referenceLine/cubicSpline.i: referenceLine/cubicSpline.cpp.i
+
+.PHONY : referenceLine/cubicSpline.i
+
+# target to preprocess a source file
+referenceLine/cubicSpline.cpp.i:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/referenceLine/cubicSpline.cpp.i
+.PHONY : referenceLine/cubicSpline.cpp.i
+
+referenceLine/cubicSpline.s: referenceLine/cubicSpline.cpp.s
+
+.PHONY : referenceLine/cubicSpline.s
+
+# target to generate assembly for a file
+referenceLine/cubicSpline.cpp.s:
+	$(MAKE) -f CMakeFiles/latticePlanner.dir/build.make CMakeFiles/latticePlanner.dir/referenceLine/cubicSpline.cpp.s
+.PHONY : referenceLine/cubicSpline.cpp.s
+
 referenceLine/referenceLine.o: referenceLine/referenceLine.cpp.o
 
 .PHONY : referenceLine/referenceLine.o
@@ -429,6 +456,9 @@ help:
 	@echo "... pathPlanner/latticePlanner.o"
 	@echo "... pathPlanner/latticePlanner.i"
 	@echo "... pathPlanner/latticePlanner.s"
+	@echo "... referenceLine/cubicSpline.o"
+	@echo "... referenceLine/cubicSpline.i"
+	@echo "... referenceLine/cubicSpline.s"
 	@echo "... referenceLine/referenceLine.o"
 	@echo "... referenceLine/referenceLine.i"
 	@echo "... referenceLine/referenceLine.s"

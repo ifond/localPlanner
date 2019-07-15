@@ -7,9 +7,6 @@
 
 
 #include <array>
-#include <string>
-#include <Eigen/Dense>
-#include <math.h>
 #include <vector>
 #include "../FrenetMath/calHeading.h"
 

@@ -4,7 +4,15 @@
 
 #include "latticePlanner.h"
 
-plannerParameter parameter;
+#include <queue>
+#include <iostream>
+#include <iomanip>
+#include <array>
+#include <algorithm>
+#include <typeinfo>
+
+
+latticeParameter::plannerParameter planer_parameter;
 
 
 Node::Node(double x, double y, double cost, int id, int pid){
@@ -69,8 +77,8 @@ bool compare_cost::operator()(Node & p1, Node & p2){
 std::vector<Node> GetMotion(){
 
     std::vector<Node> motion;
-    for(int i=0; i<parameter.lateral_num; i++){
-        Node tmp_motion(parameter.longitudinal_step, (i - parameter.SampleNumberOnOneSide) * parameter.lateral_step+ parameter.refLineRho, 0.0, 0, 0);
+    for(int i=0; i<planer_parameter.lateral_num; i++){
+        Node tmp_motion(planer_parameter.longitudinal_step, (i - planer_parameter.SampleNumberOnOneSide) * planer_parameter.lateral_step+ planer_parameter.refLineRho, 0.0, 0, 0);
         motion.push_back(tmp_motion);
     }
 
@@ -84,7 +92,7 @@ std::vector<Node> GetMotion(){
 
 int Dijkstra::calIndex(Node p) {
 
-    double id = (p.y_ - (parameter.refLineRho- parameter.SampleNumberOnOneSide * parameter.lateral_step)) / parameter.lateral_step + ((p.x_ - start_.x_) /parameter.longitudinal_step - 1.0) *parameter.lateral_num + 1.0;
+    double id = (p.y_ - (planer_parameter.refLineRho- planer_parameter.SampleNumberOnOneSide * planer_parameter.lateral_step)) / planer_parameter.lateral_step + ((p.x_ - start_.x_) /planer_parameter.longitudinal_step - 1.0) *planer_parameter.lateral_num + 1.0;
     return int(id);
 }
 
@@ -153,11 +161,11 @@ std::vector<Node> Dijkstra::dijkstra(Node start_in){
             new_point.y_ = i.y_;
             new_point.id_ = calIndex(new_point);
             new_point.pid_ = current.id_;
-            new_point.cost_ = total_cost(current, new_point, parameter.refLineRho, parameter.obs);
+            new_point.cost_ = total_cost(current, new_point, planer_parameter.refLineRho, planer_parameter.obs);
 
 //            cout<<"------------------newpoint.x--------"<<endl;
 //            cout<<new_point.x_<<endl;
-            if (new_point.x_ > parameter.s_end) break;
+            if (new_point.x_ > planer_parameter.s_end) break;
 
             auto it = open_list_.begin();
             bool flag=nodeIsInClosed(new_point);
@@ -179,7 +187,7 @@ std::vector<Node> Dijkstra::dijkstra(Node start_in){
 Node Dijkstra::determineGoal() {
     std::vector<Node> tmpVector;
 
-    for (int i=*(parameter.last_column_id.cbegin()); i!=*(parameter.last_column_id.cbegin()+1) + 1; i++) {
+    for (int i=*(planer_parameter.last_column_id.cbegin()); i!=*(planer_parameter.last_column_id.cbegin()+1) + 1; i++) {
         for (auto j:closed_list_){
             if (i == j.id_) {
                 tmpVector.push_back(j);

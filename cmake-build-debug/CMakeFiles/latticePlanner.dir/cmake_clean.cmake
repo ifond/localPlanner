@@ -9,6 +9,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/latticePlanner.dir/FrenetMath/cartesianToFrenet.cpp.o"
   "CMakeFiles/latticePlanner.dir/FrenetMath/frenetToCartesian.cpp.o"
   "CMakeFiles/latticePlanner.dir/referenceLine/referenceLine.cpp.o"
+  "CMakeFiles/latticePlanner.dir/referenceLine/cubicSpline.cpp.o"
   "latticePlanner.pdb"
   "latticePlanner"
 )

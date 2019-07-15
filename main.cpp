@@ -17,7 +17,7 @@ int main() {
     std::cout << "--------------------- lattice planner ---------------------" << std::endl;
     std::cout << "----------------------search algorithm: Dijkstra-----------" << std::endl;
 
-    plannerParameter pp;
+    latticeParameter::plannerParameter pp;
     Node initState(pp.start_SRho[0], pp.start_SRho[1], pp.start_SRho[2], 0, -1);
     Dijkstra planner;
     std::vector<Node> closed = planner.dijkstra(initState);

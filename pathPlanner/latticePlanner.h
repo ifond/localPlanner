@@ -5,17 +5,9 @@
 #ifndef LATTICEPLANNER_LATTICEPLANNER_H
 #define LATTICEPLANNER_LATTICEPLANNER_H
 
-#include <vector>
-#include <queue>
-#include <iostream>
-#include <iomanip>
-#include <array>
-#include <algorithm>
-#include "costFunctions.h"
-#include <typeinfo>
-
 #include "../config/parameters.h"
-
+#include "costFunctions.h"
+#include <vector>
 
 
 /**
