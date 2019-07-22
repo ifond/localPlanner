@@ -1,3 +1,0 @@
-/home/ustb/桌面/latticePlanner/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/ustb/桌面/latticePlanner/cmake-build-debug/CMakeFiles/latticePlanner.dir
-/home/ustb/桌面/latticePlanner/cmake-build-debug/CMakeFiles/edit_cache.dir
