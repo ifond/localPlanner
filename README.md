@@ -1,5 +1,6 @@
 # latticePlanner
 author:ming.ustb@outlook.com
+git@github.com:yangmingustb/latticePlanner.git
 
 ## Requirements
    eigen3
@@ -15,5 +16,7 @@ author:ming.ustb@outlook.com
 4 Dijkstra's algorithm
 
 5 cubic polynomials in the frenet coordinate system
+
+#	![avatar](https://github.com/yangmingustb/latticePlanner/graph/lattice1.png)
 
 

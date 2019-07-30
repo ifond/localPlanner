@@ -1,0 +1,10 @@
+<launch>
+
+
+    <!-- lattice planner -->
+    <node pkg="lattice_planner" type="lattice_planner" name="lattice_planner" />
+
+    <!-- 运行rviz -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find lattice_planner)/launch/config.rviz"/>
+
+</launch>
