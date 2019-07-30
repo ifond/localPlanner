@@ -17,6 +17,14 @@ git@github.com:yangmingustb/latticePlanner.git
 
 5 cubic polynomials in the frenet coordinate system
 
-#	![avatar](https://github.com/yangmingustb/latticePlanner/graph/lattice1.png)
+#	![avatar](https://github.com/yangmingustb/latticePlanner/blob/master/graph/lattice1.png)
+
+# include:
+
+lattice_planner, 
+
+Hybrid A* planner,
+
+rviz path visualization
 
 
