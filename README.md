@@ -1,9 +1,13 @@
-# latticePlanner
+#localPlanner
 author:ming.ustb@outlook.com
-git@github.com:yangmingustb/latticePlanner.git
+
+git@github.com:yangmingustb/localPlanner.git
 
 ## Requirements
    eigen3
+   ros
+   ompl
+   moveit
 
 
 ## algorithms
@@ -19,12 +23,12 @@ git@github.com:yangmingustb/latticePlanner.git
 
 #	![avatar](https://github.com/yangmingustb/latticePlanner/blob/master/graph/lattice1.png)
 
-# include:
+## include_planner:
 
-lattice_planner, 
+-1. lattice_planner, 
 
-Hybrid A* planner,
+-2. Hybrid A* planner,
 
-rviz path visualization
+-rviz path visualization
 
 

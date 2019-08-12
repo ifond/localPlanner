@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
 	// std::cout<<"----x_lattice size----"<<std::endl;
 	// std::cout<<x_lattice.size()<<" "<<y_lattice.size()<<std::endl;
 
-	// int count=0;
+	// 节点休眠时间1Hz;
 	ros::Rate loop_rate(1);
 	while (ros::ok())
 	{

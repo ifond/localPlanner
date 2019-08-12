@@ -15,6 +15,23 @@
 
 namespace lattice_planner{
 
+
+struct frenet_pose
+{
+    /* data */
+    double s;
+    double rho;
+    double theta;
+};
+
+struct cartesian_pose
+{
+    /* data */
+    double x;
+    double y;
+    double theta;
+};
+
 /**
 * @brief Node class
 * @param x_: X value, when we make planning in the frenet coordinate system,
@@ -152,6 +169,10 @@ void generate_lattice(std::vector<double> &x_lattice,
 
 coefficients_type pathPlanner(std::vector<double> &x_vec, 
                             std::vector<double> &y_vec);
+
+
+
+
 
 }   // namespace lattice_planner
 
