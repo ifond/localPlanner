@@ -16,12 +16,12 @@
 #include <iostream>
 #include <vector>
 #include <array>
-#include "../referenceLine/cubicSpline.h"
+#include "cubicSpline.h"
 
 
 typedef std::vector<std::vector<double > > coefficients_type;
 
-namespace lattice_planner{
+namespace reference_line{
 
     /**
      * calculate the efficients of reference line
@@ -56,15 +56,7 @@ namespace lattice_planner{
      * @param coefficients
      * @return
      */
-    std::array<double, 3> poses_of_reference_line(double s, coefficients_type & coefficients);
 
-    /**
-     * algorithm:binary search
-     * @param coefficients
-     * @param s
-     * @return
-     */
-    int binary_search(coefficients_type & coefficients, double s);
 
 } //namespace referenceLine
 

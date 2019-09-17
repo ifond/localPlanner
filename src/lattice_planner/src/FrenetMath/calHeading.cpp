@@ -5,13 +5,19 @@
 #include <math.h>
 #include "calHeading.h"
 
-double cal_FrenetHeading(std::array<double, 2> pose0, std::array<double, 2> pose1){
-    double s0 = *(pose0.cbegin());
-    double rho0 = *(pose0.cbegin()+1);
-    double s1 = *(pose1.cbegin());
-    double rho1 = *(pose1.cbegin()+1);
+namespace lattice_planner{
 
-    double theta = atan2((rho1-rho0),(s1-s0));
-    return theta;
+double cal_FrenetHeading(lattice_planner::pose_frenet pose0, lattice_planner::pose_frenet pose1){
+double s0 = pose0.s;
+double rho0 = pose0.rho;
+double s1 = pose1.s;
+double rho1 = pose1.rho;
+
+double theta = atan2((rho1-rho0),(s1-s0));
+return theta;
 
 }
+
+}
+
+

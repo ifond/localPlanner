@@ -3,3 +3,10 @@
 //
 
 #include "cartesianToFrenet.h"
+
+
+namespace lattice_planner{
+
+
+    
+}

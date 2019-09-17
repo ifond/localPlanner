@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(lattice_planner)
+project(reference_line)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
@@ -7,18 +7,10 @@ add_compile_options(-std=c++11)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-
-
 find_package(catkin REQUIRED COMPONENTS
-	pcl_ros
   roscpp
   rospy
   std_msgs
-# PCL REQUIRED
-# PCL 1.7 REQUIRED
-# pcl_conversions
-
-
 )
 
 ## System dependencies are found with CMake's conventions
@@ -110,10 +102,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-
 catkin_package(
- INCLUDE_DIRS include
-#  LIBRARIES lattice_planner
+INCLUDE_DIRS include
+#  LIBRARIES reference_line
 #  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
@@ -126,17 +117,13 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
 include
-${catkin_INCLUDE_DIRS}
-src/curves 
-src/pathPlanner
-src/FrenetMath
-src/config
-${PCL_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
+
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/lattice_planner.cpp
+#   src/${PROJECT_NAME}/reference_line.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -147,28 +134,13 @@ ${PCL_INCLUDE_DIRS}
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(
-lattice_planner 
-src/lattice_planner_node.cpp 
-src/curves/cubicPolynomial.cpp 
+add_executable(reference_arclength_node 
+src/reference_arclength_node.cpp
 
-src/pathPlanner/latticePlanner.cpp 
+src/cubicSpline.cpp 
+src/referenceLine.cpp
 
-src/pathPlanner/costFunctions.cpp 
- 
-src/FrenetMath/calHeading.cpp 
- 
-src/FrenetMath/calKappa.cpp 
-
-src/config/parameters.cpp 
-
-src/FrenetMath/cartesianToFrenet.cpp 
- 
-src/FrenetMath/frenetToCartesian.cpp 
- 
 )
-
-
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -178,13 +150,14 @@ src/FrenetMath/frenetToCartesian.cpp
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(lattice_planner ${PROJECT_NAME}_generate_messages_cpp)
+# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(lattice_planner   ${catkin_LIBRARIES} ${PCL_LIBRARY_DIRS})
+target_link_libraries(reference_arclength_node
+  ${catkin_LIBRARIES}
+ )
 
-link_directories(${PCL_LIBRARY_DIRS})
-
+add_dependencies(reference_arclength_node ${PROJECT_NAME}_generate_messages_cpp )
 #############
 ## Install ##
 #############
@@ -225,13 +198,10 @@ link_directories(${PCL_LIBRARY_DIRS})
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_lattice_planner.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_reference_line.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-
-
-

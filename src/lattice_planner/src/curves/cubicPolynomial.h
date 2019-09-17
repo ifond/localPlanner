@@ -9,16 +9,27 @@
 #include <array>
 #include <vector>
 #include "../FrenetMath/calHeading.h"
+#include "../config/parameters.h"
 
-// using namespace std;
+
+namespace lattice_planner{
+
+/**
+ * a struct:store cubic polynomial's coefficients
+ */
+struct cubic_coeffi
+{
+    /* data */
+    double c0,c1,c2,c3;
+};
 
 
 class CubicPolynomial {
 public:
     CubicPolynomial() = default;
     virtual ~CubicPolynomial() = default;
-    CubicPolynomial(const std::array<double, 3> & start,
-                    const std::array<double, 3> & end);
+    CubicPolynomial(const lattice_planner::pose_frenet & start,
+                    const lattice_planner::pose_frenet & end);
 
 
     /**
@@ -28,21 +39,19 @@ public:
      * f(x = param) = x1
      */
 
-    std::vector<std::vector<double >> computeFrenetCoordinates();
+    std::vector<lattice_planner::pose_frenet> computeFrenetCoordinates();
 
+    void print_coefficients();
 
 private:
-    std::array<double, 4> coeffients_ = {{0.0, 0.0, 0.0, 0.0}};
-    std::array<double, 3> start_condition_ = {{0.0, 0.0, 0.0}};
-    std::array<double, 3> end_condition_ = {{0.0, 0.0, 0.0}};
-    std::vector<double> s;
-    std::vector<double> rho;
-    std::vector<double> theta;
+    cubic_coeffi coeffients_;
+    lattice_planner::pose_frenet start_condition_;
+    lattice_planner::pose_frenet end_condition_;
 
     void computeCoefficients();
 
 };
 
-
+}
 
 #endif //LATTICEPLANNER_CUBICPOLYNOMIAL_H

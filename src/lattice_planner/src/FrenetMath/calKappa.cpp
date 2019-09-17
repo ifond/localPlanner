@@ -11,42 +11,47 @@ namespace lattice_planner{
 
 double trajectory_kappa(const Node node, 
                         const Node next_node, 
-                        std::vector<std::vector<double > > & coefficients){
+                        std::vector<arc_length_parameter> & coefficients){
 
-    std::array<double, 3> start= {{node.x_, node.y_, 0.0 * M_PI / 180.0}};
-    std::array<double, 3> end = {{next_node.x_, next_node.y_, 0.0 * M_PI / 180.0}};
+    pose_frenet start;
+    start.s = node.x_;
+    start.rho = node.y_;
+    start.heading = 0.0 * M_PI / 180.0;
+
+    pose_frenet end;
+    end.s = next_node.x_;
+    end.rho = next_node.y_;
+    end.heading = 0.0 * M_PI / 180.0;
+    
     CubicPolynomial cubic(start, end);
-    std::vector<std::vector<double >> set = cubic.computeFrenetCoordinates();
-    std::vector<double> s = *(set.begin());
-    std::vector<double> rho = *(set.begin()+1);
-    std::vector<double> theta = *(set.begin()+2);
+    std::vector<pose_frenet> frenet_path = cubic.computeFrenetCoordinates();
 
-//    cout<<"-------------------s,rho,theta-size()-------------"<<endl;
-//    cout<<s.size()<<"-"<<rho.size()<<"-"<<theta.size()<<endl;
+    // cout<<"-------------------s,rho,theta-size()-------------"<<endl;
+    // cout<<s.size()<<"-"<<rho.size()<<"-"<<theta.size()<<endl;
 
     std::vector<double> kappa_set;
-    for (int i=0; i < (s.size()-2); i=i+5){
+    for (int i=0; i < (frenet_path.size()-2); i=i+5){
         double x0, x1, x2, y0, y1, y2, k1, k2, k3, s0, rho0, s1, rho1, s2, rho2, theta_rho0, theta_rho1, theta_rho2;
-        std::vector<double> cartesian_pose;
-        s0 = s[i];
-        rho0 = rho[i];
-        theta_rho0 = theta[i];
-        s1=s[i + 1];
-        rho1=rho[i + 1];
-        theta_rho1 = theta[i+1];
-        s2=s[i + 2];
-        rho2=rho[i + 2];
-        theta_rho2 = theta[i+2];
+        geometry_msgs::PoseStamped cartesian_pose;
+        s0 = frenet_path[i].s;
+        rho0 = frenet_path[i].rho;
+        theta_rho0 = frenet_path[i].heading;
+        s1=frenet_path[i + 1].s;
+        rho1=frenet_path[i + 1].rho;
+        theta_rho1 = frenet_path[i+1].heading;
+        s2=frenet_path[i + 2].s;
+        rho2=frenet_path[i + 2].rho;
+        theta_rho2 = frenet_path[i+2].heading;
 
         cartesian_pose=frenet_to_cartesian(s0, rho0, theta_rho0, coefficients);
-        x0 = cartesian_pose[0];
-        y0 = cartesian_pose[1];
+        x0 = cartesian_pose.pose.position.x;
+        y0 = cartesian_pose.pose.position.y;
         cartesian_pose=frenet_to_cartesian(s1, rho1, theta_rho1, coefficients);
-        x1 = cartesian_pose[0];
-        y1 = cartesian_pose[1];
+        x1 = cartesian_pose.pose.position.x;
+        y1 = cartesian_pose.pose.position.y;
         cartesian_pose=frenet_to_cartesian(s2, rho2, theta_rho2, coefficients);
-        x2 = cartesian_pose[0];
-        y2 = cartesian_pose[1];
+        x2 = cartesian_pose.pose.position.x;
+        y2 = cartesian_pose.pose.position.y;
 
         k1 = (x1 - x0) * (y2 - 2 * y1 + y0);
         k2 = (y1 - y0) * (x2 - 2 * x1 + x0);

@@ -3,18 +3,18 @@
 //
 
 #include "latticePlanner.h"
-
 #include <queue>
 #include <iostream>
 #include <iomanip>
 #include <array>
 #include <algorithm>
 #include <typeinfo>
+#include <sstream>
+#include <fstream>
+#include <stdlib.h>
 
 
 namespace lattice_planner{
-
-parameters param;
 
 Node::Node(double x, double y, double cost, int id, int pid){
     this->x_ = x;
@@ -75,11 +75,75 @@ bool compare_cost::operator()(Node & p1, Node & p2){
 };
 
 
-std::vector<Node> GetMotion(){
+Dijkstra::Dijkstra(std::vector<arc_length_parameter> & coefficients, Node & start)
+{
+    std::cout<<"=======lattice planner is initialing==========="<<std::endl;
+    // ros::param::get("/lattice_planner/lateral_num", lateral_num);
+    // ros::param::get("/lattice_planner/longitudinal_step", longitudinal_step);
+    // ros::param::get("/lattice_planner/lateral_step", lateral_step);
+    // ros::param::get("/lattice_planner/lane_width", lane_width);
+    // ros::param::get("/lattice_planner/longitudinal_num", longitudinal_num);
+    // ros::param::get("/lattice_planner/s0", s0);
+    // ros::param::get("/lattice_planner/lane_width", lane_width);
+    // ros::param::get("/lattice_planner/obstacleHeading", obstacleHeading);
+
+    r_circle = 1.0;
+    d_circle = 2.0;
+    obstacle_inflation = 1.5;
+    alpha1 = 100;
+    alpha2 = 1;
+    alpha3 = 10;
+    alpha4 = 0.0;
+
+    longitudinal_num = 5;
+    lateral_num = 9;  // 横向采样个数
+    longitudinal_step = 20.0;
+    lateral_step = 0.5;
+    lane_width = 3.75;
+    SampleNumberOnOneSide = lateral_num / 2;    // sampling number on one side of the reference line
+    s0 = 0.0;
+    s_max = longitudinal_num*longitudinal_step;
+    s_end = s0 + s_max;
+    refLineRho = lane_width * 0.5;
+    obstacleHeading=0;
+
+
+    // the frenet coordinates of obstacles
+    
+    obs1.s = 20.0;
+    obs1.rho = refLineRho - 1;
+    obs1.heading = obstacleHeading;
+
+    obs2.s = 40.0;
+    obs2.rho = refLineRho + 1;
+    obs2.heading = obstacleHeading;
+    obs3.s = 70.0;
+    obs3.rho = refLineRho - 1;
+    obs3.heading = obstacleHeading;
+    obstacles.push_back(obs1);
+    obstacles.push_back(obs2);
+    obstacles.push_back(obs3);
+
+    // 最后一列的编号
+    last_column_id = {lateral_num * (longitudinal_num - 1) + 1, lateral_num * longitudinal_num};  
+
+    coefficients_=coefficients;
+    start_=start;
+
+    start_SRho.s = start.x_;
+    start_SRho.rho = start.y_;
+    start_SRho.heading = obstacleHeading;
+
+    std::cout<<"----lattice planner has been initialized---"<<std::endl;
+
+}
+
+
+std::vector<Node> Dijkstra::GetNextMotion(){
 
     std::vector<Node> motion;
-    for(int i=0; i<param.lateral_num; i++){
-        Node tmp_motion(param.longitudinal_step, (i - param.SampleNumberOnOneSide) * param.lateral_step+ param.refLineRho, 0.0, 0, 0);
+    for(int i=0; i<lateral_num; i++){
+        Node tmp_motion(longitudinal_step, (i - SampleNumberOnOneSide) * lateral_step+ refLineRho, 0.0, 0, 0);
         motion.push_back(tmp_motion);
     }
 
@@ -93,7 +157,7 @@ std::vector<Node> GetMotion(){
 
 int Dijkstra::calIndex(Node p) {
 
-    double id = (p.y_ - (param.refLineRho- param.SampleNumberOnOneSide * param.lateral_step)) / param.lateral_step + ((p.x_ - start_.x_) /param.longitudinal_step - 1.0) *param.lateral_num + 1.0;
+    double id = (p.y_ - (refLineRho- SampleNumberOnOneSide * lateral_step)) / lateral_step + ((p.x_ - start_.x_) /longitudinal_step - 1.0) *lateral_num + 1.0;
     return int(id);
 }
 
@@ -106,7 +170,6 @@ bool Dijkstra::nodeIsInClosed(Node &p){
     return false;
 }
 
-
 Node Dijkstra::minCostInOpen() {
     auto p = *open_list_.begin();
     for (auto o:open_list_){
@@ -115,7 +178,6 @@ Node Dijkstra::minCostInOpen() {
     }
     return p;
 }
-
 
 bool Dijkstra::NodeInOpen(Node &p, std::vector<Node>::iterator &it) {
 
@@ -137,36 +199,33 @@ void Dijkstra::DeleteOpenNode(Node p) {
     }
 }
 
-std::vector<Node> Dijkstra::dijkstra(){
-    // start_ = start_in;
-//    cout<<typeid(start_.x_).name()<<endl;
-//    cout<<"start:"<<start_.x_ << " " << start_.y_<<endl;
-    // Get possible motions, child nodes
-    std::vector<Node> motion = GetMotion();
-//    cout<<"motion_size:"<<motion.size()<<endl;
+void Dijkstra::makePlan(){
+
+    std::vector<Node> motion = GetNextMotion();
+    // std::cout<<"motion_size:"<<motion.size()<<std::endl;
     open_list_.push_back(start_);
-//    cout<<open_list_.size()<<endl;
+    // cout<<open_list_.size()<<endl;
 
     // Main loop
     while(!open_list_.empty()){
         Node current = minCostInOpen();
         // std::cout<<"-------------current id-------------"<<std::endl;
         // std::cout<<current.id_<<std::endl;
-        // std::cout<<"open_size:"<<open_list_.size()<<endl;
+        // std::cout<<"open_size:"<<open_list_.size()<<std::endl;
         closed_list_.push_back(current);
         for(auto i:motion){
             Node new_point;
-//            cout<<"current "<<current.x_<<endl;
-//            cout<<"current address "<<&(current)<<endl;
+            //            cout<<"current "<<current.x_<<endl;
+            //            cout<<"current address "<<&(current)<<endl;
             new_point.x_ = current.x_ + i.x_;
             new_point.y_ = i.y_;
             new_point.id_ = calIndex(new_point);
             new_point.pid_ = current.id_;
-            new_point.cost_ = total_cost(current, new_point, param.refLineRho, param.obs, coefficients_);
+            new_point.cost_ = total_cost(current, new_point, refLineRho, obstacles, coefficients_);
 
-//            cout<<"------------------newpoint.x--------"<<endl;
-//            cout<<new_point.x_<<endl;
-            if (new_point.x_ > param.s_end) break;
+            //            cout<<"------------------newpoint.x--------"<<endl;
+            //            cout<<new_point.x_<<endl;
+            if (new_point.x_ > s_end) break;
 
             auto it = open_list_.begin();
             bool flag=nodeIsInClosed(new_point);
@@ -181,14 +240,13 @@ std::vector<Node> Dijkstra::dijkstra(){
         }
         DeleteOpenNode(current);
     }
-    return closed_list_;
+
 }
 
-
-Node Dijkstra::determineGoal() {
+void Dijkstra::determineGoal() {
     std::vector<Node> tmpVector;
-
-    for (int i=*(param.last_column_id.cbegin()); i!=*(param.last_column_id.cbegin()+1) + 1; i++) {
+ 
+    for (int i=*(last_column_id.cbegin()); i!=*(last_column_id.cbegin()+1) + 1; i++) {
         for (auto j:closed_list_){
             if (i == j.id_) {
                 tmpVector.push_back(j);
@@ -197,20 +255,20 @@ Node Dijkstra::determineGoal() {
         }
     }
 
-    Node goal = *tmpVector.begin();
+    goal_ = *tmpVector.begin();
     for (auto t:tmpVector){
-        if(goal.cost_ > t.cost_)
-            goal = t;
+        if(goal_.cost_ > t.cost_)
+            goal_ = t;
     }
-    return goal;
+
 }
 
 
-void Dijkstra::pathTrace(Node & p, std::stack<Node> &path) {
+void Dijkstra::pathTrace(std::stack<Node> &path) {
     
-    path.push(p);
+    path.push(goal_);
 
-    int ptr = p.pid_;
+    int ptr = goal_.pid_;
     while (ptr != -1) {
         for (auto c:closed_list_){
             if(c.id_ == ptr){
@@ -223,80 +281,123 @@ void Dijkstra::pathTrace(Node & p, std::stack<Node> &path) {
 
 }
 
+std::vector<geometry_msgs::PoseStamped> Dijkstra::generatePath(){
+    std::vector<geometry_msgs::PoseStamped> optimal_path;
 
-void samplingNodes(std::vector<std::vector<std::array<double,3> > > & Nodes){
-    
-	for (int i=0; i<param.longitudinal_num; i++){
-		double x_i = (i + 1) * param.longitudinal_step + param.start_SRho[0];
+    makePlan();
 
-        std::vector<std::array<double, 3> > lateral_nodes;
-		for (int j=0; j< param.lateral_num; j++){
-			double y_i = (j - param.SampleNumberOnOneSide) * param.lateral_step+ param.refLineRho;
-			std::array<double, 3> tmp_node = {{x_i, y_i, 0.0 * M_PI / 180.0}};
-            lateral_nodes.push_back(tmp_node);
+    determineGoal();
+    std::cout<<"==============goal================="<<std::endl;
+    std::cout<<"["<<goal_.x_<<","<<goal_.y_<<"]"<<std::endl;
+	std::stack<lattice_planner::Node> pathNode;
+    pathTrace(pathNode);
 
-            // std::cout<<"lateral size()"<< lateral_nodes.size()<<std::endl;
+	// PoseCartesian cartesian_pose;
+    geometry_msgs::PoseStamped cartesian_pose;
 
-        }
-        Nodes.push_back(lateral_nodes);
+	while (!pathNode.empty()){
+		
+		lattice_planner::pose_frenet start;
+        start.s = pathNode.top().x_;
+        start.rho = pathNode.top().y_;
+        start.heading = 0.0 * M_PI / 180.0;
         
-    }
-    // std::cout<<"-------------sampling nodes--------"<<std::endl;
-    // std::cout<<Nodes.size()<<" "<<Nodes[0].size()<<std::endl;
-    // for(auto i:Nodes){
-        // for(auto j:i){
-            // std::cout<<"["<<j[0]<<","<<j[1]<<"]"<<std::endl;
-        // }
-    // }
+		pathNode.pop();
+		if (pathNode.empty()) break;
+   		lattice_planner::pose_frenet end;
+        end.s = pathNode.top().x_;
+        end.rho = pathNode.top().y_;
+        end.heading = 0.0 * M_PI / 180.0;
+           				
+		// std::cout<<"-----x,y-------------"<<std::endl;
+		// std::cout<<start[0]<<","<<start[1]<<std::endl;
+   		lattice_planner::CubicPolynomial cubic(start, end);
+   		std::vector<lattice_planner::pose_frenet> frenet_path=cubic.computeFrenetCoordinates();
+		
+		// std::vector<double> s_vec=*(set.begin());
+		// std::vector<double> rho_vec=*(set.begin()+1);
+		// std::vector<double> theta = *(set.begin()+2);
+
+		for(std::size_t i=0; i< frenet_path.size(); i=i+4){
+			cartesian_pose=frenet_to_cartesian(frenet_path[i].s, frenet_path[i].rho, frenet_path[i].heading, coefficients_);
+        	        
+            optimal_path.push_back(cartesian_pose);	
+		}
+	}
+
+    return optimal_path;
 }
 
-void generate_lattice(std::vector<double> &x_lattice, 
-						std::vector<double> &y_lattice, 
-						coefficients_type &coefficients){
+void Dijkstra::samplingNodes(std::vector<pose_frenet> & poses_frenet){
+    pose_frenet tmp_pose;
 
-    std::vector<std::vector<std::array<double, 3> > > Nodes;
-	samplingNodes(Nodes);
-	std::vector<double > cartesian_pose;
+	for (int i=0; i<longitudinal_num; i++){
+		double x_i = (i + 1) * longitudinal_step + start_.x_;
+
+        // std::vector<std::array<double, 3> > lateral_nodes;
+		for (int j=0; j< lateral_num; j++){
+			double y_i = (j - SampleNumberOnOneSide) * lateral_step+ refLineRho;
+			// std::array<double, 3> tmp_node = {{x_i, y_i, 0.0 * M_PI / 180.0}};
+            tmp_pose.s = x_i;
+            tmp_pose.rho = y_i;
+            tmp_pose.heading = 0.0 * M_PI / 180.0;
+            poses_frenet.push_back(tmp_pose);
+        }
+        // Nodes.push_back(lateral_nodes);  
+    }
+
+}
+
+std::vector<geometry_msgs::PoseStamped> Dijkstra::generateLattice(){
+    std::vector<geometry_msgs::PoseStamped> path_lattice;
+
+    std::vector<pose_frenet> poses_frenet;
+	samplingNodes(poses_frenet);
+	geometry_msgs::PoseStamped cartesian_pose;
+
 	// 生成车辆起点到第一列采样点的图
-	for( int i=0; i<param.lateral_num; i++){
-        std::array<double, 3> start= param.start_SRho;
-   		std::array<double, 3> end = Nodes[0][i];
+	for( int i=0; i<lateral_num; i++){
+        pose_frenet start;
+        start.s = start_SRho.s;
+        start.rho = start_SRho.rho;
+        start.heading = start_SRho.heading;
+   		pose_frenet end;
+        end.s = poses_frenet[i].s;
+        end.rho = poses_frenet[i].rho;
+        end.heading = poses_frenet[i].heading;
+
    		CubicPolynomial cubic(start, end);
-   		std::vector<std::vector<double> > set=cubic.computeFrenetCoordinates();
-           		
-		std::vector<double> s_vec=*(set.begin());
-		std::vector<double> rho_vec=*(set.begin()+1);
-		std::vector<double> theta = *(set.begin()+2);
+   		std::vector<pose_frenet> frenet_path=cubic.computeFrenetCoordinates();
 
-		for(std::size_t i=0; i!= s_vec.size(); i++){
-			cartesian_pose=frenet_to_cartesian(s_vec[i], rho_vec[i], theta[i], coefficients);
-        	x_lattice.push_back(cartesian_pose[0]);
-        	y_lattice.push_back(cartesian_pose[1]);
-
+		for(std::size_t i=0; i!= frenet_path.size(); i++){
+			cartesian_pose = frenet_to_cartesian(frenet_path[i].s, frenet_path[i].rho, frenet_path[i].heading, coefficients_);
+        	path_lattice.push_back(cartesian_pose);
 		}
-        // std::cout<<"----s_vlatticesize----"<<std::endl;
-        // std::cout<<x_lattice.size()<<" "<<y_lattice.size()<<std::endl;
-
     } 
+
 	// 采样点之间的图
-	for (int i=0; i<param.longitudinal_num-1; i++ ){
-		for (int j=0;j<param.lateral_num; j++){
-            for(int q=0; q<param.lateral_num; q++){
-                std::array<double, 3> start= Nodes[i][j];
-   		        std::array<double, 3> end = Nodes[i+1][q];
+	for (int i=0; i<longitudinal_num-1; i++ ){
+		for (int j=0;j<lateral_num; j++){
+            for(int q=0; q<lateral_num; q++){
+                pose_frenet start;
+                start.s = poses_frenet[i*lateral_num+j].s;
+                start.rho = poses_frenet[i*lateral_num+j].rho;
+                start.heading = poses_frenet[i*lateral_num+j].heading;                
+                
+   		        pose_frenet end;
+                end.s = poses_frenet[(i+1)*lateral_num + q].s;
+                end.rho = poses_frenet[(i+1)*lateral_num + q].rho;
+                end.heading = poses_frenet[(i+1)*lateral_num + q].heading;
+
                 // std::cout<<"---------start end----------"<<std::endl;
                 // std::cout<<"start x:"<<start[0]<<"end x: "<<end[0]<<std::endl;
 
    		        CubicPolynomial cubic(start, end);
-   		        std::vector<std::vector<double> > set=cubic.computeFrenetCoordinates();
-                std::vector<double> s_vec=*(set.begin());
-                std::vector<double> rho_vec=*(set.begin()+1);
-                std::vector<double> theta = *(set.begin()+2);
+   		        std::vector<pose_frenet> frenet_path=cubic.computeFrenetCoordinates();
 
-                for(std::size_t i=0; i!= s_vec.size(); i++){
-                    cartesian_pose=frenet_to_cartesian(s_vec[i], rho_vec[i], theta[i], coefficients);
-                    x_lattice.push_back(cartesian_pose[0]);
-                    y_lattice.push_back(cartesian_pose[1]);
+                for(std::size_t t=0; t!= frenet_path.size(); t++){
+                    cartesian_pose = frenet_to_cartesian(frenet_path[t].s, frenet_path[t].rho, frenet_path[t].heading, coefficients_);
+                    path_lattice.push_back(cartesian_pose);
 
                 }           
                 // std::cout<<"----s_vlatticesize----"<<std::endl;
@@ -304,63 +405,7 @@ void generate_lattice(std::vector<double> &x_lattice,
             }
         }
     }
-
-    // std::cout<<"----s_vlatticesize----"<<std::endl;
-    // std::cout<<x_lattice.size()<<" "<<y_lattice.size()<<std::endl;
-}
-
-coefficients_type pathPlanner(std::vector<double> &x_vec, 
-						  std::vector<double> &y_vec){
-	
-    Node initState(param.start_SRho[0], param.start_SRho[1], param.start_SRho[2], 0, -1);
-	coefficients_type coefficients = refLine_coefficients();
-    Dijkstra planner(coefficients, initState);
-    std::vector<Node> closed = planner.dijkstra();
-
-    Node goal= planner.determineGoal();
-    std::cout<<"==============goal================="<<std::endl;
-    std::cout<<"["<<goal.x_<<","<<goal.y_<<"]"<<std::endl;
-	std::stack<Node> pathNode;
-    planner.pathTrace(goal, pathNode);
-
-	std::vector<double > cartesian_pose;
-
-	while (!pathNode.empty()){
-		
-		std::array<double, 3> start= {{ pathNode.top().x_, pathNode.top().y_, 0.0 * M_PI / 180.0}};
-		pathNode.pop();
-		if (pathNode.empty()) break;
-   		std::array<double, 3> end = {{ pathNode.top().x_, pathNode.top().y_, 0.0 * M_PI / 180.0}};
-				
-		// std::cout<<"-----x,y-------------"<<std::endl;
-		// std::cout<<start[0]<<","<<start[1]<<std::endl;
-   		CubicPolynomial cubic(start, end);
-   		std::vector<std::vector<double> > set=cubic.computeFrenetCoordinates();
-		
-		std::vector<double> s_vec=*(set.begin());
-		std::vector<double> rho_vec=*(set.begin()+1);
-		std::vector<double> theta = *(set.begin()+2);
-
-		for(std::size_t i=0; i< s_vec.size(); i=i+4){
-			cartesian_pose=frenet_to_cartesian(s_vec[i], rho_vec[i], theta[i], coefficients);
-        	x_vec.push_back(cartesian_pose[0]);
-        	y_vec.push_back(cartesian_pose[1]);
-
-		}
-		
-		// std::cout<<"----------path s,rho----------------"<<std::endl;
-		// std::cout<<set.size()<<"rho size:"<<set[1].size()<<"theta size:"<<set[2].size()<<std::endl;
-
-	}
-	
-	// std::cout<<"------------s size--------------"<<std::endl;
-	// std::cout<<"s.size() "<<x_vec.size()<<"s[0].size(): "<<x_vec[0].size()<<std::endl;
-    // std::vector<std::vector<Vec_d > > coefficients = referenceLine::refLine_coefficients();
-    // cout<<"coefficients:"<<coefficients[10][1][0]<<endl;
-
-	// generate the path lattice graph
-	// generate_latttice(x_lattice, y_lattice, coefficients);
-	return coefficients;	
+    return path_lattice;
 }
 
 }   // namespace lattice_planner

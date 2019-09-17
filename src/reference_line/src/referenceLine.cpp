@@ -4,17 +4,25 @@
 
 #include <Eigen/Dense>
 #include "referenceLine.h"
-#include "../config/parameters.h"
+#include <fstream>
 
 
-namespace lattice_planner{
+namespace reference_line{
 
-parameters param_r;
+// std::vector<double > waypoints_x={{0.0, 20.0, 50, 100.0, 150.0, 220.0, 300.0, 350.0, 400.0, 430.0, 370.0, 300, 200.0}};
+// std::vector<double > waypoints_y={{0.0, 70.0, 100, 120.0, 100.0, 150.0, 180.0, 150.0, 110.0, 20.0, -80.0, -80.0, -80.0}};
+
+std::vector<double > waypoints_x={{0.0, 20.0, 50, 100.0, 150.0, 220.0, 300.0}};
+std::vector<double > waypoints_y={{0.0, 70.0, 100, 120.0, 100.0, 150.0, 180.0}};
 
 coefficients_type refLine_coefficients(){
-    
-    std::vector<double > x=param_r.waypoints_x;
-    std::vector<double > y=param_r.waypoints_y;
+    // std::ofstream writeFile;    
+    // writeFile.open("coefficients.csv", std::ios::out); // 打开模式可省略 
+    std::ofstream writeFile;    
+    writeFile.open("/home/ustb/coefficients_test.csv", std::ios::ate); // 打开模式可省略 
+    writeFile.close();
+    std::vector<double > x=waypoints_x;
+    std::vector<double > y=waypoints_y;
     std::vector<double > r_x, r_y, r_heading, r_curvature, r_s;
 
     cubicSpline::Spline2D cubic_spline(x, y);
@@ -31,6 +39,7 @@ coefficients_type refLine_coefficients(){
 //    <<r_curvature.size()<<" "<< r_s.size()<<std::endl;
 
     std::vector<std::vector<double > > coefficients = SparseWayPoints(r_x, r_y, r_heading, r_s);
+    // writeFile.close();
     return coefficients;
 
 }
@@ -39,6 +48,9 @@ std::vector<double> arcLengthRefLine(std::vector<double> pose,
                                                     std::vector<double> nextPose,
                                                     double s0, 
                                                     double sf){
+
+    std::ofstream writeFile;    
+    writeFile.open("/home/ustb/coefficients_test.csv", std::ios::app); // 打开模式可省略 
     double x0 = pose[0];
     double y0 = pose[1];
     double theta0 = pose[2];
@@ -67,6 +79,17 @@ std::vector<double> arcLengthRefLine(std::vector<double> pose,
     Tmp_coefficients.insert(Tmp_coefficients.end(), a.begin(), a.end());
 //    std::cout<<"=============tmp coefficients==========="<<std::endl;
 //    std::cout<<s_d.size()<<a.size()<<b.size()<<std::endl;
+
+    writeFile << s0 << ',' 
+    << a[0] << ',' 
+    << a[1] << ','
+    << a[2] << ','
+    << a[3] << ','
+    << a[4] << ','
+    << a[5] << ','
+    << a[6] << ','
+    << a[7] << std::endl;
+    writeFile.close();
     return Tmp_coefficients;
 
 }
@@ -106,44 +129,6 @@ std::vector<std::vector<double > > SparseWayPoints(std::vector<double > r_x,
 
     return coefficients;
 
-}
-
-std::array<double, 3> poses_of_reference_line(double s, coefficients_type & coefficients){
-
-    int s_id = 0;
-    s_id = binary_search(coefficients, s);
-    double s_start = coefficients[s_id][0];
-    std::vector<double> a = {{coefficients[s_id][1], coefficients[s_id][2], coefficients[s_id][3], coefficients[s_id][4]}};
-    std::vector<double > b = {{coefficients[s_id][5], coefficients[s_id][6], coefficients[s_id][7], coefficients[s_id][8]}};
-
-    double x = a[0] + a[1] * s + a[2] * s * s + a[3] * s * s * s;
-    double d_x = a[1] + 2 * a[2] * s + 3 * a[3] * s * s;
-    double y = b[0] + b[1] * s + b[2] * s * s + b[3] * s * s * s;
-    double d_y = b[1] + 2 * b[2] * s + 3 * b[3] * s * s;
-
-    double theta = std::atan2(d_y, d_x);
-
-    std::array<double, 3> pose = {{x, y, theta}};
-    return pose;
-}
-
-int binary_search(coefficients_type & coefficients, double s) {
-
-    int head = 0;
-    int tail = coefficients.size() - 1;
-    int mid = 0;
-
-    while (head < tail){
-        mid = (head + tail) / 2;
-        if (coefficients[mid][0] < s) head = mid+1;
-        else if (s<coefficients[mid][0]) tail = mid -1;
-        else return mid;
-    }
-
-    if (s < coefficients[head][0])
-        return head -1;
-    else
-        return head;
 }
 
 } //namespace referenceLine

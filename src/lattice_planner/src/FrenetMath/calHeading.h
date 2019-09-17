@@ -6,7 +6,14 @@
 #define LATTICEPLANNER_CALHEADING_H
 
 #include <array>
+#include "../config/parameters.h"
 
-double cal_FrenetHeading(std::array<double, 2> pose0, std::array<double, 2> pose1);
+namespace lattice_planner{
+
+double cal_FrenetHeading(lattice_planner::pose_frenet pose0, lattice_planner::pose_frenet pose1);
+
+
+}
+
 
 #endif //LATTICEPLANNER_CALHEADING_H

@@ -20,7 +20,7 @@ class Node;
  */
 double trajectory_kappa(const Node node, 
                         const Node next_node, 
-                        std::vector<std::vector<double > > & coefficients);
+                        std::vector<arc_length_parameter> & coefficients);
 
 }
 

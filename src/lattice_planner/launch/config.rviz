@@ -8,6 +8,8 @@ Panels:
         - /Status1
         - /PointCloud21
         - /Path1
+        - /Marker1
+        - /MarkerArray1
       Splitter Ratio: 0.5
     Tree Height: 775
   - Class: rviz/Selection
@@ -105,6 +107,22 @@ Visualization Manager:
       Topic: /optimal_path
       Unreliable: false
       Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: visualization_marker
+      Name: Marker
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /visualization_markerarray
+      Name: MarkerArray
+      Namespaces:
+        obstacles: true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -145,10 +163,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.579797268
+      Pitch: 0.574798107
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.17858362
+      Yaw: 4.33859396
     Saved: ~
 Window Geometry:
   Displays:
@@ -167,4 +185,4 @@ Window Geometry:
     collapsed: false
   Width: 1855
   X: 65
-  Y: 24
+  Y: 37
