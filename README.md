@@ -25,7 +25,7 @@ git@github.com:yangmingustb/localPlanner.git
 
 ![avatar](https://github.com/yangmingustb/latticePlanner/blob/master/graph/2.png)
 
-![avatar](https://github.com/yangmingustb/latticePlanner/blob/master/graph/2.png)
+![avatar](https://github.com/yangmingustb/latticePlanner/blob/master/graph/3.png)
 
 ## include_planner:
 
