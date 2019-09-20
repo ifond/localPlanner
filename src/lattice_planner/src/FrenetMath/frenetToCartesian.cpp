@@ -13,7 +13,7 @@ namespace lattice_planner{
 geometry_msgs::PoseStamped frenet_to_cartesian(double s, 
                                                 double rho, 
                                                 double thetaRho, 
-                                                std::vector<arc_length_parameter> coefficients){
+                                                std::vector<arc_length_parameter> &coefficients){
     geometry_msgs::PoseStamped Refline_pose = poses_of_reference_line(s, coefficients);
     double x_r=Refline_pose.pose.position.x;
     double y_r=Refline_pose.pose.position.y;
@@ -57,6 +57,9 @@ geometry_msgs::PoseStamped poses_of_reference_line(double s, std::vector<arc_len
     refLine_pose.pose.position.y = y;
     geometry_msgs::Quaternion q = tf::createQuaternionMsgFromYaw(theta);
     refLine_pose.pose.orientation = q;
+    refLine_pose.header.stamp=ros::Time::now();
+    // this_pose_stamped.header.frame_id="/my_frame";
+    refLine_pose.header.frame_id="/map";
     return refLine_pose;
 }
 

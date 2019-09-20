@@ -18,7 +18,7 @@ namespace lattice_planner{
 geometry_msgs::PoseStamped frenet_to_cartesian(double s, 
                                         double rho, 
                                         double thetaRho, 
-                                        std::vector<arc_length_parameter> coefficients);
+                                        std::vector<arc_length_parameter> &coefficients);
 
 /**
  * input:s,output:x,y,theta

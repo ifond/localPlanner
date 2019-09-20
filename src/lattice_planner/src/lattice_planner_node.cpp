@@ -17,10 +17,11 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <pcl/point_types.h>
 #include <visualization_msgs/MarkerArray.h>
+#include <nav_msgs/Path.h>
 
 
 std::vector<lattice_planner::arc_length_parameter> loadCoefficients(){
-	std::ifstream readFile("/home/ustb/coefficients.csv");
+	std::ifstream readFile("/home/ustb/coefficients_test.csv");
     std::string lineStr;
 
 	std::vector<lattice_planner::arc_length_parameter> coefficients;
@@ -55,14 +56,8 @@ std::vector<lattice_planner::arc_length_parameter> loadCoefficients(){
 }
 
 
-int main(int argc, char **argv) {
-
-    ROS_INFO("--------------- lattice planner -------------");
-    ROS_INFO("------------search algorithm: Dijkstra--------");
-
-    ros::init (argc, argv, "lattice_planner");
-
-	ros::NodeHandle ph;
+void startPlan(){
+	ros::NodeHandle nh;
 
 	// int lateral_num, SampleNumberOnOneSide, longitudinal_num;
     // SampleNumberOnOneSide = lateral_num / 2;
@@ -71,30 +66,31 @@ int main(int argc, char **argv) {
 	// std::cout<<"main lateral number:"<<lateral_num<<std::endl;
     // ros::param::get("/lattice_planner/longitudinal_step", longitudinal_step);
     // ros::param::get("/lattice_planner/lateral_step", lateral_step);
-	double lane_width=3.75;
-    // ph.getParam("lane_width", lane_width);
-	ROS_INFO("LANE_WIDTH = %f", lane_width);
+	// double lane_width=3.75;
+    // nh.getParam("lane_width", lane_width);
+	// ROS_INFO("LANE_WIDTH = %f", lane_width);
     // ros::param::get("/lattice_planner/longitudinal_num", longitudinal_num);
     // ros::param::get("/lattice_planner/s0", s0);
 
-    double refLineRho=lane_width * 0.5;
-	//	publish path
-	ros::Publisher path_pub = ph.advertise<nav_msgs::Path>("optimal_path",1, true);
+    double refLineRho=0.0;
+	// publish path
+	ros::Publisher path_pub = nh.advertise<nav_msgs::Path>("optimal_path",1, true);
+	ros::Publisher refLine_pub = nh.advertise<nav_msgs::Path>("ref_line",1, true);
 	// publish lattice
-	// ros::Publisher lattice_pub = ph.advertise<nav_msgs::Path>("lattice",1, true);
+	// ros::Publisher lattice_pub = nh.advertise<nav_msgs::Path>("lattice",1, true);
 
-	ros::Publisher pcl_pub = ph.advertise<sensor_msgs::PointCloud2> ("pcl_output", 1);
+	ros::Publisher pcl_pub = nh.advertise<sensor_msgs::PointCloud2> ("pcl_output", 1);
 
 
 	// std::vector<ros::Publisher> obs_pubs; 
-	ros::Publisher obss_pub = ph.advertise<visualization_msgs::MarkerArray>("visualization_markerarray",100);
+	ros::Publisher obss_pub = nh.advertise<visualization_msgs::MarkerArray>("visualization_markerarray",100);
 	// 设置初始形状为立方体
   	uint32_t shape = visualization_msgs::Marker::CUBE;
 
 
     // pcl::PointCloud<pcl::PointXYZ> cloud;
     sensor_msgs::PointCloud2 cloud_msg;
-	// ros::Publisher cloud_pub = ph.advertise<snensor_msgs::PointCloud2>("cloud",1, true);
+	// ros::Publisher cloud_pub = nh.advertise<snensor_msgs::PointCloud2>("cloud",1, true);
 
 	// std::vector<geometry_msgs::PoseStamped> optimal_path, path_lattice; 
 
@@ -110,20 +106,22 @@ int main(int argc, char **argv) {
 
 	lattice_planner::pose_frenet start_;
 	start_.s=s0;
-	start_.rho = refLineRho;
+	start_.rho = 1;
 	start_.heading = 0;
     lattice_planner::Node initState(start_.s, start_.rho, start_.heading, 0, -1);
 
-	// coefficients_type coefficients = refLine_coefficients();
     lattice_planner::Dijkstra planner(coefficients, initState);
     std::vector<geometry_msgs::PoseStamped> optimal_path = planner.generatePath();
+	nav_msgs::Path ref_line = planner.generateRefLine();
+
     // std::cout<<"----------path ----------------"<<std::endl;
     // std::cout<<optimal_path.size()<<"size:"<<std::endl;
 	std::vector<geometry_msgs::PoseStamped> path_lattice;
 	if(show_lattice_in_rviz){ 
 		path_lattice = planner.generateLattice();
 	}
-	// std::vector<lattice_planner::arc_length_parameter>  coefficients = startPlan(optimal_path, path_lattice);	
+
+	
 
 
 	// std::cout<<"-----optimal_path size---------------"<<std::endl;
@@ -206,6 +204,11 @@ int main(int argc, char **argv) {
 		}
 
 		/**
+		 * pub reference line
+		 */
+		refLine_pub.publish(ref_line);
+
+		/**
 		 * pub obstacles
 		 */
 		visualization_msgs::MarkerArray obss;
@@ -243,7 +246,7 @@ int main(int argc, char **argv) {
 			obs.scale.y = 1.0;
 			obs.scale.z = 1.0;
 
-			//设置标记颜色，确保alpha（不透明度）值不为0
+			//设置标记颜色，确保alnha（不透明度）值不为0
 			obs.color.r = 0.0f;
 			obs.color.g = 1.0f;
 			obs.color.b = 0.0f;
@@ -259,6 +262,16 @@ int main(int argc, char **argv) {
 		loop_rate.sleep();
 		// ++count;
 	}
+}
+
+
+int main(int argc, char **argv) {
+
+    ROS_INFO("--------------- lattice planner -------------");
+    ROS_INFO("------------search algorithm: Dijkstra--------");
+
+    ros::init (argc, argv, "lattice_planner");
+	startPlan();
 
 	return 0;
 

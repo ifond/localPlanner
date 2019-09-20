@@ -5,6 +5,7 @@
 #include "std_msgs/String.h"
 #include <sstream>
 #include "referenceLine.h"
+#include <nav_msgs/Path.h>
 
 
 
@@ -14,21 +15,21 @@ int main(int argc, char **argv){
 
     ros::NodeHandle nh;
 
-    ros::Publisher referenceLine_pub = nh.advertise<std_msgs::String>("arc_length_parameter_table", 1000);
+    ros::Publisher referenceLine_pub = nh.advertise<nav_msgs::Path>("referenceLine", 1, true);
+    ros::Publisher referenceLine_pub2 = nh.advertise<nav_msgs::Path>("referenceLine2", 1, true);
 
-    std::vector<std::vector<double > > coefficients = reference_line::refLine_coefficients();
+    reference_line::RefLine reference_line;
+    
+    nav_msgs::Path ref_path = reference_line.generateRefLine_inRviz();
+
+    nav_msgs::Path ref_path2 = reference_line.readCoefficientsFromFile();
 
     ros::Rate loop_rate(10);
     while (ros::ok())
     {
-        /* code */
-        std_msgs::String msg;
-        std::stringstream ss;
-        ss<<"---------------calculate the arc-length parameter table-------------";
-        msg.data = ss.str();
 
-        ROS_INFO("%s", msg.data.c_str());
-        referenceLine_pub.publish(msg);
+        referenceLine_pub.publish(ref_path);
+        referenceLine_pub2.publish(ref_path2);
 
         ros::spinOnce();
         loop_rate.sleep();

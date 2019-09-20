@@ -21,7 +21,11 @@ git@github.com:yangmingustb/localPlanner.git
 
 5 cubic polynomials in the frenet coordinate system
 
-#	![avatar](https://github.com/yangmingustb/latticePlanner/blob/master/graph/lattice1.png)
+![avatar](https://github.com/yangmingustb/latticePlanner/blob/master/graph/1.png)
+
+![avatar](https://github.com/yangmingustb/latticePlanner/blob/master/graph/2.png)
+
+![avatar](https://github.com/yangmingustb/latticePlanner/blob/master/graph/2.png)
 
 ## include_planner:
 

@@ -11,6 +11,7 @@
 #include <stack>
 #include <geometry_msgs/PoseStamped.h>
 #include <ros/ros.h>
+#include <nav_msgs/Path.h>
 
 
 
@@ -113,7 +114,7 @@ public:
     Dijkstra(std::vector<arc_length_parameter> &coefficients, Node & start);
     
     /**
-     * @brief Main algorithm of Dijstra.
+     * @brief Main algorithm of Dijkstra.
      */
     void makePlan();
 
@@ -136,29 +137,28 @@ public:
     */
     std::vector<Node> GetNextMotion();
     
-    std::vector<arc_length_parameter> coefficients_;
-
-
 private:
     std::vector<Node> open_list_;
     std::vector<Node> closed_list_;
     Node start_, goal_;
+    std::vector<arc_length_parameter> coefficients_;
     // std::vector<geometry_msgs::PoseStamped> optimal_path, path_lattice; 
+    // sampling poses from the Frenet coordinate system
+    std::vector<pose_frenet> samplingPoses;
+
+    nav_msgs::Path ref_line_;
 
 
 public:
-    void samplingNodes(std::vector<pose_frenet> & poses_frenet);
+    void samplingNodes();
     std::vector<geometry_msgs::PoseStamped> generatePath();
     std::vector<geometry_msgs::PoseStamped> generateLattice();
+    nav_msgs::Path generateRefLine();
 
 private:
     double r_circle = 1.0;
     double d_circle = 2.0;
     double obstacle_inflation = 1.5;
-    double alpha1 = 100;
-    double alpha2 = 1;
-    double alpha3 = 10;
-    double alpha4 = 0.0;
 
     int longitudinal_num = 5;
     int lateral_num = 9;  // 横向采样个数
@@ -169,7 +169,7 @@ private:
     double s0 = 0.0;
     double s_max;
     double s_end;
-    double refLineRho;
+    double refLineRho_;
     
     // 
     pose_frenet start_SRho;

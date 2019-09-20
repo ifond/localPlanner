@@ -17,46 +17,63 @@
 #include <vector>
 #include <array>
 #include "cubicSpline.h"
+#include <geometry_msgs/PoseStamped.h>
+#include <nav_msgs/Path.h>
 
 
-typedef std::vector<std::vector<double > > coefficients_type;
 
 namespace reference_line{
 
-    /**
-     * calculate the efficients of reference line
-     * [vector_a, vector_b, s]
-     *
-     * @return
-     */
-    coefficients_type refLine_coefficients();
+typedef std::vector<std::vector<double > > coefficients_type;
 
 
-    /**
-     * reference line is parameterized by the arc length
-     */
-    std::vector<double > arcLengthRefLine(std::vector<double> pose, 
-                                        std::vector<double> nextPose,
-                                        double s0,
-                                        double sf);
+struct arc_length_parameter{
+    double s;
+    double a0, a1, a2, a3;
+    double b0, b1, b2, b3;
+};
 
+class RefLine{
+public:
+
+    RefLine();
 
     /**
      * select appropriate step between way-points in the reference line
      */
-    std::vector<std::vector<double > > SparseWayPoints(std::vector<double > r_x, 
-                                                        std::vector<double > r_y, 
-                                                        std::vector<double > r_heading, 
-                                                        std::vector<double > r_s);
+    void SparseWayPoints(std::vector<double > r_x, 
+                        std::vector<double > r_y, 
+                        std::vector<double > r_heading, 
+                        std::vector<double > r_s);
 
+    
     /**
-     * input:s,output:x,y,theta
-     * calculate the poses of points in the reference line
-     * @param s
-     * @param coefficients
-     * @return
+     * reference line is parameterized by the arc length
      */
+    void arcLengthRefLine(std::vector<double> pose, 
+                        std::vector<double> nextPose,
+                        double s0,
+                        double sf,
+                        std::ofstream &writeFile);
 
+    std::vector<arc_length_parameter> ref_coefficients_output();
+
+    nav_msgs::Path generateRefLine_inRviz();
+
+    geometry_msgs::PoseStamped poses_of_reference_line(double s);
+
+    int binary_search(double s);
+    nav_msgs::Path readCoefficientsFromFile();
+    bool isSameData(std::vector<arc_length_parameter> coeff, nav_msgs::Path path);
+
+
+private:
+    std::vector<geometry_msgs::Point> waypoints_;
+    std::vector<arc_length_parameter> coefficients_;
+    std::vector<arc_length_parameter> coefficientsTest_;
+    nav_msgs::Path refline_waypoints_;
+
+};
 
 } //namespace referenceLine
 

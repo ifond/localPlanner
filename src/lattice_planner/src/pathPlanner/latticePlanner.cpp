@@ -90,13 +90,9 @@ Dijkstra::Dijkstra(std::vector<arc_length_parameter> & coefficients, Node & star
     r_circle = 1.0;
     d_circle = 2.0;
     obstacle_inflation = 1.5;
-    alpha1 = 100;
-    alpha2 = 1;
-    alpha3 = 10;
-    alpha4 = 0.0;
 
     longitudinal_num = 5;
-    lateral_num = 9;  // 横向采样个数
+    lateral_num = 10;  // 横向采样个数
     longitudinal_step = 20.0;
     lateral_step = 0.5;
     lane_width = 3.75;
@@ -104,21 +100,21 @@ Dijkstra::Dijkstra(std::vector<arc_length_parameter> & coefficients, Node & star
     s0 = 0.0;
     s_max = longitudinal_num*longitudinal_step;
     s_end = s0 + s_max;
-    refLineRho = lane_width * 0.5;
+    refLineRho_ = 0.0;
     obstacleHeading=0;
 
 
     // the frenet coordinates of obstacles
     
     obs1.s = 20.0;
-    obs1.rho = refLineRho - 1;
+    obs1.rho = refLineRho_ - 1;
     obs1.heading = obstacleHeading;
 
     obs2.s = 40.0;
-    obs2.rho = refLineRho + 1;
+    obs2.rho = refLineRho_ + 1;
     obs2.heading = obstacleHeading;
     obs3.s = 70.0;
-    obs3.rho = refLineRho - 1;
+    obs3.rho = refLineRho_ - 1;
     obs3.heading = obstacleHeading;
     obstacles.push_back(obs1);
     obstacles.push_back(obs2);
@@ -143,7 +139,7 @@ std::vector<Node> Dijkstra::GetNextMotion(){
 
     std::vector<Node> motion;
     for(int i=0; i<lateral_num; i++){
-        Node tmp_motion(longitudinal_step, (i - SampleNumberOnOneSide) * lateral_step+ refLineRho, 0.0, 0, 0);
+        Node tmp_motion(longitudinal_step, (i - SampleNumberOnOneSide) * lateral_step+ refLineRho_, 0.0, 0, 0);
         motion.push_back(tmp_motion);
     }
 
@@ -157,7 +153,7 @@ std::vector<Node> Dijkstra::GetNextMotion(){
 
 int Dijkstra::calIndex(Node p) {
 
-    double id = (p.y_ - (refLineRho- SampleNumberOnOneSide * lateral_step)) / lateral_step + ((p.x_ - start_.x_) /longitudinal_step - 1.0) *lateral_num + 1.0;
+    double id = (p.y_ - (refLineRho_- SampleNumberOnOneSide * lateral_step)) / lateral_step + ((p.x_ - start_.x_) /longitudinal_step - 1.0) *lateral_num + 1.0;
     return int(id);
 }
 
@@ -221,7 +217,7 @@ void Dijkstra::makePlan(){
             new_point.y_ = i.y_;
             new_point.id_ = calIndex(new_point);
             new_point.pid_ = current.id_;
-            new_point.cost_ = total_cost(current, new_point, refLineRho, obstacles, coefficients_);
+            new_point.cost_ = total_cost(current, new_point, refLineRho_, obstacles, coefficients_);
 
             //            cout<<"------------------newpoint.x--------"<<endl;
             //            cout<<new_point.x_<<endl;
@@ -328,7 +324,7 @@ std::vector<geometry_msgs::PoseStamped> Dijkstra::generatePath(){
     return optimal_path;
 }
 
-void Dijkstra::samplingNodes(std::vector<pose_frenet> & poses_frenet){
+void Dijkstra::samplingNodes(){
     pose_frenet tmp_pose;
 
 	for (int i=0; i<longitudinal_num; i++){
@@ -336,12 +332,12 @@ void Dijkstra::samplingNodes(std::vector<pose_frenet> & poses_frenet){
 
         // std::vector<std::array<double, 3> > lateral_nodes;
 		for (int j=0; j< lateral_num; j++){
-			double y_i = (j - SampleNumberOnOneSide) * lateral_step+ refLineRho;
+			double y_i = (j - SampleNumberOnOneSide) * lateral_step+ refLineRho_;
 			// std::array<double, 3> tmp_node = {{x_i, y_i, 0.0 * M_PI / 180.0}};
             tmp_pose.s = x_i;
             tmp_pose.rho = y_i;
             tmp_pose.heading = 0.0 * M_PI / 180.0;
-            poses_frenet.push_back(tmp_pose);
+            samplingPoses.push_back(tmp_pose);
         }
         // Nodes.push_back(lateral_nodes);  
     }
@@ -350,9 +346,8 @@ void Dijkstra::samplingNodes(std::vector<pose_frenet> & poses_frenet){
 
 std::vector<geometry_msgs::PoseStamped> Dijkstra::generateLattice(){
     std::vector<geometry_msgs::PoseStamped> path_lattice;
-
-    std::vector<pose_frenet> poses_frenet;
-	samplingNodes(poses_frenet);
+   
+	samplingNodes();
 	geometry_msgs::PoseStamped cartesian_pose;
 
 	// 生成车辆起点到第一列采样点的图
@@ -362,9 +357,9 @@ std::vector<geometry_msgs::PoseStamped> Dijkstra::generateLattice(){
         start.rho = start_SRho.rho;
         start.heading = start_SRho.heading;
    		pose_frenet end;
-        end.s = poses_frenet[i].s;
-        end.rho = poses_frenet[i].rho;
-        end.heading = poses_frenet[i].heading;
+        end.s = samplingPoses[i].s;
+        end.rho = samplingPoses[i].rho;
+        end.heading = samplingPoses[i].heading;
 
    		CubicPolynomial cubic(start, end);
    		std::vector<pose_frenet> frenet_path=cubic.computeFrenetCoordinates();
@@ -380,14 +375,14 @@ std::vector<geometry_msgs::PoseStamped> Dijkstra::generateLattice(){
 		for (int j=0;j<lateral_num; j++){
             for(int q=0; q<lateral_num; q++){
                 pose_frenet start;
-                start.s = poses_frenet[i*lateral_num+j].s;
-                start.rho = poses_frenet[i*lateral_num+j].rho;
-                start.heading = poses_frenet[i*lateral_num+j].heading;                
+                start.s = samplingPoses[i*lateral_num+j].s;
+                start.rho = samplingPoses[i*lateral_num+j].rho;
+                start.heading = samplingPoses[i*lateral_num+j].heading;                
                 
    		        pose_frenet end;
-                end.s = poses_frenet[(i+1)*lateral_num + q].s;
-                end.rho = poses_frenet[(i+1)*lateral_num + q].rho;
-                end.heading = poses_frenet[(i+1)*lateral_num + q].heading;
+                end.s = samplingPoses[(i+1)*lateral_num + q].s;
+                end.rho = samplingPoses[(i+1)*lateral_num + q].rho;
+                end.heading = samplingPoses[(i+1)*lateral_num + q].heading;
 
                 // std::cout<<"---------start end----------"<<std::endl;
                 // std::cout<<"start x:"<<start[0]<<"end x: "<<end[0]<<std::endl;
@@ -406,6 +401,25 @@ std::vector<geometry_msgs::PoseStamped> Dijkstra::generateLattice(){
         }
     }
     return path_lattice;
+}
+
+
+nav_msgs::Path Dijkstra::generateRefLine(){
+
+    ref_line_.header.stamp=ros::Time::now();
+    // path.header.frame_id="/my_frame";
+    ref_line_.header.frame_id="/map";
+
+    for(auto i:coefficients_){
+
+        geometry_msgs::PoseStamped Refline_pose = poses_of_reference_line(i.s, coefficients_);
+
+        ref_line_.poses.push_back(Refline_pose);
+
+
+    }
+    return ref_line_;
+
 }
 
 }   // namespace lattice_planner
