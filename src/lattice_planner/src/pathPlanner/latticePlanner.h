@@ -5,14 +5,27 @@
 #ifndef LATTICEPLANNER_LATTICEPLANNER_H
 #define LATTICEPLANNER_LATTICEPLANNER_H
 
+
+#include <ros/ros.h>
 #include "../config/parameters.h"
 #include "costFunctions.h"
 #include <vector>
-#include <stack>
 #include <geometry_msgs/PoseStamped.h>
-#include <ros/ros.h>
 #include <nav_msgs/Path.h>
-
+#include "../FrenetMath/cartesianToFrenet.h"
+// #include <pcl_ros/point_cloud.h>
+// #include <pcl_conversions/pcl_conversions.h>
+// #include <sensor_msgs/PointCloud2.h>
+// #include <pcl/point_types.h>
+#include <visualization_msgs/MarkerArray.h>
+#include <visualization_msgs/Marker.h>
+#include <iostream>
+#include <ctime>
+#include <stack>
+#include <pcl_ros/point_cloud.h>
+#include <pcl_conversions/pcl_conversions.h>
+#include <sensor_msgs/PointCloud2.h>
+#include <pcl/point_types.h>
 
 
 namespace lattice_planner{
@@ -111,7 +124,7 @@ class Dijkstra{
 public:
 
     Dijkstra() = default;
-    Dijkstra(std::vector<arc_length_parameter> &coefficients, Node & start);
+    Dijkstra(std::vector<arc_length_parameter> &coefficients);
     
     /**
      * @brief Main algorithm of Dijkstra.
@@ -138,61 +151,77 @@ public:
     std::vector<Node> GetNextMotion();
     
 private:
+    ros::NodeHandle nh;
     std::vector<Node> open_list_;
     std::vector<Node> closed_list_;
-    Node start_, goal_;
+    Node nodeStart_, goal_;
     std::vector<arc_length_parameter> coefficients_;
     // std::vector<geometry_msgs::PoseStamped> optimal_path, path_lattice; 
     // sampling poses from the Frenet coordinate system
     std::vector<pose_frenet> samplingPoses;
-
+    
+    std::vector<geometry_msgs::PoseStamped> path_lattice;
+    sensor_msgs::PointCloud2 cloud_msg;
+    // pcl::PointCloud<pcl::PointXYZ> cloud;
+    visualization_msgs::MarkerArray obstaclesInRviz_;
+    nav_msgs::Path optimal_path_;
     nav_msgs::Path ref_line_;
 
+    geometry_msgs::PoseWithCovarianceStamped cartesianStart_;
+    pose_frenet FrenetStart_;
+    ros::Publisher path_pub;
+	ros::Publisher refLine_pub;
+	// publish lattice
+	// ros::Publisher lattice_pub = nh.advertise<nav_msgs::Path>("lattice",1, true);
+
+	ros::Publisher lattice_pub_;
+	// std::vector<ros::Publisher> obs_pubs; 
+	ros::Publisher obss_pub;
+    ros::Subscriber SubStart_;
+    ros::Publisher pub_startInRviz_;
+    double begin_time_;
+    double running_time_;
+	
 
 public:
     void samplingNodes();
-    std::vector<geometry_msgs::PoseStamped> generatePath();
-    std::vector<geometry_msgs::PoseStamped> generateLattice();
-    nav_msgs::Path generateRefLine();
+    void generatePath();
+    void generateLattice();
+    void generateRefLine();
+    
+    void ShowRefLineInRviz();
+    void ShowObstaclesInRviz();
+    void setStart_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& initial);
+
 
 private:
+   
     double r_circle = 1.0;
     double d_circle = 2.0;
     double obstacle_inflation = 1.5;
-
     int longitudinal_num = 5;
     int lateral_num = 9;  // 横向采样个数
     double longitudinal_step = 20.0;
     double lateral_step = 0.5;
     double lane_width = 3.75;
     int SampleNumberOnOneSide;    // sampling number on one side of the reference line
-    double s0 = 0.0;
+    double s0;
     double s_max;
     double s_end;
     double refLineRho_;
     
-    // 
-    pose_frenet start_SRho;
-
     // the frenet coordinates of obstacles
     pose_frenet obs1,obs2,obs3;
-    std::vector<pose_frenet> obstacles;
+    std::vector<pose_frenet> obstacles_;
 
     double obstacleHeading = 0.0 * M_PI / 180.0;
 
     // 最后一列的编号
     std::vector<int> last_column_id; 
-
-    // std::vector<double > waypoints_x={{0.0, 20.0, 50, 100.0, 150.0, 220.0, 300.0, 350.0, 400.0, 430.0, 370.0, 300, 200.0}};
-    // std::vector<double > waypoints_y={{0.0, 70.0, 100, 120.0, 100.0, 150.0, 180.0, 150.0, 110.0, 20.0, -80.0, -80.0, -80.0}};
-
-    // std::vector<double > waypoints_x={{0.0, 20.0, 50, 100.0, 150.0, 220.0, 300.0}};
-    // std::vector<double > waypoints_y={{0.0, 70.0, 100, 120.0, 100.0, 150.0, 180.0}};
-
     double vehicle_body_fast_check_circle = 3.0;  // body collision fast check circle, the radius is 3.0 m
     double vehicle_body_envelope_circle = 1.0;    // little circles, the radius is 1.0 m  
 
-    bool show_lattice_in_rviz=true;
+    bool show_lattice_in_rviz=true; 
 
 
 };

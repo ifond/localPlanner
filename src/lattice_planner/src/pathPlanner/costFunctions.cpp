@@ -14,7 +14,7 @@ double kappa_cost(const Node node,
                 const Node & next_node, 
                 std::vector<arc_length_parameter> & coefficients) {
     double mean_kappa = trajectory_kappa(node, next_node, coefficients);
-
+    // ROS_INFO("trajectory_kappa() is completed...");
     return mean_kappa;
 }
 
@@ -73,6 +73,7 @@ double total_cost(const Node node,
     double cost2 = reference_line_cost(node, next_node, refline);
     double cost3 = collision_risk(node, next_node, obstacle);
 
+    // ROS_INFO("costFunction method is complted...");
     // cout<<"cost1:"<< cost1<<"cost2:"<<cost2<<"cost3:"<<cost3<<endl;
 
     // double alpha1,alpha2,alpha3;

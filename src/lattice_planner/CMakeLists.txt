@@ -8,15 +8,16 @@ add_compile_options(-std=c++11)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 
-
+# set(PCL_DIR "/usr/include/pcl-1.7")
 find_package(catkin REQUIRED COMPONENTS
 	pcl_ros
   roscpp
   rospy
   std_msgs
-# PCL REQUIRED
-# PCL 1.7 REQUIRED
-# pcl_conversions
+
+ # PCL REQUIRED
+ # PCL 1.7 REQUIRED
+ # pcl_conversions
 
 
 )
@@ -134,6 +135,7 @@ src/config
 ${PCL_INCLUDE_DIRS}
 )
 
+
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/lattice_planner.cpp
@@ -181,7 +183,7 @@ src/FrenetMath/frenetToCartesian.cpp
 add_dependencies(lattice_planner ${PROJECT_NAME}_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(lattice_planner   ${catkin_LIBRARIES} ${PCL_LIBRARY_DIRS})
+target_link_libraries(lattice_planner   ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
 link_directories(${PCL_LIBRARY_DIRS})
 

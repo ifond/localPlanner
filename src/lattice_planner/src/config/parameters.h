@@ -45,6 +45,25 @@ struct arc_length_parameter{
 // template <typename T>
 // void operator>>(const YAML::Node& node, T& i); 
 
+struct parameters
+{
+    /* data */
+    double r_circle = 1.0;
+    double d_circle = 2.0;
+    double obstacle_inflation = 1.5;
+    double alpha1 = 100;
+    double alpha2 = 1;
+    double alpha3 = 10;
+    double alpha4 = 0.0;
+    int longitudinal_num = 5;
+    int lateral_num = 9;  // 横向采样个数
+    double longitudinal_step = 20.0;
+    double lateral_step = 0.5;
+    double lane_width = 3.75;
+    double s0 = 0.0;
+
+};
+
 
 int setStart();
 

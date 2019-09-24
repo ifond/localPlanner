@@ -68,7 +68,7 @@ RefLine::RefLine(){
     // <<r_curvature.size()<<" "<< r_s.size()<<std::endl;
 
     SparseWayPoints(r_x, r_y, r_heading, r_s);
-    ROS_INFO("refline initialing ... coefficients size: %d", coefficients_.size());
+    ROS_INFO("refline initialing... coefficients size: %d", coefficients_.size());
 
 }
 

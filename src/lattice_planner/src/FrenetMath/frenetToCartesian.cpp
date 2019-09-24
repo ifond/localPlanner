@@ -15,6 +15,8 @@ geometry_msgs::PoseStamped frenet_to_cartesian(double s,
                                                 double thetaRho, 
                                                 std::vector<arc_length_parameter> &coefficients){
     geometry_msgs::PoseStamped Refline_pose = poses_of_reference_line(s, coefficients);
+
+    // ROS_INFO("poses_of_reference_line() is completed...");
     double x_r=Refline_pose.pose.position.x;
     double y_r=Refline_pose.pose.position.y;
 

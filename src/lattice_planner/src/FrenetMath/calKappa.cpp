@@ -25,7 +25,7 @@ double trajectory_kappa(const Node node,
     
     CubicPolynomial cubic(start, end);
     std::vector<pose_frenet> frenet_path = cubic.computeFrenetCoordinates();
-
+    // ROS_INFO("cubic.computeFrenet() is completed...");
     // cout<<"-------------------s,rho,theta-size()-------------"<<endl;
     // cout<<s.size()<<"-"<<rho.size()<<"-"<<theta.size()<<endl;
 
@@ -44,6 +44,7 @@ double trajectory_kappa(const Node node,
         theta_rho2 = frenet_path[i+2].heading;
 
         cartesian_pose=frenet_to_cartesian(s0, rho0, theta_rho0, coefficients);
+        // ROS_INFO("frenet_to_cartesian() is completed...");
         x0 = cartesian_pose.pose.position.x;
         y0 = cartesian_pose.pose.position.y;
         cartesian_pose=frenet_to_cartesian(s1, rho1, theta_rho1, coefficients);

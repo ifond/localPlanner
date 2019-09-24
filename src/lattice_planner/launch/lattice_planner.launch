@@ -6,25 +6,25 @@
     <!-- <rosparam file="$(find lattice_planner)/launch/lattice_planner_para.yaml" 
     # command="load" ns="lattice_planner" />
     -->
-    <param name="r_circle" value="1.0" type="double"/>
-    <param name="lane_width" value="3.75" type="double"/>
-    <!--
-        <param name="r_circle" value="1.0" type="double"/>
-        <param name="d_circle" value="2.0" type="double" />
-        <param name="obstacle_inflation" value="1.5" type="double" />
-        <param name="alpha1" value="100.0" type="double"/>
-        <param name="alpha2" value="1.0" type="double" />
-        <param name="alpha3" value="10.0" type="double" />
-        <param name="alpha4" value="0.0" type="double" />
 
-        <param name="longitudinal_num" value="5" type="int"/>
-        <param name="lateral_num" value="9" type="int"/>
-        <param name="longitudinal_step" value="20.0" type="double" />
-        <param name="lateral_step" value="0.5" type="double"/>
-        
-        <param name="s0" value="0.0" type="double"/>
-        <param name="show_lattice_in_rviz" value="true" type="bool"/>
-        -->
+    <param name="r_circle" value="1.0" type="double"/>
+    <param name="d_circle" value="2.0" type="double" />
+    <param name="obstacle_inflation" value="1.5" type="double" />
+    <param name="alpha1" value="100.0" type="double"/>
+    <param name="alpha2" value="1.0" type="double" />
+    <param name="alpha3" value="10.0" type="double" />
+    <param name="alpha4" value="0.0" type="double" />
+    <param name="lane_width" value="3.75" type="double"/>
+    <param name="longitudinal_num" value="5" type="int"/>
+    <param name="lateral_num" value="9" type="int"/>
+    <param name="longitudinal_step" value="20.0" type="double" />
+    <param name="lateral_step" value="0.5" type="double"/>
+    
+    <param name="s0" value="1.0" type="double"/>
+    <param name="startRho" value="-1.0" type="double"/>
+    <param name="startHeading" value="0.0" type="double"/>
+    <param name="show_lattice_in_rviz" value="true" type="bool"/>
+
 
     </node>
     <!-- 运行rviz -->
