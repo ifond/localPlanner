@@ -7,7 +7,7 @@
 
 
 #include <ros/ros.h>
-#include "../config/parameters.h"
+#include "selfType.h"
 #include "costFunctions.h"
 #include <vector>
 #include <geometry_msgs/PoseStamped.h>
@@ -30,93 +30,6 @@
 
 namespace lattice_planner{
 
-
-/**
-* @brief Node class
-* @param x_: X value, when we make planning in the frenet coordinate system,
-*            x_ represents the longitudinal station
-* @param y_ Y value, when we make planning in the frenet coordinate system,
-*           y_ represents the lateral offset
-* @param cost_ Cost to get to this node
-* @param id_ Node's id
-* @param pid_ Node's parent's id
-*/
-class Node{
-// Variables used here are constantly accessed and checked; leaving public for now.
-public:
-    /** \brief x coordinate */
-    double x_;
-    /** \brief y coordinate */
-    double y_;
-    /** \brief cost to reach this node */
-    double cost_;
-    /** \brief Node id */
-    int id_;
-    /** \brief Node's parent's id */
-    int pid_;
-
-
-    /**
-    * @brief Constructor for Node class
-    * @param x X value
-    * @param y Y value
-    * @param cost Cost to get to this node
-    * @param id Node's id
-    * @param pid Node's parent's id
-    */
-    Node(double x = 0.0, double y = 0.0, double cost = 0.0, int id = 0, int pid = 0);
-
-    /**
-    * @brief Prints the values of the variables in the node
-    * @return void
-    */
-    void PrintStatus();
-
-    /**
-    * @brief Overloading operator + for Node class
-    * @param p node
-    * @return Node with current node's and input node p's values added
-    */
-    Node operator+(Node p);
-
-    /**
-    * @brief Overloading operator - for Node class
-    * @param p node
-    * @return Node with current node's and input node p's values subtracted
-    */
-    Node operator-(Node p);
-
-    /**
-    * @brief Overloading operator = for Node class
-    * @param p node
-    * @return void
-    */
-    void operator=(Node p);
-
-    /**
-    * @brief Overloading operator == for searching the id of the Node class
-    * @param p node
-    * @return bool whether current node equals input node
-    */
-    bool operator==(Node p);
-
-
-    /**
-    * @brief Overloading operator != for Node class
-    * @param p node
-    * @return bool whether current node is not equal to input node
-    */
-    bool operator!=(Node p);
-};
-
-/**
-* @brief Struct created to encapsulate function compare cost between 2 nodes. 升序
-*/
-struct compare_cost{
-    bool operator()(Node& p1, Node& p2);
-};
-
-
 /**
  * dijkstra planning in the path lattice
  */
@@ -124,7 +37,7 @@ class Dijkstra{
 public:
 
     Dijkstra() = default;
-    Dijkstra(std::vector<arc_length_parameter> &coefficients);
+    Dijkstra(std::vector<CubicCoefficients> &coefficients);
     
     /**
      * @brief Main algorithm of Dijkstra.
@@ -155,10 +68,10 @@ private:
     std::vector<Node> open_list_;
     std::vector<Node> closed_list_;
     Node nodeStart_, goal_;
-    std::vector<arc_length_parameter> coefficients_;
+    std::vector<CubicCoefficients> coefficients_;
     // std::vector<geometry_msgs::PoseStamped> optimal_path, path_lattice; 
     // sampling poses from the Frenet coordinate system
-    std::vector<pose_frenet> samplingPoses;
+    std::vector<FrenetPose> samplingPoses;
     
     std::vector<geometry_msgs::PoseStamped> path_lattice;
     sensor_msgs::PointCloud2 cloud_msg;
@@ -168,7 +81,7 @@ private:
     nav_msgs::Path ref_line_;
 
     geometry_msgs::PoseWithCovarianceStamped cartesianStart_;
-    pose_frenet FrenetStart_;
+    FrenetPose FrenetStart_;
     ros::Publisher path_pub;
 	ros::Publisher refLine_pub;
 	// publish lattice
@@ -211,8 +124,8 @@ private:
     double refLineRho_;
     
     // the frenet coordinates of obstacles
-    pose_frenet obs1,obs2,obs3;
-    std::vector<pose_frenet> obstacles_;
+    FrenetPose obs1,obs2,obs3;
+    std::vector<FrenetPose> obstacles_;
 
     double obstacleHeading = 0.0 * M_PI / 180.0;
 

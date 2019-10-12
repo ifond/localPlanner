@@ -163,7 +163,7 @@ void RefLine::arcLengthRefLine(std::vector<double> pose,
 }
 
 
-std::vector<arc_length_parameter> RefLine::ref_coefficients_output(){
+std::vector<arc_length_parameter> RefLine::ref_coefficients_output() const{
     
     return coefficients_;
 }
@@ -284,7 +284,7 @@ nav_msgs::Path RefLine::readCoefficientsFromFile(){
 
 }
 
-bool RefLine::isSameData(std::vector<arc_length_parameter> coeff, nav_msgs::Path path){
+bool RefLine::isSameData(std::vector<arc_length_parameter> &coeff, nav_msgs::Path &path){
 
     // calculate coeffcients error
     double maxCoeffError=0;

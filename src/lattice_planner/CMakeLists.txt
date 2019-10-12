@@ -10,7 +10,7 @@ add_compile_options(-std=c++11)
 
 # set(PCL_DIR "/usr/include/pcl-1.7")
 find_package(catkin REQUIRED COMPONENTS
-	pcl_ros
+pcl_ros
   roscpp
   rospy
   std_msgs
@@ -128,10 +128,8 @@ catkin_package(
 include_directories(
 include
 ${catkin_INCLUDE_DIRS}
-src/curves 
 src/pathPlanner
 src/FrenetMath
-src/config
 ${PCL_INCLUDE_DIRS}
 )
 
@@ -152,7 +150,7 @@ ${PCL_INCLUDE_DIRS}
 add_executable(
 lattice_planner 
 src/lattice_planner_node.cpp 
-src/curves/cubicPolynomial.cpp 
+src/FrenetMath/cubicPolynomial.cpp 
 
 src/pathPlanner/latticePlanner.cpp 
 
@@ -162,11 +160,12 @@ src/FrenetMath/calHeading.cpp
  
 src/FrenetMath/calKappa.cpp 
 
-src/config/parameters.cpp 
-
 src/FrenetMath/cartesianToFrenet.cpp 
  
 src/FrenetMath/frenetToCartesian.cpp 
+src/FrenetMath/kdTree.cpp
+src/FrenetMath/collisionChecking.cpp
+src/FrenetMath/selfType.cpp
  
 )
 

@@ -12,7 +12,7 @@ namespace lattice_planner{
 
 double kappa_cost(const Node node, 
                 const Node & next_node, 
-                std::vector<arc_length_parameter> & coefficients) {
+                std::vector<CubicCoefficients> & coefficients) {
     double mean_kappa = trajectory_kappa(node, next_node, coefficients);
     // ROS_INFO("trajectory_kappa() is completed...");
     return mean_kappa;
@@ -29,20 +29,20 @@ double reference_line_cost(const Node start_node, const Node next_node, double &
 }
 
 
-double collision_risk(const Node start_node, const Node next_node, const std::vector<pose_frenet>& obstacle) {
+double collision_risk(const Node start_node, const Node next_node, const std::vector<FrenetPose>& obstacle) {
 
-    pose_frenet start;
+    FrenetPose start;
     start.s=start_node.x_;
     start.rho = start_node.y_;
     start.heading = 0.0 * M_PI / 180.0;
 
-    pose_frenet end;
+    FrenetPose end;
     end.s = next_node.x_;
     end.rho = next_node.y_;
     end.heading = 0.0 * M_PI / 180.0;
 
     CubicPolynomial cubic(start, end);
-    std::vector<pose_frenet> frenet_path = cubic.computeFrenetCoordinates();
+    std::vector<FrenetPose> frenet_path = cubic.computeFrenetCoordinates();
 
     double r_circle=1.0;
     double obstacle_inflation=1.5;
@@ -66,8 +66,8 @@ double collision_risk(const Node start_node, const Node next_node, const std::ve
 double total_cost(const Node node, 
                 const Node next_node, 
                 double & refline, 
-                const std::vector<pose_frenet> & obstacle, 
-                std::vector<arc_length_parameter> & coefficients) {
+                const std::vector<FrenetPose> & obstacle, 
+                std::vector<CubicCoefficients> & coefficients) {
 
     double cost1 = kappa_cost(node, next_node, coefficients);
     double cost2 = reference_line_cost(node, next_node, refline);

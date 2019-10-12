@@ -11,20 +11,20 @@ namespace lattice_planner{
 
 double trajectory_kappa(const Node node, 
                         const Node next_node, 
-                        std::vector<arc_length_parameter> & coefficients){
+                        std::vector<CubicCoefficients> & coefficients){
 
-    pose_frenet start;
+    FrenetPose start;
     start.s = node.x_;
     start.rho = node.y_;
     start.heading = 0.0 * M_PI / 180.0;
 
-    pose_frenet end;
+    FrenetPose end;
     end.s = next_node.x_;
     end.rho = next_node.y_;
     end.heading = 0.0 * M_PI / 180.0;
     
     CubicPolynomial cubic(start, end);
-    std::vector<pose_frenet> frenet_path = cubic.computeFrenetCoordinates();
+    std::vector<FrenetPose> frenet_path = cubic.computeFrenetCoordinates();
     // ROS_INFO("cubic.computeFrenet() is completed...");
     // cout<<"-------------------s,rho,theta-size()-------------"<<endl;
     // cout<<s.size()<<"-"<<rho.size()<<"-"<<theta.size()<<endl;

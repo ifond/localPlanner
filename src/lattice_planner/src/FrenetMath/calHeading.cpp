@@ -7,7 +7,7 @@
 
 namespace lattice_planner{
 
-double cal_FrenetHeading(lattice_planner::pose_frenet pose0, lattice_planner::pose_frenet pose1){
+double cal_FrenetHeading(lattice_planner::FrenetPose pose0, lattice_planner::FrenetPose pose1){
 double s0 = pose0.s;
 double rho0 = pose0.rho;
 double s1 = pose1.s;

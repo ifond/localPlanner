@@ -6,11 +6,11 @@
 #define LATTICEPLANNER_CALHEADING_H
 
 #include <array>
-#include "../config/parameters.h"
+#include "selfType.h"
 
 namespace lattice_planner{
 
-double cal_FrenetHeading(lattice_planner::pose_frenet pose0, lattice_planner::pose_frenet pose1);
+double cal_FrenetHeading(lattice_planner::FrenetPose pose0, lattice_planner::FrenetPose pose1);
 
 
 }

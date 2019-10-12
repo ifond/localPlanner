@@ -19,7 +19,7 @@ class Node;
  */
 double kappa_cost(const Node node, 
                 const Node & next_node, 
-                std::vector<arc_length_parameter> & coefficients);
+                std::vector<CubicCoefficients> & coefficients);
 
 
 /**
@@ -41,14 +41,14 @@ double reference_line_cost(const Node start_node, const Node next_node, double &
  */
 double collision_risk(const Node start_node, 
                     const Node next_node, 
-                    const std::vector<pose_frenet> & obstacle);
+                    const std::vector<FrenetPose> & obstacle);
 
 
 double total_cost(const Node node, 
                 const Node next_node, 
                 double & refline, 
-                const std::vector<pose_frenet> & obstacle, 
-                std::vector<arc_length_parameter> &coefficients);
+                const std::vector<FrenetPose> & obstacle, 
+                std::vector<CubicCoefficients> &coefficients);
 
 }
 

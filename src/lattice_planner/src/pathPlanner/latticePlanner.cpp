@@ -17,66 +17,8 @@
 
 namespace lattice_planner{
 
-Node::Node(double x, double y, double cost, int id, int pid){
-    this->x_ = x;
-    this->y_ = y;
-    this->cost_ = cost;
-    this->id_ = id;
-    this->pid_ = pid;
-}
 
-void Node::PrintStatus(){
-    std::cout << "--------------"              << std::endl
-              << "Node          :"             << std::endl
-              << "x             : " << x_      << std::endl
-              << "y             : " << y_      << std::endl
-              << "Cost          : " << cost_   << std::endl
-              << "Id            : " << id_     << std::endl
-              << "Pid           : " << pid_    << std::endl
-              << "--------------"              << std::endl;
-}
-
-Node Node::operator+(Node p){
-    Node tmp;
-    tmp.x_ = this->x_ + p.x_;
-    tmp.y_ = p.y_;
-    tmp.cost_ = this->cost_ + p.cost_;
-    return tmp;
-}
-
-Node Node::operator-(Node p){
-    Node tmp;
-    tmp.x_ = this->x_ - p.x_;
-    tmp.y_ = this->y_ - p.y_;
-    return tmp;
-}
-
-void Node::operator=(Node p){
-    this->x_ = p.x_;
-    this->y_ = p.y_;
-    this->cost_ = p.cost_;
-    this->id_ = p.id_;
-    this->pid_ = p.pid_;
-}
-
-bool Node::operator==(Node p) {
-    if (this->x_ == p.x_ && this->y_ == p.y_) return true;
-    return false;
-}
-
-bool Node::operator!=(Node p){
-    if (this->x_ != p.x_ || this->y_ != p.y_) return true;
-    return false;
-}
-
-
-bool compare_cost::operator()(Node & p1, Node & p2){
-    if (p1.cost_ >= p2.cost_) return true;
-    return false;
-};
-
-
-Dijkstra::Dijkstra(std::vector<arc_length_parameter> &coefficients){
+Dijkstra::Dijkstra(std::vector<CubicCoefficients> &coefficients){
     
     ROS_INFO("lattice planner is initialing..");
     coefficients_=coefficients;
@@ -312,13 +254,13 @@ void Dijkstra::generatePath(){
     geometry_msgs::PoseStamped cartesian_pose;
 
     // start cubic
-    lattice_planner::pose_frenet start;
+    lattice_planner::FrenetPose start;
     start.s = pathNode.top().x_;
     start.rho = pathNode.top().y_;
     start.heading = FrenetStart_.heading;
     
     pathNode.pop();
-    lattice_planner::pose_frenet end;
+    lattice_planner::FrenetPose end;
     end.s = pathNode.top().x_;
     end.rho = pathNode.top().y_;
     end.heading = 0.0 * M_PI / 180.0;
@@ -326,7 +268,7 @@ void Dijkstra::generatePath(){
     // std::cout<<"-----x,y-------------"<<std::endl;
     // std::cout<<start[0]<<","<<start[1]<<std::endl;
     lattice_planner::CubicPolynomial cubic(start, end);
-    std::vector<lattice_planner::pose_frenet> frenet_path=cubic.computeFrenetCoordinates();
+    std::vector<lattice_planner::FrenetPose> frenet_path=cubic.computeFrenetCoordinates();
     
     // std::vector<double> s_vec=*(set.begin());
     // std::vector<double> rho_vec=*(set.begin()+1);
@@ -340,14 +282,14 @@ void Dijkstra::generatePath(){
 
 	while (!pathNode.empty()){
 		
-		lattice_planner::pose_frenet start;
+		lattice_planner::FrenetPose start;
         start.s = pathNode.top().x_;
         start.rho = pathNode.top().y_;
         start.heading = 0.0 * M_PI / 180.0;
         
 		pathNode.pop();
 		if (pathNode.empty()) break;
-   		lattice_planner::pose_frenet end;
+   		lattice_planner::FrenetPose end;
         end.s = pathNode.top().x_;
         end.rho = pathNode.top().y_;
         end.heading = 0.0 * M_PI / 180.0;
@@ -355,7 +297,7 @@ void Dijkstra::generatePath(){
 		// std::cout<<"-----x,y-------------"<<std::endl;
 		// std::cout<<start[0]<<","<<start[1]<<std::endl;
    		lattice_planner::CubicPolynomial cubic(start, end);
-   		std::vector<lattice_planner::pose_frenet> frenet_path=cubic.computeFrenetCoordinates();
+   		std::vector<lattice_planner::FrenetPose> frenet_path=cubic.computeFrenetCoordinates();
 		
 		// std::vector<double> s_vec=*(set.begin());
 		// std::vector<double> rho_vec=*(set.begin()+1);
@@ -379,7 +321,7 @@ void Dijkstra::generatePath(){
 }
 
 void Dijkstra::samplingNodes(){
-    pose_frenet tmp_pose;
+    FrenetPose tmp_pose;
 
 	for (int i=0; i<longitudinal_num; i++){
 		double x_i = (i + 1) * longitudinal_step + nodeStart_.x_;
@@ -405,17 +347,17 @@ void Dijkstra::generateLattice(){
 
 	// 生成车辆起点到第一列采样点的图
 	for( int i=0; i<lateral_num; i++){
-        pose_frenet start;
+        FrenetPose start;
         start.s = FrenetStart_.s;
         start.rho = FrenetStart_.rho;
         start.heading = FrenetStart_.heading;
-   		pose_frenet end;
+   		FrenetPose end;
         end.s = samplingPoses[i].s;
         end.rho = samplingPoses[i].rho;
         end.heading = samplingPoses[i].heading;
 
    		CubicPolynomial cubic(start, end);
-   		std::vector<pose_frenet> frenet_path=cubic.computeFrenetCoordinates();
+   		std::vector<FrenetPose> frenet_path=cubic.computeFrenetCoordinates();
 
 		for(std::size_t i=0; i!= frenet_path.size(); i++){
 			cartesian_pose = frenet_to_cartesian(frenet_path[i].s, frenet_path[i].rho, frenet_path[i].heading, coefficients_);
@@ -427,12 +369,12 @@ void Dijkstra::generateLattice(){
 	for (int i=0; i<longitudinal_num-1; i++ ){
 		for (int j=0;j<lateral_num; j++){
             for(int q=0; q<lateral_num; q++){
-                pose_frenet start;
+                FrenetPose start;
                 start.s = samplingPoses[i*lateral_num+j].s;
                 start.rho = samplingPoses[i*lateral_num+j].rho;
                 start.heading = samplingPoses[i*lateral_num+j].heading;                
                 
-   		        pose_frenet end;
+   		        FrenetPose end;
                 end.s = samplingPoses[(i+1)*lateral_num + q].s;
                 end.rho = samplingPoses[(i+1)*lateral_num + q].rho;
                 end.heading = samplingPoses[(i+1)*lateral_num + q].heading;
@@ -441,7 +383,7 @@ void Dijkstra::generateLattice(){
                 // std::cout<<"start x:"<<start[0]<<"end x: "<<end[0]<<std::endl;
 
    		        CubicPolynomial cubic(start, end);
-   		        std::vector<pose_frenet> frenet_path=cubic.computeFrenetCoordinates();
+   		        std::vector<FrenetPose> frenet_path=cubic.computeFrenetCoordinates();
 
                 for(std::size_t t=0; t!= frenet_path.size(); t++){
                     cartesian_pose = frenet_to_cartesian(frenet_path[t].s, frenet_path[t].rho, frenet_path[t].heading, coefficients_);
@@ -469,6 +411,8 @@ void Dijkstra::generateLattice(){
     cloud_msg.header.stamp = ros::Time::now();
     cloud_msg.header.frame_id="/map";
     lattice_pub_.publish(cloud_msg);
+
+    // delete cloud;
 
     // return path_lattice;
 }

@@ -8,17 +8,20 @@
 
 #include <vector>
 #include <array>
-#include "../config/parameters.h"
+#include "selfType.h"
 #include <geometry_msgs/PoseStamped.h>
 #include <tf/transform_datatypes.h>
 
 
 namespace lattice_planner{
 
+/**
+ * the frenet pose is transformed into the cartesian pose
+ */
 geometry_msgs::PoseStamped frenet_to_cartesian(double s, 
                                         double rho, 
                                         double thetaRho, 
-                                        std::vector<arc_length_parameter> &coefficients);
+                                        std::vector<CubicCoefficients> &coefficients);
 
 /**
  * input:s,output:x,y,theta
@@ -27,7 +30,7 @@ geometry_msgs::PoseStamped frenet_to_cartesian(double s,
  * @param coefficients
  * @return
  */
-geometry_msgs::PoseStamped poses_of_reference_line(double s, std::vector<arc_length_parameter>  & coefficients);
+geometry_msgs::PoseStamped poses_of_reference_line(double s, std::vector<CubicCoefficients>  & coefficients);
 
 /**
  * algorithm:binary search
@@ -35,7 +38,7 @@ geometry_msgs::PoseStamped poses_of_reference_line(double s, std::vector<arc_len
  * @param s
  * @return
  */
-int binary_search(std::vector<arc_length_parameter>  & coefficients, double s);
+int binary_search(std::vector<CubicCoefficients> & coefficients, double s);
 
 }
 

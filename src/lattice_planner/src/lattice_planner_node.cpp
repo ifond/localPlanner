@@ -5,7 +5,7 @@
 #include <fstream>
 #include "pathPlanner/latticePlanner.h"
 // #include "curves/cubicPolynomial.h"
-#include "config/parameters.h"
+#include "FrenetMath/selfType.h"
 // #include "FrenetMath/frenetToCartesian.h"
 // #include "../include/lattice_planner/lattice_planner.h"
 #include <ros/ros.h>
@@ -18,11 +18,11 @@
 // #include "FrenetMath/cartesianToFrenet.h"
 
 
-std::vector<lattice_planner::arc_length_parameter> loadCoefficients(){
+std::vector<lattice_planner::CubicCoefficients> loadCoefficients(){
 	std::ifstream readFile("/home/ustb/coefficients_test.csv");
     std::string lineStr;
 
-	std::vector<lattice_planner::arc_length_parameter> coefficients;
+	std::vector<lattice_planner::CubicCoefficients> coefficients;
 	// std::vector<std::vector<double>> coefficients;
 	while (getline(readFile, lineStr))
 	{
@@ -38,7 +38,7 @@ std::vector<lattice_planner::arc_length_parameter> loadCoefficients(){
 			lineArray.push_back(d_data);
         }
 
-        lattice_planner::arc_length_parameter p;
+        lattice_planner::CubicCoefficients p;
         p.s = lineArray[0];
         p.a0 = lineArray[1];
         p.a1 = lineArray[2];
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
 
     ROS_INFO("lattice planner is running...");
     ros::init(argc, argv, "lattice_planner");
-	std::vector<lattice_planner::arc_length_parameter> coefficients;
+	std::vector<lattice_planner::CubicCoefficients> coefficients;
 	// call the lattice planner
 	coefficients = loadCoefficients();
 

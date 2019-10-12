@@ -13,7 +13,7 @@ namespace lattice_planner{
 geometry_msgs::PoseStamped frenet_to_cartesian(double s, 
                                                 double rho, 
                                                 double thetaRho, 
-                                                std::vector<arc_length_parameter> &coefficients){
+                                                std::vector<CubicCoefficients> &coefficients){
     geometry_msgs::PoseStamped Refline_pose = poses_of_reference_line(s, coefficients);
 
     // ROS_INFO("poses_of_reference_line() is completed...");
@@ -38,11 +38,11 @@ geometry_msgs::PoseStamped frenet_to_cartesian(double s,
 }
 
 
-geometry_msgs::PoseStamped poses_of_reference_line(double s, std::vector<arc_length_parameter> & coefficients){
+geometry_msgs::PoseStamped poses_of_reference_line(double s, std::vector<CubicCoefficients> & coefficients){
 
     int s_id = 0;
     s_id = binary_search(coefficients, s);
-    arc_length_parameter param = coefficients[s_id];
+    CubicCoefficients param = coefficients[s_id];
     double s_start = param.s;
     // std::vector<double> a = {{coefficients[s_id][1], coefficients[s_id][2], coefficients[s_id][3], coefficients[s_id][4]}};
     // std::vector<double > b = {{coefficients[s_id][5], coefficients[s_id][6], coefficients[s_id][7], coefficients[s_id][8]}};
@@ -65,7 +65,7 @@ geometry_msgs::PoseStamped poses_of_reference_line(double s, std::vector<arc_len
     return refLine_pose;
 }
 
-int binary_search(std::vector<arc_length_parameter> &coefficients, double s) {
+int binary_search(std::vector<CubicCoefficients> &coefficients, double s) {
 
     int head = 0;
     int tail = coefficients.size() - 1;

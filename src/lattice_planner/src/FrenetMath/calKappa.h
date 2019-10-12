@@ -5,13 +5,13 @@
 #ifndef LATTICEPLANNER_CALKAPPA_H
 #define LATTICEPLANNER_CALKAPPA_H
 
-#include "../pathPlanner/latticePlanner.h"
-#include "../curves/cubicPolynomial.h"
-#include "../FrenetMath/frenetToCartesian.h"
+#include "selfType.h"
+#include "cubicPolynomial.h"
+#include "frenetToCartesian.h"
 
 
 namespace lattice_planner{
-class Node;
+
 /**
  * calculate the average curvature of a cubic polynomial path
  * @param node
@@ -20,7 +20,7 @@ class Node;
  */
 double trajectory_kappa(const Node node, 
                         const Node next_node, 
-                        std::vector<arc_length_parameter> & coefficients);
+                        std::vector<CubicCoefficients> & coefficients);
 
 }
 

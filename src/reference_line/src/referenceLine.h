@@ -24,15 +24,20 @@
 
 namespace reference_line{
 
-typedef std::vector<std::vector<double > > coefficients_type;
+// typedef std::vector<std::vector<double >> coefficients_type;
 
-
+/**
+ * self defined struct
+ */
 struct arc_length_parameter{
     double s;
     double a0, a1, a2, a3;
     double b0, b1, b2, b3;
 };
 
+/**
+ * reference line class
+ */
 class RefLine{
 public:
 
@@ -56,15 +61,39 @@ public:
                         double sf,
                         std::ofstream &writeFile);
 
-    std::vector<arc_length_parameter> ref_coefficients_output();
+    /**
+     * obtain the coefficients of the reference line, 
+     * this is an API in the RefLine class.
+     */
+    std::vector<arc_length_parameter> ref_coefficients_output() const;
 
+    /**
+     * visualization in rviz, display the reference line
+     */
     nav_msgs::Path generateRefLine_inRviz();
 
+    /**
+     * calculate the cartesian pose of every point in the reference line.
+     */
     geometry_msgs::PoseStamped poses_of_reference_line(double s);
 
+    /**
+     * binary search about the coefficients lookup table.
+     */
     int binary_search(double s);
+
+    /**
+     * debug function.
+     * read coefficients lookup table from the file which is made by the RefLine::RefLine().
+     */
     nav_msgs::Path readCoefficientsFromFile();
-    bool isSameData(std::vector<arc_length_parameter> coeff, nav_msgs::Path path);
+
+    /**
+     * 计算在线计算出的参考线系数，和经过存储到csv文件再读取后的参考线系数，之间的系数误差，
+     * 以及依据两者两者生成的参考线位姿误差。
+     * 这个函数也是用来debug的。
+     */
+    bool isSameData(std::vector<arc_length_parameter> &coeff, nav_msgs::Path &path);
 
 
 private:
