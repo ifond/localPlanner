@@ -27,13 +27,28 @@
  * 
  */
 
-
+#include <vector>
+#include "selfType.h"
 
 
 #ifndef LATTICE_PLANNER_COLLISIONCHECKING_H
 #define LATTICE_PLANNER_COLLISIONCHECKING_H
 
 namespace lattice_planner{
+
+
+class CollisionChecker
+{
+private:
+    
+    VehicleBox box_;
+    
+
+public:
+    CollisionChecker(/* args */);
+    ~CollisionChecker();
+};
+
 
 
 

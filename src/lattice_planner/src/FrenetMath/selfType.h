@@ -3,6 +3,8 @@
 //
 //  input:way-points
 //  output:coefficients of the arc-length parameterized reference line
+// Paper:
+// Fast Collision Checking for Intelligent Vehicle Motion Planning
 
 
 #ifndef LATTICEPLANNER_SELFTYPE_H
@@ -135,12 +137,12 @@ struct CartesianPoint{
 
 
 struct CartesianPath{
-    std::vector<CartesianPose> CartesianPath;
+    std::vector<CartesianPose> cartesianPath;
 };
 
 
 struct FrenetPath{
-    std::vector<FrenetPose> FrenetPath;
+    std::vector<FrenetPose> frenetPath;
 };
 
 
@@ -166,14 +168,43 @@ struct PointsObstacle
 };
 
 
-struct Rectangle{
+class VehicleBox{
+private:
     CartesianPoint p0,p1,p2,p3;
+
+    /**
+     * 外接圆半径
+     */
+    double CircumscribedCircleRadius_;
+
+    /**
+     * 内接圆半径
+     */
+    double InscribedCircleRadius_;
+
+    /**
+     * 后轴中点
+     */
+    CartesianPose RearAxleMidPoint_;
+
+    double VehicleWidth_;
+    double VehicleLength_;
+
+    int NumCircles_;
+
+    double BodyDiskRadius_;
+    double DistanceBetweenDisks_;
+
+public:
+    VehicleBox();
+
+
 };
 
 
-struct Rectangles{
+struct VehicleBoxes{
     /* data */
-    std::vector<Rectangle> rectangles;
+    std::vector<VehicleBox> boxes;
 };
 
 

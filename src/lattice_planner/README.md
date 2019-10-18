@@ -11,6 +11,10 @@ sudo cp -r /usr/local/include/eigen3/Eigen /usr/local/include
 or 
 
 sudo cp -r /usr/include/eigen3/Eigen /usr/include 
+
+
+libccd   https://github.com/danfis/libccd
+
 ## algorithms
 1 calculate kappa
 

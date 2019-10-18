@@ -64,5 +64,28 @@ bool compare_cost::operator()(Node & p1, Node & p2){
 };
 
 
+
+VehicleBox::VehicleBox(){
+
+
+    RearAxleMidPoint_.x=0.0;
+    RearAxleMidPoint_.y=0.0;
+    RearAxleMidPoint_.yaw=0.0;
+
+    VehicleWidth_=1.8;
+    VehicleLength_=4.0;
+
+    CircumscribedCircleRadius_=sqrt(pow(VehicleWidth_/2.0,2) + pow(VehicleLength_/2.0,2));
+
+    InscribedCircleRadius_ = VehicleWidth_/2.0;
+
+    NumCircles_=3;
+    BodyDiskRadius_ = sqrt(pow(VehicleLength_,2)/(NumCircles_*NumCircles_) + pow(VehicleWidth_,2)/4);
+
+    DistanceBetweenDisks_ = 2*sqrt(pow(BodyDiskRadius_,2)-pow(VehicleWidth_,2)/4);
+
+
+    
+}
     
 } // namespace name

@@ -11,6 +11,7 @@ git@github.com:yangmingustb/localPlanner.git
 
 
 ## algorithms
+
 1 calculate kappa
 
 2 calculate heading
@@ -27,12 +28,18 @@ git@github.com:yangmingustb/localPlanner.git
 
 ![avatar](https://github.com/yangmingustb/latticePlanner/blob/master/graph/3.png)
 
-## include_planner:
+## project movies
+
+[movie1](https://zhuanlan.zhihu.com/p/83851704)
+
+# include_planner:
 
 -1. lattice_planner, 
 
 -2. Hybrid A* planner,
 
 -rviz path visualization
+
+
 
 
