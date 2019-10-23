@@ -33,24 +33,25 @@ double trajectory_kappa(const Node node,
     for (int i=0; i < (frenet_path.size()-2); i=i+5){
         double x0, x1, x2, y0, y1, y2, k1, k2, k3, s0, rho0, s1, rho1, s2, rho2, theta_rho0, theta_rho1, theta_rho2;
         geometry_msgs::PoseStamped cartesian_pose;
-        s0 = frenet_path[i].s;
-        rho0 = frenet_path[i].rho;
-        theta_rho0 = frenet_path[i].heading;
-        s1=frenet_path[i + 1].s;
-        rho1=frenet_path[i + 1].rho;
-        theta_rho1 = frenet_path[i+1].heading;
-        s2=frenet_path[i + 2].s;
-        rho2=frenet_path[i + 2].rho;
-        theta_rho2 = frenet_path[i+2].heading;
+        FrenetPose p0,p1,p2;
+        p0.s= frenet_path[i].s;
+        p0.rho= frenet_path[i].rho;
+        p0.heading= frenet_path[i].heading;
+        p1.s=frenet_path[i + 1].s;
+        p1.rho=frenet_path[i + 1].rho;
+        p1.heading = frenet_path[i+1].heading;
+        p2.s=frenet_path[i + 2].s;
+        p2.rho=frenet_path[i + 2].rho;
+        p2.heading = frenet_path[i+2].heading;
 
-        cartesian_pose=frenet_to_cartesian(s0, rho0, theta_rho0, coefficients);
+        cartesian_pose=frenetToCartesian(p0, coefficients);
         // ROS_INFO("frenet_to_cartesian() is completed...");
         x0 = cartesian_pose.pose.position.x;
         y0 = cartesian_pose.pose.position.y;
-        cartesian_pose=frenet_to_cartesian(s1, rho1, theta_rho1, coefficients);
+        cartesian_pose=frenetToCartesian(p1, coefficients);
         x1 = cartesian_pose.pose.position.x;
         y1 = cartesian_pose.pose.position.y;
-        cartesian_pose=frenet_to_cartesian(s2, rho2, theta_rho2, coefficients);
+        cartesian_pose=frenetToCartesian(p2, coefficients);
         x2 = cartesian_pose.pose.position.x;
         y2 = cartesian_pose.pose.position.y;
 

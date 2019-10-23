@@ -68,7 +68,7 @@ private:
     std::vector<Node> open_list_;
     std::vector<Node> closed_list_;
     Node nodeStart_, goal_;
-    std::vector<CubicCoefficients> coefficients_;
+    std::vector<CubicCoefficients > coefficients_;
     // std::vector<geometry_msgs::PoseStamped> optimal_path, path_lattice; 
     // sampling poses from the Frenet coordinate system
     std::vector<FrenetPose> samplingPoses;

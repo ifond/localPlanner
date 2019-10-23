@@ -1,5 +1,7 @@
 
 #include "selfType.h"
+#include "cartesianToFrenet.h"
+
 
 
 
@@ -64,28 +66,114 @@ bool compare_cost::operator()(Node & p1, Node & p2){
 };
 
 
+VehicleDisks::VehicleDisks(CartesianPose &rearAxleMidPoint,
+                            double vehicleWidth,
+                            double vehicleLength,
+                            double H){
 
-VehicleBox::VehicleBox(){
+    RearAxleMidPoint_ = rearAxleMidPoint;
+
+    VehicleWidth_=vehicleWidth;
+    VehicleLength_=vehicleLength;
+    H_ = H;
+    Distance_ = VehicleLength_/2.0 - H_;
+
+    disk1.Catpoint.x = RearAxleMidPoint_.x;
+    disk1.Catpoint.y = RearAxleMidPoint_.y;
+    disk1.radius= sqrt(H_*H_ + VehicleWidth_*VehicleWidth_/4.0);
+
+    disk2.Catpoint.x = RearAxleMidPoint_.x + Distance_ * cos(RearAxleMidPoint_.yaw);
+    disk2.Catpoint.y = RearAxleMidPoint_.y + Distance_ * sin(RearAxleMidPoint_.yaw);
+    disk2.radius = disk1.radius;
+
+    disk3.Catpoint.x = RearAxleMidPoint_.x + 2 * Distance_ * cos(RearAxleMidPoint_.yaw);
+    disk3.Catpoint.y = RearAxleMidPoint_.y + 2 * Distance_ * sin(RearAxleMidPoint_.yaw);
+    disk3.radius = disk1.radius;
+
+    BigDisk.Catpoint.x = disk2.Catpoint.x;
+    BigDisk.Catpoint.y = disk2.Catpoint.y;
+    BigDisk.radius = sqrt(VehicleLength_ * VehicleLength_ / 4.0 + VehicleWidth_*VehicleWidth_/4.0);
+
+}
 
 
-    RearAxleMidPoint_.x=0.0;
-    RearAxleMidPoint_.y=0.0;
-    RearAxleMidPoint_.yaw=0.0;
+VehicleDisks::VehicleDisks(CartesianPose &rearAxleMidPoint,
+                           std::vector<CubicCoefficients> *coefficients,
+                           nav_msgs::Path &refline){
 
-    VehicleWidth_=1.8;
+    RearAxleMidPoint_ = rearAxleMidPoint;
+
+    coefficients_ = coefficients;
+
+    VehicleWidth_=1.6;
     VehicleLength_=4.0;
+    H_ = 1.0;
+    Distance_ = VehicleLength_/2.0 - H_;
 
-    CircumscribedCircleRadius_=sqrt(pow(VehicleWidth_/2.0,2) + pow(VehicleLength_/2.0,2));
+    disk1.Catpoint.x = RearAxleMidPoint_.x;
+    disk1.Catpoint.y = RearAxleMidPoint_.y;
+    disk1.radius= sqrt(H_*H_ + VehicleWidth_*VehicleWidth_/4.0);
 
-    InscribedCircleRadius_ = VehicleWidth_/2.0;
+    geometry_msgs::Quaternion q = tf::createQuaternionMsgFromYaw(RearAxleMidPoint_.yaw);
+    geometry_msgs::PoseWithCovarianceStamped diskStamped1;
+    diskStamped1.pose.pose.position.x = disk1.Catpoint.x; 
+    diskStamped1.pose.pose.position.y = disk1.Catpoint.y;
+    diskStamped1.pose.pose.orientation = q;
+    FrenetPose frtdisk1 = CartesianToFrenet(diskStamped1, refline, *coefficients_);
+    disk1.FrtPoint.s = frtdisk1.s;
+    disk1.FrtPoint.rho = frtdisk1.rho;
 
-    NumCircles_=3;
-    BodyDiskRadius_ = sqrt(pow(VehicleLength_,2)/(NumCircles_*NumCircles_) + pow(VehicleWidth_,2)/4);
+    disk2.Catpoint.x = RearAxleMidPoint_.x + Distance_ * cos(RearAxleMidPoint_.yaw);
+    disk2.Catpoint.y = RearAxleMidPoint_.y + Distance_ * sin(RearAxleMidPoint_.yaw);
+    disk2.radius = disk1.radius;
 
-    DistanceBetweenDisks_ = 2*sqrt(pow(BodyDiskRadius_,2)-pow(VehicleWidth_,2)/4);
+    geometry_msgs::PoseWithCovarianceStamped diskStamped2;
+    diskStamped2.pose.pose.position.x = disk2.Catpoint.x; 
+    diskStamped2.pose.pose.position.y = disk2.Catpoint.y;
+    diskStamped2.pose.pose.orientation = q;
+    FrenetPose frtdisk2 = CartesianToFrenet(diskStamped2, refline, *coefficients_);
+    disk2.FrtPoint.s = frtdisk2.s;
+    disk2.FrtPoint.rho = frtdisk2.rho;
 
+    disk3.Catpoint.x = RearAxleMidPoint_.x + 2 * Distance_ * cos(RearAxleMidPoint_.yaw);
+    disk3.Catpoint.y = RearAxleMidPoint_.y + 2 * Distance_ * sin(RearAxleMidPoint_.yaw);
+    disk3.radius = disk1.radius;
 
-    
+    geometry_msgs::PoseWithCovarianceStamped diskStamped3;
+    diskStamped3.pose.pose.position.x = disk3.Catpoint.x; 
+    diskStamped3.pose.pose.position.y = disk3.Catpoint.y;
+    diskStamped3.pose.pose.orientation = q;
+    FrenetPose frtdisk3 = CartesianToFrenet(diskStamped3, refline, *coefficients_);
+    disk3.FrtPoint.s = frtdisk3.s;
+    disk3.FrtPoint.rho = frtdisk3.rho;
+
+    BigDisk.Catpoint.x = disk2.Catpoint.x;
+    BigDisk.Catpoint.y = disk2.Catpoint.y;
+    BigDisk.radius = sqrt(VehicleLength_ * VehicleLength_ / 4.0 + VehicleWidth_*VehicleWidth_/4.0);
+    BigDisk.FrtPoint.s = disk2.FrtPoint.s;
+    BigDisk.FrtPoint.rho = disk2.FrtPoint.rho;
+
 }
     
+
+VehicleDisk VehicleDisks::getDisk1() const {
+
+    return disk1;
+}
+
+
+VehicleDisk VehicleDisks::getDisk2() const{
+    return disk2;
+}
+
+
+VehicleDisk VehicleDisks::getDisk3() const{
+    return disk3;
+}
+
+VehicleDisk VehicleDisks::getBigDisk() const{
+    return BigDisk;
+}
+
+
 } // namespace name

@@ -41,12 +41,38 @@ class CollisionChecker
 {
 private:
     
-    VehicleBox box_;
+    // VehicleDisks disks_;
+
+    CartesianPath catPath_;
+    complexPath cpxpath_;
+    PointsObstacle obstacles_;
+    VehicleDisksTrajectory disksTrajectory_;
+
+    double rhoLeft_;
+    double rhoRight_;
+
+    nav_msgs::Path refline_;
+    std::vector<CubicCoefficients> coefficients_;
     
 
 public:
-    CollisionChecker(/* args */);
+    CollisionChecker(complexPath & cpxpath, 
+                     PointsObstacle & obstacles,
+                     double rhoLeft,
+                     double rhoRight,
+                     nav_msgs::Path &refline, 
+                     std::vector<CubicCoefficients> &coefficients);
+
     ~CollisionChecker();
+
+public:
+    void generateDisksTrajectory();
+
+    /**
+     * if collision, return false
+     * if no collision, return true
+     */
+    bool performChecking();
 };
 
 

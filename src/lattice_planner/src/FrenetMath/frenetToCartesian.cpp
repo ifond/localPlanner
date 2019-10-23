@@ -10,11 +10,10 @@
 
 namespace lattice_planner{
 
-geometry_msgs::PoseStamped frenet_to_cartesian(double s, 
-                                                double rho, 
-                                                double thetaRho, 
-                                                std::vector<CubicCoefficients> &coefficients){
-    geometry_msgs::PoseStamped Refline_pose = poses_of_reference_line(s, coefficients);
+geometry_msgs::PoseStamped frenetToCartesian(FrenetPose frtPose, 
+                                            std::vector<CubicCoefficients> &coefficients){
+                                                
+    geometry_msgs::PoseStamped Refline_pose = poses_of_reference_line(frtPose.s, coefficients);
 
     // ROS_INFO("poses_of_reference_line() is completed...");
     double x_r=Refline_pose.pose.position.x;
@@ -28,9 +27,9 @@ geometry_msgs::PoseStamped frenet_to_cartesian(double s,
     double theta_r=yaw;
 
     geometry_msgs::PoseStamped pose;
-    pose.pose.position.x = x_r + rho * cos(theta_r + M_PI / 2.0);
-    pose.pose.position.y = y_r + rho * sin(theta_r + M_PI / 2.0);
-    double theta = theta_r + thetaRho;
+    pose.pose.position.x = x_r + frtPose.rho * cos(theta_r + M_PI / 2.0);
+    pose.pose.position.y = y_r + frtPose.rho * sin(theta_r + M_PI / 2.0);
+    double theta = theta_r + frtPose.heading;
     geometry_msgs::Quaternion geo_q = tf::createQuaternionMsgFromYaw(theta);
     pose.pose.orientation = geo_q;
     // pose.yaw = theta_r + thetaRho;

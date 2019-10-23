@@ -19,6 +19,7 @@
 #include <tf/transform_listener.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <nav_msgs/Path.h>
 
 
 namespace lattice_planner{
@@ -111,7 +112,6 @@ struct compare_cost{
 };
 
 
-
 /**
  * self defined data structure
  * 
@@ -121,6 +121,13 @@ struct FrenetPose{
     double s;
     double rho;
     double heading=0.0;
+};
+
+
+struct FrenetPoint
+{
+    /* data */
+    double s,rho;
 };
 
 
@@ -136,6 +143,27 @@ struct CartesianPoint{
 };
 
 
+/**
+ * 组合的点
+ */
+struct complexPoint{
+    FrenetPoint frtPoint_;
+    CartesianPoint catPoint_;
+
+};
+
+
+/**
+ * 组合的位姿
+ */
+struct complexPose{
+
+    FrenetPose frtPose_;
+    CartesianPose catPose_;
+    double kappa;
+};
+
+
 struct CartesianPath{
     std::vector<CartesianPose> cartesianPath;
 };
@@ -143,6 +171,12 @@ struct CartesianPath{
 
 struct FrenetPath{
     std::vector<FrenetPose> frenetPath;
+};
+
+
+struct complexPath{
+    std::vector<complexPose> cpxPath_;
+
 };
 
 
@@ -168,49 +202,75 @@ struct PointsObstacle
 };
 
 
-class VehicleBox{
+/**
+ * vehicle body disk parameters
+ */
+struct VehicleDisk{
+    CartesianPoint Catpoint;
+    FrenetPoint FrtPoint;
+    double radius;
+};
+
+
+/**
+ * a vehicle body is overlaid by three little disks and one big disk.
+ */
+class VehicleDisks{
 private:
-    CartesianPoint p0,p1,p2,p3;
-
-    /**
-     * 外接圆半径
-     */
-    double CircumscribedCircleRadius_;
-
-    /**
-     * 内接圆半径
-     */
-    double InscribedCircleRadius_;
+    VehicleDisk disk1,disk2,disk3;
+    VehicleDisk BigDisk;
 
     /**
      * 后轴中点
      */
     CartesianPose RearAxleMidPoint_;
 
+    /**
+     * vehicle body width
+     */
     double VehicleWidth_;
+
+    /**
+     * vehicle body length;
+     */
     double VehicleLength_;
 
-    int NumCircles_;
+    /**
+     * distance between disks
+     */
+    double Distance_;
+    
+    /**
+     * the distancle between the rear axle mid point and the rear boudary of a vehicle body
+     */
+    double H_;
 
-    double BodyDiskRadius_;
-    double DistanceBetweenDisks_;
+    std::vector<CubicCoefficients> * coefficients_;
 
 public:
-    VehicleBox();
+    VehicleDisks(CartesianPose &rearAxleMidPoint,
+                double vehicleWidth,
+                double vehicleLength,
+                double H);
 
+    VehicleDisks(CartesianPose &rearAxleMidPoint, 
+                 std::vector<CubicCoefficients> * coefficients,
+                 nav_msgs::Path &refline);
+
+    VehicleDisks();
+
+    VehicleDisk getDisk1() const;
+    VehicleDisk getDisk2() const;
+    VehicleDisk getDisk3() const;
+    VehicleDisk getBigDisk() const;
 
 };
 
 
-struct VehicleBoxes{
-    /* data */
-    std::vector<VehicleBox> boxes;
+struct VehicleDisksTrajectory{
+    std::vector<VehicleDisks> disksTrajectory_;
+
 };
-
-
-
-
-
 
 } //namespace latticeParameter
 

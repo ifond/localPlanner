@@ -18,10 +18,8 @@ namespace lattice_planner{
 /**
  * the frenet pose is transformed into the cartesian pose
  */
-geometry_msgs::PoseStamped frenet_to_cartesian(double s, 
-                                        double rho, 
-                                        double thetaRho, 
-                                        std::vector<CubicCoefficients> &coefficients);
+geometry_msgs::PoseStamped frenetToCartesian(FrenetPose frtPose,
+                                            std::vector<CubicCoefficients> &coefficients);
 
 /**
  * input:s,output:x,y,theta

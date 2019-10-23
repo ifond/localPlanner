@@ -275,7 +275,8 @@ void Dijkstra::generatePath(){
     // std::vector<double> theta = *(set.begin()+2);
 
     for(std::size_t i=0; i< frenet_path.size(); i=i+4){
-        cartesian_pose=frenet_to_cartesian(frenet_path[i].s, frenet_path[i].rho, frenet_path[i].heading, coefficients_);
+
+        cartesian_pose=frenetToCartesian(frenet_path[i], coefficients_);
                 
         optimal_path_.poses.push_back(cartesian_pose);	
     }
@@ -304,7 +305,7 @@ void Dijkstra::generatePath(){
 		// std::vector<double> theta = *(set.begin()+2);
 
 		for(std::size_t i=0; i< frenet_path.size(); i=i+4){
-			cartesian_pose=frenet_to_cartesian(frenet_path[i].s, frenet_path[i].rho, frenet_path[i].heading, coefficients_);
+			cartesian_pose=frenetToCartesian(frenet_path[i], coefficients_);
         	        
             optimal_path_.poses.push_back(cartesian_pose);	
 		}
@@ -360,7 +361,7 @@ void Dijkstra::generateLattice(){
    		std::vector<FrenetPose> frenet_path=cubic.computeFrenetCoordinates();
 
 		for(std::size_t i=0; i!= frenet_path.size(); i++){
-			cartesian_pose = frenet_to_cartesian(frenet_path[i].s, frenet_path[i].rho, frenet_path[i].heading, coefficients_);
+			cartesian_pose = frenetToCartesian(frenet_path[i], coefficients_);
         	path_lattice.push_back(cartesian_pose);
 		}
     } 
@@ -386,7 +387,7 @@ void Dijkstra::generateLattice(){
    		        std::vector<FrenetPose> frenet_path=cubic.computeFrenetCoordinates();
 
                 for(std::size_t t=0; t!= frenet_path.size(); t++){
-                    cartesian_pose = frenet_to_cartesian(frenet_path[t].s, frenet_path[t].rho, frenet_path[t].heading, coefficients_);
+                    cartesian_pose = frenetToCartesian(frenet_path[t], coefficients_);
                     path_lattice.push_back(cartesian_pose);
 
                 }           
@@ -501,11 +502,7 @@ void Dijkstra::ShowObstaclesInRviz(){
 		
 	// 设置初始形状为立方体
   	uint32_t shape = visualization_msgs::Marker::CUBE;
-    
-	double refLineRho=0.0;
-    std::vector<std::vector<double>> obstacles = {{20, refLineRho - 1},{40, refLineRho + 1},{70, refLineRho - 1}};
-
-    for (int i=0; i != obstacles.size(); i++)
+    for (int i=0; i != obstacles_.size(); i++)
     {
         // Create lines and points
         visualization_msgs::Marker obs;
@@ -517,11 +514,7 @@ void Dijkstra::ShowObstaclesInRviz(){
         obs.id = i;
         obs.type = shape;
 
-        double obs_s = obstacles[i][0];
-        double obs_rho = obstacles[i][1];
-        double heading = 0;
-
-        geometry_msgs::PoseStamped poseCartesian = lattice_planner::frenet_to_cartesian(obs_s, obs_rho, heading, coefficients_);
+        geometry_msgs::PoseStamped poseCartesian = lattice_planner::frenetToCartesian(obstacles_[i], coefficients_);
         obs.pose = poseCartesian.pose;
         // obs.pose.position.x = poseCartesian.x;
         // obs.pose.position.y = poseCartesian.y;
