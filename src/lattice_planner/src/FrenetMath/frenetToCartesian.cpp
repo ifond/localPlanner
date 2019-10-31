@@ -4,27 +4,29 @@
 
 #include "frenetToCartesian.h"
 #include <iostream>
-#include <vector>
-#include <array>
 #include <cmath>
 
 namespace lattice_planner{
 
-geometry_msgs::PoseStamped frenetToCartesian(FrenetPose frtPose, 
-                                            std::vector<CubicCoefficients> &coefficients){
+frenetToCartesian::frenetToCartesian(std::vector<CubicCoefficients> &coefficients){
+
+    coefficients_ = coefficients;
+}
+
+
+void frenetToCartesian::setParameters(std::vector<CubicCoefficients> &coefficients){
+    coefficients_ = coefficients;
+}
+
+
+geometry_msgs::PoseStamped frenetToCartesian::transform(FrenetPose frtPose){
                                                 
-    geometry_msgs::PoseStamped Refline_pose = poses_of_reference_line(frtPose.s, coefficients);
+    poseInTheRefLine(frtPose.s);
 
     // ROS_INFO("poses_of_reference_line() is completed...");
-    double x_r=Refline_pose.pose.position.x;
-    double y_r=Refline_pose.pose.position.y;
-
-    tf::Quaternion q;
-    tf::quaternionMsgToTF(Refline_pose.pose.orientation, q);
-    double roll, pitch, yaw;
-    tf::Matrix3x3(q).getRPY(roll, pitch, yaw);
-
-    double theta_r=yaw;
+    double x_r=refLinePose_.x;
+    double y_r=refLinePose_.y;
+    double theta_r=refLinePose_.yaw;
 
     geometry_msgs::PoseStamped pose;
     pose.pose.position.x = x_r + frtPose.rho * cos(theta_r + M_PI / 2.0);
@@ -37,11 +39,11 @@ geometry_msgs::PoseStamped frenetToCartesian(FrenetPose frtPose,
 }
 
 
-geometry_msgs::PoseStamped poses_of_reference_line(double s, std::vector<CubicCoefficients> & coefficients){
+void frenetToCartesian::poseInTheRefLine(double s){
 
     int s_id = 0;
-    s_id = binary_search(coefficients, s);
-    CubicCoefficients param = coefficients[s_id];
+    s_id = binarySearch(s);
+    CubicCoefficients param = coefficients_[s_id];
     double s_start = param.s;
     // std::vector<double> a = {{coefficients[s_id][1], coefficients[s_id][2], coefficients[s_id][3], coefficients[s_id][4]}};
     // std::vector<double > b = {{coefficients[s_id][5], coefficients[s_id][6], coefficients[s_id][7], coefficients[s_id][8]}};
@@ -52,36 +54,56 @@ geometry_msgs::PoseStamped poses_of_reference_line(double s, std::vector<CubicCo
     double d_y = param.b1 + 2 * param.b2 * s + 3 * param.b3 * s * s;
 
     double theta = std::atan2(d_y, d_x);
-
-    geometry_msgs::PoseStamped refLine_pose;
-    refLine_pose.pose.position.x = x;
-    refLine_pose.pose.position.y = y;
-    geometry_msgs::Quaternion q = tf::createQuaternionMsgFromYaw(theta);
-    refLine_pose.pose.orientation = q;
-    refLine_pose.header.stamp=ros::Time::now();
-    // this_pose_stamped.header.frame_id="/my_frame";
-    refLine_pose.header.frame_id="/map";
-    return refLine_pose;
+    refLinePose_.x = x;
+    refLinePose_.y = y;
+    refLinePose_.yaw=theta;
 }
 
-int binary_search(std::vector<CubicCoefficients> &coefficients, double s) {
+int frenetToCartesian::binarySearch(double s) {
 
     int head = 0;
-    int tail = coefficients.size() - 1;
+    int tail = coefficients_.size() - 1;
     int mid = 0;
 
     while (head < tail){
         mid = (head + tail) / 2;
-        if (coefficients[mid].s < s) head = mid+1;
-        else if (s<coefficients[mid].s) tail = mid -1;
+        if (coefficients_[mid].s < s) head = mid+1;
+        else if (s<coefficients_[mid].s) tail = mid -1;
         else return mid;
     }
 
-    if (s < coefficients[head].s)
+    if (s < coefficients_[head].s)
         return head -1;
     else
         return head;
 }
 
+geometry_msgs::PoseStamped frenetToCartesian::getReflinePose(double s){
 
+    int s_id = 0;
+    s_id = binarySearch(s);
+    CubicCoefficients param = coefficients_[s_id];
+    double s_start = param.s;
+    // std::vector<double> a = {{coefficients[s_id][1], coefficients[s_id][2], coefficients[s_id][3], coefficients[s_id][4]}};
+    // std::vector<double > b = {{coefficients[s_id][5], coefficients[s_id][6], coefficients[s_id][7], coefficients[s_id][8]}};
+
+    double x = param.a0 + param.a1 * s + param.a2 * s * s + param.a3 * s * s * s;
+    double d_x = param.a1 + 2 * param.a2 * s + 3 * param.a3 * s * s;
+    double y = param.b0 + param.b1 * s + param.b2 * s * s + param.b3 * s * s * s;
+    double d_y = param.b1 + 2 * param.b2 * s + 3 * param.b3 * s * s;
+
+    double theta = std::atan2(d_y, d_x);
+    refLinePose_.x = x;
+    refLinePose_.y = y;
+    refLinePose_.yaw=theta;
+    geometry_msgs::PoseStamped pose;
+    pose.pose.position.x = refLinePose_.x;
+    pose.pose.position.y = refLinePose_.y;
+    geometry_msgs::Quaternion geo_q = tf::createQuaternionMsgFromYaw(refLinePose_.yaw);
+    pose.pose.orientation = geo_q;
+
+    return pose;
 }
+
+
+}//namespace lattice_planner

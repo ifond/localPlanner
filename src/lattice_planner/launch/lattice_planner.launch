@@ -23,7 +23,7 @@
     <param name="s0" value="1.0" type="double"/>
     <param name="startRho" value="-1.0" type="double"/>
     <param name="startHeading" value="0.0" type="double"/>
-    <param name="show_lattice_in_rviz" value="true" type="bool"/>
+    <param name="showLatticeFlag" value="true" type="bool"/>
 
 
     </node>

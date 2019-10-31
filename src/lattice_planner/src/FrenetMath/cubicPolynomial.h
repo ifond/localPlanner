@@ -27,9 +27,9 @@ struct cubic_coeffi
 class CubicPolynomial {
 public:
     CubicPolynomial() = default;
-    virtual ~CubicPolynomial() = default;
-    CubicPolynomial(const lattice_planner::FrenetPose & start,
-                    const lattice_planner::FrenetPose & end);
+
+    CubicPolynomial(const FrenetPose & start,
+                    const FrenetPose & end);
 
 
     /**
@@ -39,17 +39,18 @@ public:
      * f(x = param) = x1
      */
 
-    std::vector<lattice_planner::FrenetPose> computeFrenetCoordinates();
+    FrenetPath FrenetCubicPolynomial();
+
+    cubic_coeffi getCubicCoefficients();
 
     void print_coefficients();
 
 private:
-    cubic_coeffi coeffients_;
-    lattice_planner::FrenetPose start_condition_;
-    lattice_planner::FrenetPose end_condition_;
-
-    void computeCoefficients();
-
+    cubic_coeffi cubicCoeffients_;
+    FrenetPose start_condition_;
+    FrenetPose end_condition_;
+    FrenetPath frtPath_;
+    
 };
 
 }

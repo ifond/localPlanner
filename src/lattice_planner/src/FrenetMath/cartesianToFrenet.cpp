@@ -9,21 +9,34 @@
 #include <iterator>
 #include <limits>
 #include <tf/transform_datatypes.h>
-// #include "kdTree.h"
 
 
 namespace lattice_planner{
 
-FrenetPose CartesianToFrenet(const geometry_msgs::PoseWithCovarianceStamped &pose_, 
-                                nav_msgs::Path &refline_, 
-                                std::vector<CubicCoefficients> &coefficients_){
+cartesianToFrenet::cartesianToFrenet(nav_msgs::Path &refline, 
+                                     std::vector<CubicCoefficients> &coefficients){
+
+    refline_ = refline;
+    coefficients_ = coefficients;
+}
+
+
+
+void cartesianToFrenet::setParameters(nav_msgs::Path &refline, 
+                                     std::vector<CubicCoefficients> &coefficients){
+    
+    refline_ = refline;
+    coefficients_ = coefficients;
+
+}
+
+
+FrenetPose cartesianToFrenet::transform(geometry_msgs::PoseWithCovarianceStamped pose){
 
     ROS_INFO("cartesian to frenet is begining...");
 
-    FrenetPose FrenetPose_;
-
     tf::Quaternion q;
-    tf::quaternionMsgToTF(pose_.pose.pose.orientation, q);
+    tf::quaternionMsgToTF(pose.pose.pose.orientation, q);
     double roll, pitch, yaw;
     tf::Matrix3x3(q).getRPY(roll, pitch, yaw);
     double cartesian_yaw=yaw;
@@ -43,9 +56,7 @@ FrenetPose CartesianToFrenet(const geometry_msgs::PoseWithCovarianceStamped &pos
     point_t point_;
     pointIndex pointAndId_;  // record the mapping point in the reference line
 
-    // std::cout << "nearest test\n";
-
-    point_ = {pose_.pose.pose.position.x, pose_.pose.pose.position.y};
+    point_ = {pose.pose.pose.position.x, pose.pose.pose.position.y};
     // point_ = {10, 50};
 
 
@@ -118,9 +129,9 @@ FrenetPose CartesianToFrenet(const geometry_msgs::PoseWithCovarianceStamped &pos
         double theta_refline = std::atan2(d_y, d_x);
         mapping_heading = cartesian_yaw-theta_refline; 
 
-        FrenetPose_.s = mapping_s;
-        FrenetPose_.rho = mapping_distance*flag;
-        FrenetPose_.heading = mapping_heading;
+        FrtPose_.s = mapping_s;
+        FrtPose_.rho = mapping_distance*flag;
+        FrtPose_.heading = mapping_heading;
 
 
     }
@@ -162,9 +173,9 @@ FrenetPose CartesianToFrenet(const geometry_msgs::PoseWithCovarianceStamped &pos
         double theta_refline = std::atan2(d_y, d_x);
         mapping_heading = cartesian_yaw-theta_refline; 
 
-        FrenetPose_.s = mapping_s;
-        FrenetPose_.rho = mapping_distance*flag;
-        FrenetPose_.heading = mapping_heading;
+        FrtPose_.s = mapping_s;
+        FrtPose_.rho = mapping_distance*flag;
+        FrtPose_.heading = mapping_heading;
     }
     else{
         CubicCoefficients currentPointPara = coefficients_[nearstPointID];
@@ -202,9 +213,9 @@ FrenetPose CartesianToFrenet(const geometry_msgs::PoseWithCovarianceStamped &pos
         double theta_refline = std::atan2(d_y, d_x);
         mapping_heading = cartesian_yaw-theta_refline; 
 
-        FrenetPose_.s = mapping_s;
-        FrenetPose_.rho = mapping_distance * flag;
-        FrenetPose_.heading = mapping_heading;
+        FrtPose_.s = mapping_s;
+        FrtPose_.rho = mapping_distance * flag;
+        FrtPose_.heading = mapping_heading;
     } 
 
     // if (nearstPointID >0 ){
@@ -233,16 +244,17 @@ FrenetPose CartesianToFrenet(const geometry_msgs::PoseWithCovarianceStamped &pos
     //     CubicCoefficients currentPointPara = coefficients_[nearstPointID];
     // } 
     ROS_INFO("start cartesian pose.x:%f,y:%f,yaw:%f", 
-            pose_.pose.pose.position.x, pose_.pose.pose.position.y, cartesian_yaw);
+            pose.pose.pose.position.x, pose.pose.pose.position.y, cartesian_yaw);
     ROS_INFO("the mapping point in the reference line.x:%f,y:%f", 
             pointAndId_.first[0], pointAndId_.first[1]);
     ROS_INFO("the start Frenet pose.s:%f, rho:%f, heading: %f", 
-            FrenetPose_.s, FrenetPose_.rho, FrenetPose_.heading);
-    return FrenetPose_;
+            FrtPose_.s, FrtPose_.rho, FrtPose_.heading);
+
+    return FrtPose_;
 }
 
 
-int IsRightOrLeft(point_t p, point_t mappingp_p, point_t mapping_pNeighbour){
+int cartesianToFrenet::IsRightOrLeft(point_t p, point_t mappingp_p, point_t mapping_pNeighbour){
 
     point_t a={mapping_pNeighbour[0]-mappingp_p[0], mapping_pNeighbour[1]-mappingp_p[1]};
 
@@ -255,7 +267,7 @@ int IsRightOrLeft(point_t p, point_t mappingp_p, point_t mapping_pNeighbour){
     
 }
    
-}
+}//namespace lattice_planner
 
 #ifdef BUILD_INDIVIDUAL
 int main()

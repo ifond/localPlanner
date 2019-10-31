@@ -8,36 +8,57 @@
 
 #include <vector>
 #include <array>
-#include "selfType.h"
 #include <geometry_msgs/PoseStamped.h>
 #include <tf/transform_datatypes.h>
+#include "selfType.h"
 
 
 namespace lattice_planner{
 
-/**
- * the frenet pose is transformed into the cartesian pose
- */
-geometry_msgs::PoseStamped frenetToCartesian(FrenetPose frtPose,
-                                            std::vector<CubicCoefficients> &coefficients);
 
-/**
- * input:s,output:x,y,theta
- * calculate the poses of points in the reference line
- * @param s
- * @param coefficients
- * @return
- */
-geometry_msgs::PoseStamped poses_of_reference_line(double s, std::vector<CubicCoefficients>  & coefficients);
+class frenetToCartesian{
+private:
+    /* data */
+    std::vector<CubicCoefficients> coefficients_;
+    FrenetPose frtPose_;
+    CartesianPose crtPose_;
 
-/**
- * algorithm:binary search
- * @param coefficients
- * @param s
- * @return
- */
-int binary_search(std::vector<CubicCoefficients> & coefficients, double s);
+    CartesianPose refLinePose_;
+public:
+    frenetToCartesian() = default;
+    frenetToCartesian(std::vector<CubicCoefficients> &coefficients);
+    
+    void setParameters(std::vector<CubicCoefficients> &coefficients);
+    
 
-}
+
+    /**
+     * the frenet pose is transformed into the cartesian pose
+     */
+    geometry_msgs::PoseStamped transform(FrenetPose frtPose);
+
+    /**
+     * input:s,output:x,y,theta
+     * calculate the poses of points in the reference line
+     * @param s
+     * @param coefficients
+     * @return
+     */
+    void poseInTheRefLine(double s);
+
+    /**
+     * algorithm:binary search
+     * @param coefficients
+     * @param s
+     * @return
+     */
+    int binarySearch(double s);
+
+    geometry_msgs::PoseStamped getReflinePose(double s);
+};
+
+
+
+}   //namespace lattice_planner
 
 #endif //LATTICEPLANNER_FRENETTOCARTESIAN_H

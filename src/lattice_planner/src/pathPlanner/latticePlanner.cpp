@@ -4,7 +4,6 @@
 
 #include "latticePlanner.h"
 #include <queue>
-#include <iostream>
 #include <iomanip>
 #include <array>
 
@@ -22,12 +21,15 @@ Dijkstra::Dijkstra(std::vector<CubicCoefficients> &coefficients){
     
     ROS_INFO("lattice planner is initialing..");
     coefficients_=coefficients;
+
+    ROS_INFO("lookup table size:%d", coefficients_.size());
     path_pub = nh.advertise<nav_msgs::Path>("optimal_path",1, true);
     lattice_pub_ = nh.advertise<sensor_msgs::PointCloud2>("lattice", 1, true);
     refLine_pub = nh.advertise<nav_msgs::Path>("ref_line",1, true);
     obss_pub = nh.advertise<visualization_msgs::MarkerArray>("obstacles",100, true);
+    pub_vehiclePathInRviz_ = nh.advertise<visualization_msgs::MarkerArray>("vehiclePathInRviz", 1, true);
 
-    nh.getParam("/lattice_planner/show_lattice_in_rviz", show_lattice_in_rviz);
+    nh.getParam("/lattice_planner/showLatticeFlag", showLatticeFlag);
 	nh.getParam("/lattice_planner/r_circle", r_circle);
 	nh.getParam("/lattice_planner/d_circle", d_circle);
 	nh.getParam("/lattice_planner/obstacle_inflation", obstacle_inflation);
@@ -62,26 +64,16 @@ Dijkstra::Dijkstra(std::vector<CubicCoefficients> &coefficients){
 
     // 最后一列的编号
     last_column_id = {lateral_num * (longitudinal_num - 1) + 1, lateral_num * longitudinal_num};  
-    begin_time_ = ros::Time::now().toSec();
+    
+
+    // cost_ = coefficients_;
+    
+    frtToCrt_.setParameters(coefficients_);
+    cost_.setParameters(coefficients_,refLineRho_,obstacles_, frtToCrt_);
     generateRefLine();
+    crtToFrt_.setParameters(ref_line_, coefficients_);
 
-/*
-    FrenetStart_ = CartesianToFrenet(cartesianStart_, ref_line_, coefficients_);
-
-	nodeStart_.x_=FrenetStart_.s;
-	nodeStart_.y_ = FrenetStart_.rho;
-	nodeStart_.cost_ = 0.0;
-    nodeStart_.id_=0;
-    nodeStart_.pid_=-1;
-    s0 = FrenetStart_.s;
-    s_max = longitudinal_num*longitudinal_step;
-    s_end = s0 + s_max;
-
-    // generatePath();
-    // ShowRefLineInRviz();
-    // generateLattice();
-    // ShowObstaclesInRviz();
-*/
+    defaultStart();
     SubStart_ = nh.subscribe("/initialpose", 100, &Dijkstra::setStart_callback, this);
     ROS_INFO("----lattice planner has been initialized---");
 
@@ -106,7 +98,7 @@ std::vector<Node> Dijkstra::GetNextMotion(){
 
 int Dijkstra::calIndex(Node p) {
 
-    double id = (p.y_ - (refLineRho_- SampleNumberOnOneSide * lateral_step)) / lateral_step + ((p.x_ - nodeStart_.x_) /longitudinal_step - 1.0) *lateral_num + 1.0;
+    double id = (p.rho_ - (refLineRho_- SampleNumberOnOneSide * lateral_step)) / lateral_step + ((p.s_ - nodeStart_.s_) /longitudinal_step - 1.0) *lateral_num + 1.0;
     return int(id);
 }
 
@@ -165,20 +157,20 @@ void Dijkstra::makePlan(){
         closed_list_.push_back(current);
         for(auto i:motion){
             Node new_point;
-            //            cout<<"current "<<current.x_<<endl;
-            //            cout<<"current address "<<&(current)<<endl;
-            new_point.x_ = current.x_ + i.x_;
-            new_point.y_ = i.y_;
+            // cout<<"current "<<current.x_<<endl;
+            // cout<<"current address "<<&(current)<<endl;
+            new_point.s_ = current.s_ + i.s_;
+            new_point.rho_ = i.rho_;
             new_point.id_ = calIndex(new_point);
             // ROS_INFO("calculated the index...");
             new_point.pid_ = current.id_;
-            new_point.cost_ = total_cost(current, new_point, refLineRho_, obstacles_, coefficients_);
+            new_point.cost_ = cost_.total_cost(current, new_point);
 
             // ROS_INFO("total cost has been calculated..");
 
-            //            cout<<"------------------newpoint.x--------"<<endl;
-            //            cout<<new_point.x_<<endl;
-            if (new_point.x_ > s_end) break;
+            // cout<<"------------------newpoint.x--------"<<endl;
+            // cout<<new_point.x_<<endl;
+            if (new_point.s_ > s_end) break;
 
             auto it = open_list_.begin();
             bool flag=nodeIsInClosed(new_point);
@@ -246,7 +238,7 @@ void Dijkstra::generatePath(){
     makePlan();
 
     determineGoal();
-    ROS_INFO("the Frenet coordinates of the goal. s:%f,rho:%f", goal_.x_, goal_.y_);
+    ROS_INFO("the Frenet coordinates of the goal. s:%f,rho:%f", goal_.s_, goal_.rho_);
 	std::stack<lattice_planner::Node> pathNode;
     pathTrace(pathNode);
 
@@ -255,28 +247,22 @@ void Dijkstra::generatePath(){
 
     // start cubic
     lattice_planner::FrenetPose start;
-    start.s = pathNode.top().x_;
-    start.rho = pathNode.top().y_;
+    start.s = pathNode.top().s_;
+    start.rho = pathNode.top().rho_;
     start.heading = FrenetStart_.heading;
     
     pathNode.pop();
     lattice_planner::FrenetPose end;
-    end.s = pathNode.top().x_;
-    end.rho = pathNode.top().y_;
+    end.s = pathNode.top().s_;
+    end.rho = pathNode.top().rho_;
     end.heading = 0.0 * M_PI / 180.0;
                     
-    // std::cout<<"-----x,y-------------"<<std::endl;
-    // std::cout<<start[0]<<","<<start[1]<<std::endl;
-    lattice_planner::CubicPolynomial cubic(start, end);
-    std::vector<lattice_planner::FrenetPose> frenet_path=cubic.computeFrenetCoordinates();
+    CubicPolynomial cubic(start, end);
+    FrenetPath frenet_path=cubic.FrenetCubicPolynomial();
     
-    // std::vector<double> s_vec=*(set.begin());
-    // std::vector<double> rho_vec=*(set.begin()+1);
-    // std::vector<double> theta = *(set.begin()+2);
+    for(std::size_t i=0; i< frenet_path.frtPath_.size(); i=i+5){
 
-    for(std::size_t i=0; i< frenet_path.size(); i=i+4){
-
-        cartesian_pose=frenetToCartesian(frenet_path[i], coefficients_);
+        cartesian_pose=frtToCrt_.transform(frenet_path.frtPath_[i]);
                 
         optimal_path_.poses.push_back(cartesian_pose);	
     }
@@ -284,28 +270,28 @@ void Dijkstra::generatePath(){
 	while (!pathNode.empty()){
 		
 		lattice_planner::FrenetPose start;
-        start.s = pathNode.top().x_;
-        start.rho = pathNode.top().y_;
+        start.s = pathNode.top().s_;
+        start.rho = pathNode.top().rho_;
         start.heading = 0.0 * M_PI / 180.0;
         
 		pathNode.pop();
 		if (pathNode.empty()) break;
    		lattice_planner::FrenetPose end;
-        end.s = pathNode.top().x_;
-        end.rho = pathNode.top().y_;
+        end.s = pathNode.top().s_;
+        end.rho = pathNode.top().rho_;
         end.heading = 0.0 * M_PI / 180.0;
            				
 		// std::cout<<"-----x,y-------------"<<std::endl;
 		// std::cout<<start[0]<<","<<start[1]<<std::endl;
-   		lattice_planner::CubicPolynomial cubic(start, end);
-   		std::vector<lattice_planner::FrenetPose> frenet_path=cubic.computeFrenetCoordinates();
+   		CubicPolynomial cubic(start, end);
+   		FrenetPath frenet_path=cubic.FrenetCubicPolynomial();
 		
 		// std::vector<double> s_vec=*(set.begin());
 		// std::vector<double> rho_vec=*(set.begin()+1);
 		// std::vector<double> theta = *(set.begin()+2);
 
-		for(std::size_t i=0; i< frenet_path.size(); i=i+4){
-			cartesian_pose=frenetToCartesian(frenet_path[i], coefficients_);
+		for(std::size_t i=0; i< frenet_path.frtPath_.size(); i=i+5){
+			cartesian_pose=frtToCrt_.transform(frenet_path.frtPath_[i]);
         	        
             optimal_path_.poses.push_back(cartesian_pose);	
 		}
@@ -315,9 +301,21 @@ void Dijkstra::generatePath(){
 		// path.header.frame_id="/my_frame";
     optimal_path_.header.frame_id="/map";
 
-    path_pub.publish(optimal_path_);
-    running_time_ = (ros::Time::now().toSec() - begin_time_);
-	ROS_INFO ("%f secs for local_planner", running_time_);
+    if(collisionCheckingFlag) isValid_ = makeCollisionChecking();
+    // else isValid_ = true;
+
+    if (isValid_){
+        path_pub.publish(optimal_path_);
+        running_time_ = (ros::Time::now().toSec() - begin_time_);
+	    ROS_INFO ("%f secs for local_planner", running_time_);
+
+        ROS_INFO("the generated path is valid.");
+    }
+    else{
+        ROS_INFO("the generated path is invalid");
+        optimal_path_.poses.clear();
+        path_pub.publish(optimal_path_);
+    }
     // return optimal_path;
 }
 
@@ -325,7 +323,7 @@ void Dijkstra::samplingNodes(){
     FrenetPose tmp_pose;
 
 	for (int i=0; i<longitudinal_num; i++){
-		double x_i = (i + 1) * longitudinal_step + nodeStart_.x_;
+		double x_i = (i + 1) * longitudinal_step + nodeStart_.s_;
 
         // std::vector<std::array<double, 3> > lateral_nodes;
 		for (int j=0; j< lateral_num; j++){
@@ -358,10 +356,10 @@ void Dijkstra::generateLattice(){
         end.heading = samplingPoses[i].heading;
 
    		CubicPolynomial cubic(start, end);
-   		std::vector<FrenetPose> frenet_path=cubic.computeFrenetCoordinates();
+   		FrenetPath frenet_path=cubic.FrenetCubicPolynomial();
 
-		for(std::size_t i=0; i!= frenet_path.size(); i++){
-			cartesian_pose = frenetToCartesian(frenet_path[i], coefficients_);
+		for(std::size_t i=0; i < frenet_path.frtPath_.size(); i++){
+			cartesian_pose = frtToCrt_.transform(frenet_path.frtPath_[i]);
         	path_lattice.push_back(cartesian_pose);
 		}
     } 
@@ -376,18 +374,18 @@ void Dijkstra::generateLattice(){
                 start.heading = samplingPoses[i*lateral_num+j].heading;                
                 
    		        FrenetPose end;
-                end.s = samplingPoses[(i+1)*lateral_num + q].s;
-                end.rho = samplingPoses[(i+1)*lateral_num + q].rho;
-                end.heading = samplingPoses[(i+1)*lateral_num + q].heading;
+                end.s = samplingPoses[(i+1) * lateral_num + q].s;
+                end.rho = samplingPoses[(i+1) * lateral_num + q].rho;
+                end.heading = samplingPoses[(i+1) * lateral_num + q].heading;
 
                 // std::cout<<"---------start end----------"<<std::endl;
                 // std::cout<<"start x:"<<start[0]<<"end x: "<<end[0]<<std::endl;
 
    		        CubicPolynomial cubic(start, end);
-   		        std::vector<FrenetPose> frenet_path=cubic.computeFrenetCoordinates();
+   		        FrenetPath frenet_path=cubic.FrenetCubicPolynomial();
 
-                for(std::size_t t=0; t!= frenet_path.size(); t++){
-                    cartesian_pose = frenetToCartesian(frenet_path[t], coefficients_);
+                for(std::size_t t=0; t < frenet_path.frtPath_.size(); t++){
+                    cartesian_pose = frtToCrt_.transform(frenet_path.frtPath_[t]);
                     path_lattice.push_back(cartesian_pose);
 
                 }           
@@ -414,7 +412,6 @@ void Dijkstra::generateLattice(){
     lattice_pub_.publish(cloud_msg);
 
     // delete cloud;
-
     // return path_lattice;
 }
 
@@ -427,7 +424,7 @@ void Dijkstra::generateRefLine(){
 
     for(auto i:coefficients_){
 
-        geometry_msgs::PoseStamped Refline_pose = poses_of_reference_line(i.s, coefficients_);
+        geometry_msgs::PoseStamped Refline_pose = frtToCrt_.getReflinePose(i.s);
 
         ref_line_.poses.push_back(Refline_pose);
     }
@@ -437,6 +434,7 @@ void Dijkstra::generateRefLine(){
 }
 
 void Dijkstra::setStart_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& initial) {
+    begin_time_ = ros::Time::now().toSec();
 
     ROS_INFO("enter set start callback function.");
     ROS_INFO("------------------------------");
@@ -459,11 +457,10 @@ void Dijkstra::setStart_callback(const geometry_msgs::PoseWithCovarianceStamped:
     pub_startInRviz_.publish(startRviz);
     ROS_INFO("pub start in rviz.");
 
+    FrenetStart_ = crtToFrt_.transform(cartesianStart_);
 
-    FrenetStart_ = CartesianToFrenet(cartesianStart_, ref_line_, coefficients_);
-
-	nodeStart_.x_=FrenetStart_.s;
-	nodeStart_.y_ = FrenetStart_.rho;
+	nodeStart_.s_=FrenetStart_.s;
+	nodeStart_.rho_ = FrenetStart_.rho;
 	nodeStart_.cost_ = 0.0;
     nodeStart_.id_=0;
     nodeStart_.pid_=-1;
@@ -477,28 +474,29 @@ void Dijkstra::setStart_callback(const geometry_msgs::PoseWithCovarianceStamped:
     path_lattice.clear();
     cloud_msg.fields.clear();
     samplingPoses.clear();
+    vehiclePathInRviz_.markers.clear();
     
     ROS_INFO("optimal_path size:%d", optimal_path_.poses.size());
     
     generatePath();
     ROS_INFO("optimal_path size:%d", optimal_path_.poses.size());
     ShowRefLineInRviz();
-    generateLattice();
+    if(showLatticeFlag) generateLattice();
     ShowObstaclesInRviz();
+    showVehiclePathInRviz();
     
     ROS_INFO("the set start callback function is completed.");
 
 }
 
-void Dijkstra::ShowRefLineInRviz(){
 
-    
+void Dijkstra::ShowRefLineInRviz(){
     refLine_pub.publish(ref_line_);
     // return ref_line_;
 }
 
+
 void Dijkstra::ShowObstaclesInRviz(){
-    
 		
 	// 设置初始形状为立方体
   	uint32_t shape = visualization_msgs::Marker::CUBE;
@@ -514,7 +512,7 @@ void Dijkstra::ShowObstaclesInRviz(){
         obs.id = i;
         obs.type = shape;
 
-        geometry_msgs::PoseStamped poseCartesian = lattice_planner::frenetToCartesian(obstacles_[i], coefficients_);
+        geometry_msgs::PoseStamped poseCartesian = frtToCrt_.transform(obstacles_[i]);
         obs.pose = poseCartesian.pose;
         // obs.pose.position.x = poseCartesian.x;
         // obs.pose.position.y = poseCartesian.y;
@@ -540,6 +538,123 @@ void Dijkstra::ShowObstaclesInRviz(){
         }
  
     obss_pub.publish(obstaclesInRviz_);
+}
+
+
+bool Dijkstra::makeCollisionChecking(){
+
+    ROS_INFO("lattice plannnig's collision checking is called");
+    CartesianPath ctsPath;
+    CartesianPose p;
+
+    // ROS_INFO("the length of the optimal path:%d", optimal_path_.poses.size());
+    for(auto i=optimal_path_.poses.cbegin();i!=optimal_path_.poses.cend();i++){
+
+        p.x = i->pose.position.x;
+        p.y = i->pose.position.y;
+
+        tf::Quaternion q;
+        tf::quaternionMsgToTF(i->pose.orientation, q);
+        double roll, pitch, yaw;
+        tf::Matrix3x3(q).getRPY(roll, pitch, yaw);
+        p.yaw=yaw;
+        // p.yaw = tf::getYaw(i->pose.orientation);
+
+        ctsPath.ctsPath_.push_back(p);
+
+    }
+
+    PointsObstacle obspoints;
+    CartesianPoint ctsPoint;
+    geometry_msgs::PoseStamped gPose;
+    for (auto i:(obstacles_)){
+
+        gPose = frtToCrt_.transform(i);
+        ctsPoint.x = gPose.pose.position.x;
+        ctsPoint.y = gPose.pose.position.y;
+
+        obspoints.points.push_back(ctsPoint);
+    }
+    CollisionChecker collision(ctsPath, obspoints, rhoLeft, rhoRight, crtToFrt_);
+    isValid_ = collision.performChecking();
+
+    return isValid_;
+
+}
+
+void Dijkstra::defaultStart(){
+    begin_time_ = ros::Time::now().toSec();
+    geometry_msgs::PoseStamped startRviz;
+	startRviz.pose.position.x = 0.0;
+    startRviz.pose.position.y =0.0;
+    geometry_msgs::Quaternion geo_q = tf::createQuaternionMsgFromYaw(80.0);
+	startRviz.pose.orientation = geo_q;
+	startRviz.header.frame_id = "/map";
+	startRviz.header.stamp = ros::Time::now();
+	
+    cartesianStart_.pose.pose = startRviz.pose;
+	
+	pub_startInRviz_ = nh.advertise<geometry_msgs::PoseStamped>("startInRviz", 1, true);
+    // publish start for RViz
+    pub_startInRviz_.publish(startRviz);
+    ROS_INFO("pub start in rviz.");
+
+    FrenetStart_ = crtToFrt_.transform(cartesianStart_);
+
+	nodeStart_.s_=FrenetStart_.s;
+	nodeStart_.rho_ = FrenetStart_.rho;
+	nodeStart_.cost_ = 0.0;
+    nodeStart_.id_=0;
+    nodeStart_.pid_=-1;
+    s0 = FrenetStart_.s;
+    
+    s_end = s0 + s_max;
+
+    optimal_path_.poses.clear();
+    open_list_.clear();
+    closed_list_.clear();
+    path_lattice.clear();
+    cloud_msg.fields.clear();
+    samplingPoses.clear();
+    vehiclePathInRviz_.markers.clear();
+    
+    ROS_INFO("optimal_path size:%d", optimal_path_.poses.size());
+    
+    generatePath();
+    ROS_INFO("optimal_path size:%d", optimal_path_.poses.size());
+    ShowRefLineInRviz();
+    if(showLatticeFlag) generateLattice();
+    ShowObstaclesInRviz();
+    showVehiclePathInRviz();
+    
+    ROS_INFO("the default start need to be planned.");
+}
+
+
+void Dijkstra::showVehiclePathInRviz() {
+    visualization_msgs::Marker pathVehicle;
+    int id=0;
+    for(auto i=optimal_path_.poses.cbegin();i<optimal_path_.poses.cend();i=i+8){
+
+        pathVehicle.header.frame_id = "/map";
+        pathVehicle.header.stamp = ros::Time(0);
+        pathVehicle.id = id;
+        pathVehicle.type = visualization_msgs::Marker::CUBE;
+
+        pathVehicle.scale.x = 4.0;
+        pathVehicle.scale.y = 1.6;
+        pathVehicle.scale.z = 1.0;
+        pathVehicle.color.a = 0.5;
+        pathVehicle.color.r = 255.0/255.0;
+        pathVehicle.color.g = 255.0/255.0;
+        pathVehicle.color.b = 0.0/255.0;
+
+        pathVehicle.pose = i->pose;
+        vehiclePathInRviz_.markers.push_back(pathVehicle);
+        id++;
+    }
+    
+    pub_vehiclePathInRviz_.publish(vehiclePathInRviz_);
 }
 
 }   // namespace lattice_planner

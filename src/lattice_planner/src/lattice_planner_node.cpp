@@ -17,12 +17,12 @@
 // #include <nav_msgs/Path.h>
 // #include "FrenetMath/cartesianToFrenet.h"
 
-
-std::vector<lattice_planner::CubicCoefficients> loadCoefficients(){
+void loadCoefficients(std::vector<lattice_planner::CubicCoefficients> &coefficients){
+	ROS_INFO("begin to load the coefficients lookup table");
 	std::ifstream readFile("/home/ustb/coefficients_test.csv");
     std::string lineStr;
 
-	std::vector<lattice_planner::CubicCoefficients> coefficients;
+	// std::vector<lattice_planner::CubicCoefficients> coefficients;
 	// std::vector<std::vector<double>> coefficients;
 	while (getline(readFile, lineStr))
 	{
@@ -50,7 +50,9 @@ std::vector<lattice_planner::CubicCoefficients> loadCoefficients(){
         p.b3 = lineArray[8];     
 		coefficients.push_back(p);
 	}
-	return coefficients;
+	// return coefficients;
+
+	ROS_INFO("program has loaded the reference line's coefficients");
 }
 
 
@@ -60,7 +62,7 @@ int main(int argc, char **argv) {
     ros::init(argc, argv, "lattice_planner");
 	std::vector<lattice_planner::CubicCoefficients> coefficients;
 	// call the lattice planner
-	coefficients = loadCoefficients();
+	loadCoefficients(coefficients);
 
 	// ros::Rate loop_rate(0.1);
 	// while (ros::ok()){

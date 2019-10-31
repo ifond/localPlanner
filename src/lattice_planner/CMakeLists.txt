@@ -147,20 +147,21 @@ ${PCL_INCLUDE_DIRS}
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
+# add_library()
 add_executable(
 lattice_planner 
 src/lattice_planner_node.cpp 
-src/FrenetMath/cubicPolynomial.cpp 
-
 src/pathPlanner/latticePlanner.cpp 
+src/FrenetMath/cubicPolynomial.cpp
+src/FrenetMath/costFunctions.h
+src/FrenetMath/costFunctions.cpp 
 
-src/pathPlanner/costFunctions.cpp 
- 
 src/FrenetMath/calHeading.cpp 
  
 src/FrenetMath/calKappa.cpp 
 
 src/FrenetMath/cartesianToFrenet.cpp 
+src/FrenetMath/cartesianToFrenet.h
  
 src/FrenetMath/frenetToCartesian.cpp 
 src/FrenetMath/kdTree.cpp
@@ -179,7 +180,7 @@ src/FrenetMath/selfType.cpp
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(lattice_planner ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(lattice_planner ${PROJECT_NAME})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(lattice_planner   ${catkin_LIBRARIES} ${PCL_LIBRARIES})

@@ -37,3 +37,7 @@ roslaunch reference_line refLine.launch
 roslaunch lattice_planner lattice_planner.launch 
 
 
+### 优化思路，改成指针
+
+
+

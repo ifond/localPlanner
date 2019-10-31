@@ -17,11 +17,6 @@ CubicPolynomial::CubicPolynomial(const lattice_planner::FrenetPose & start,
                                 const lattice_planner::FrenetPose & end) {
     start_condition_ = start;
     end_condition_ = end;
-    computeCoefficients();
-}
-
-
-void CubicPolynomial::computeCoefficients() {
     double s0 = start_condition_.s;
     double rho0 = start_condition_.rho;
     double theta0 = start_condition_.heading;
@@ -41,56 +36,58 @@ void CubicPolynomial::computeCoefficients() {
     Vector4d TmpCoefficients = A.colPivHouseholderQr().solve(B);
     // std::cout<<"print refLine_coefficients:"<<TmpCoefficients<<std::endl;
 
-    coeffients_.c0 = TmpCoefficients[0];
-    coeffients_.c1 = TmpCoefficients[1];
-    coeffients_.c2 = TmpCoefficients[2];
-    coeffients_.c3 = TmpCoefficients[3];
-
+    cubicCoeffients_.c0 = TmpCoefficients[0];
+    cubicCoeffients_.c1 = TmpCoefficients[1];
+    cubicCoeffients_.c2 = TmpCoefficients[2];
+    cubicCoeffients_.c3 = TmpCoefficients[3];
 }
 
-std::vector<lattice_planner::FrenetPose> CubicPolynomial::computeFrenetCoordinates() {
+
+FrenetPath CubicPolynomial::FrenetCubicPolynomial() {
 
     double step = 0.1;
     double s0 = start_condition_.s;
     double sg = end_condition_.s;
     int length_s = int((sg-s0)/step);
-    // cout<<"------------------cubic sampling points-------------"<<endl;
-    // cout<<length_s<<endl;
 
-    double coeff0 = coeffients_.c0;
-    double coeff1 = coeffients_.c1;
-    double coeff2 = coeffients_.c2;
-    double coeff3 = coeffients_.c3;
+    double coeff0 = cubicCoeffients_.c0;
+    double coeff1 = cubicCoeffients_.c1;
+    double coeff2 = cubicCoeffients_.c2;
+    double coeff3 = cubicCoeffients_.c3;
     double tmp_s = s0;
-    std::vector<lattice_planner::FrenetPose> frenet_path;
+    
     for (int i=0; i<length_s; i++){
         tmp_s = tmp_s+step;
         double tmp_rho = coeff0 + coeff1 * tmp_s + coeff2 * pow(tmp_s, 2) + coeff3 * pow(tmp_s, 3);
-        lattice_planner::FrenetPose state0;
+        FrenetPose state0;
         state0.s = tmp_s;
         state0.rho = tmp_rho;
 
         double next_s = tmp_s + step;
         double next_rho = coeff0 + coeff1 * next_s + coeff2 * pow(next_s, 2) + coeff3 * pow(next_s, 3);
-        lattice_planner::FrenetPose state1;
+        FrenetPose state1;
         state1.s = next_s;
         state1.rho = next_rho;
 
         double tmp_theta = cal_FrenetHeading(state0, state1);
 
         state0.heading = tmp_theta;
-        frenet_path.push_back(state0);
+        frtPath_.frtPath_.push_back(state0);
     }
 
-    return frenet_path;
+    return frtPath_;
 
 }
 
 void CubicPolynomial::print_coefficients(){
 
-    std::cout<<"===============print cubic polynomial's coefficients======="<<std::endl;
-    std::cout<<coeffients_.c0<<"-"<<coeffients_.c1<<"-"<<coeffients_.c2<<"-"<<coeffients_.c3<<std::endl;
+    ROS_INFO("print cubic polynomial's coeffis=cients");
+    ROS_INFO("%f, %f, %f, %f", cubicCoeffients_.c0, cubicCoeffients_.c1, cubicCoeffients_.c2,cubicCoeffients_.c3);
 
 }
 
+
+cubic_coeffi CubicPolynomial::getCubicCoefficients(){
+    return cubicCoeffients_;
 }
+}//namespace lattice_planner

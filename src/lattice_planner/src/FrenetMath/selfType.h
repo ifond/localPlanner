@@ -27,10 +27,10 @@ namespace lattice_planner{
 
 /**
 * @brief Node class
-* @param x_: X value, when we make planning in the frenet coordinate system,
-*            x_ represents the longitudinal station
-* @param y_ Y value, when we make planning in the frenet coordinate system,
-*           y_ represents the lateral offset
+* @param s_: s value, when we make planning in the frenet coordinate system,
+*            s_ represents the longitudinal station
+* @param rho_ rho value, when we make planning in the frenet coordinate system,
+*           rho_ represents the lateral offset
 * @param cost_ Cost to get to this node
 * @param id_ Node's id
 * @param pid_ Node's parent's id
@@ -38,10 +38,10 @@ namespace lattice_planner{
 class Node{
 // Variables used here are constantly accessed and checked; leaving public for now.
 public:
-    /** \brief x coordinate */
-    double x_=0.0;
-    /** \brief y coordinate */
-    double y_=0.0;
+    /** \brief s coordinate */
+    double s_=0.0;
+    /** \brief rho coordinate */
+    double rho_=0.0;
     /** \brief cost to reach this node */
     double cost_=0.0;
     /** \brief Node id */
@@ -59,7 +59,7 @@ public:
     * @param id Node's id
     * @param pid Node's parent's id
     */
-    Node(double x = 0.0, double y = 0.0, double cost = 0.0, int id = 0, int pid = 0);
+    Node(double s = 0.0, double rho = 0.0, double cost = 0.0, int id = 0, int pid = 0);
 
     /**
     * @brief Prints the values of the variables in the node
@@ -165,12 +165,12 @@ struct complexPose{
 
 
 struct CartesianPath{
-    std::vector<CartesianPose> cartesianPath;
+    std::vector<CartesianPose> ctsPath_;
 };
 
 
 struct FrenetPath{
-    std::vector<FrenetPose> frenetPath;
+    std::vector<FrenetPose> frtPath_;
 };
 
 
@@ -206,71 +206,17 @@ struct PointsObstacle
  * vehicle body disk parameters
  */
 struct VehicleDisk{
-    CartesianPoint Catpoint;
-    FrenetPoint FrtPoint;
-    double radius;
+    CartesianPoint CrtPoint_;
+    FrenetPoint FrtPoint_;
+    double radius_;
 };
 
 
-/**
- * a vehicle body is overlaid by three little disks and one big disk.
- */
-class VehicleDisks{
-private:
+struct VehicleDisks{
     VehicleDisk disk1,disk2,disk3;
     VehicleDisk BigDisk;
-
-    /**
-     * 后轴中点
-     */
-    CartesianPose RearAxleMidPoint_;
-
-    /**
-     * vehicle body width
-     */
-    double VehicleWidth_;
-
-    /**
-     * vehicle body length;
-     */
-    double VehicleLength_;
-
-    /**
-     * distance between disks
-     */
-    double Distance_;
-    
-    /**
-     * the distancle between the rear axle mid point and the rear boudary of a vehicle body
-     */
-    double H_;
-
-    std::vector<CubicCoefficients> * coefficients_;
-
-public:
-    VehicleDisks(CartesianPose &rearAxleMidPoint,
-                double vehicleWidth,
-                double vehicleLength,
-                double H);
-
-    VehicleDisks(CartesianPose &rearAxleMidPoint, 
-                 std::vector<CubicCoefficients> * coefficients,
-                 nav_msgs::Path &refline);
-
-    VehicleDisks();
-
-    VehicleDisk getDisk1() const;
-    VehicleDisk getDisk2() const;
-    VehicleDisk getDisk3() const;
-    VehicleDisk getBigDisk() const;
-
 };
 
-
-struct VehicleDisksTrajectory{
-    std::vector<VehicleDisks> disksTrajectory_;
-
-};
 
 } //namespace latticeParameter
 

@@ -136,7 +136,6 @@ include
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(reference_arclength_node 
 src/reference_arclength_node.cpp
-
 src/cubicSpline.cpp 
 src/referenceLine.cpp
 

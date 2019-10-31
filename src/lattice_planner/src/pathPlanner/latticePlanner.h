@@ -7,12 +7,10 @@
 
 
 #include <ros/ros.h>
-#include "selfType.h"
-#include "costFunctions.h"
 #include <vector>
 #include <geometry_msgs/PoseStamped.h>
 #include <nav_msgs/Path.h>
-#include "../FrenetMath/cartesianToFrenet.h"
+
 // #include <pcl_ros/point_cloud.h>
 // #include <pcl_conversions/pcl_conversions.h>
 // #include <sensor_msgs/PointCloud2.h>
@@ -26,6 +24,11 @@
 #include <pcl_conversions/pcl_conversions.h>
 #include <sensor_msgs/PointCloud2.h>
 #include <pcl/point_types.h>
+
+#include "selfType.h"
+#include "../FrenetMath/cartesianToFrenet.h"
+#include "../FrenetMath/collisionChecking.h"
+#include "../FrenetMath/costFunctions.h"
 
 
 namespace lattice_planner{
@@ -77,6 +80,7 @@ private:
     sensor_msgs::PointCloud2 cloud_msg;
     // pcl::PointCloud<pcl::PointXYZ> cloud;
     visualization_msgs::MarkerArray obstaclesInRviz_;
+    visualization_msgs::MarkerArray vehiclePathInRviz_;
     nav_msgs::Path optimal_path_;
     nav_msgs::Path ref_line_;
 
@@ -92,23 +96,43 @@ private:
 	ros::Publisher obss_pub;
     ros::Subscriber SubStart_;
     ros::Publisher pub_startInRviz_;
+    ros::Publisher pub_vehiclePathInRviz_;
     double begin_time_;
     double running_time_;
-	
+
+    bool isValid_;
+    cartesianToFrenet crtToFrt_;
+    frenetToCartesian frtToCrt_;
+    costFunction cost_;
+
+    std::vector<CartesianPoint> roadLeftBorder_;
+    std::vector<CartesianPoint> roadRightBorder_;
 
 public:
     void samplingNodes();
     void generatePath();
     void generateLattice();
     void generateRefLine();
+    void generateRoadBorder();
+
     
     void ShowRefLineInRviz();
     void ShowObstaclesInRviz();
     void setStart_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& initial);
 
+    bool makeCollisionChecking();
+
+    /**
+     * 启动程序时，从默认的起点规划一次
+     */
+    void defaultStart();
+    void showVehiclePathInRviz();
+    void showRoadBorderInRviz();
+
 
 private:
-   
+    double rhoLeft = 3;
+    double rhoRight = -3;
     double r_circle = 1.0;
     double d_circle = 2.0;
     double obstacle_inflation = 1.5;
@@ -134,8 +158,8 @@ private:
     double vehicle_body_fast_check_circle = 3.0;  // body collision fast check circle, the radius is 3.0 m
     double vehicle_body_envelope_circle = 1.0;    // little circles, the radius is 1.0 m  
 
-    bool show_lattice_in_rviz=true; 
-
+    bool showLatticeFlag=true; 
+    bool collisionCheckingFlag=true;
 
 };
 
