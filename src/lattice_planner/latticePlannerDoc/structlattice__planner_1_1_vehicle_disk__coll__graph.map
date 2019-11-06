@@ -1,0 +1,4 @@
+<map id="lattice_planner::VehicleDisk" name="lattice_planner::VehicleDisk">
+<area shape="rect" id="node2" href="$structlattice__planner_1_1_cartesian_point.html" title="lattice_planner::Cartesian\lPoint" alt="" coords="5,5,176,47"/>
+<area shape="rect" id="node3" href="$structlattice__planner_1_1_frenet_point.html" title="lattice_planner::FrenetPoint" alt="" coords="200,13,381,39"/>
+</map>

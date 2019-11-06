@@ -1,0 +1,6 @@
+<map id="lattice_planner::Dijkstra::makeCollisionChecking" name="lattice_planner::Dijkstra::makeCollisionChecking">
+<area shape="rect" id="node2" href="$classlattice__planner_1_1frenet_to_cartesian.html#a8e9b0abfc341a9dd3d46b855d51ec912" title="lattice_planner::frenetTo\lCartesian::transform" alt="" coords="228,5,391,47"/>
+<area shape="rect" id="node5" href="$classlattice__planner_1_1_collision_checker.html#a22b14c3d65d3eed3547b9392d6fda47f" title="lattice_planner::Collision\lChecker::performChecking" alt="" coords="220,71,399,112"/>
+<area shape="rect" id="node3" href="$classlattice__planner_1_1frenet_to_cartesian.html#adf274c603c63b45e61d7cc8a25a73cae" title="lattice_planner::frenetTo\lCartesian::poseInTheRefLine" alt="" coords="447,5,639,47"/>
+<area shape="rect" id="node4" href="$classlattice__planner_1_1frenet_to_cartesian.html#aeb8f35cb63a36a51d5190c6b76f1d908" title="lattice_planner::frenetTo\lCartesian::binarySearch" alt="" coords="687,5,849,47"/>
+</map>

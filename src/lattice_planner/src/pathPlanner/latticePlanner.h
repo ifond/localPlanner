@@ -105,8 +105,13 @@ private:
     frenetToCartesian frtToCrt_;
     costFunction cost_;
 
-    std::vector<CartesianPoint> roadLeftBorder_;
-    std::vector<CartesianPoint> roadRightBorder_;
+    // std::vector<CartesianPoint> roadLeftBorder_;
+    // std::vector<CartesianPoint> roadRightBorder_;    
+
+    sensor_msgs::PointCloud2 roadLeftBorder_;
+    sensor_msgs::PointCloud2 roadRightBorder_;
+    ros::Publisher roadLeftBorderPub_;
+    ros::Publisher roadRightBorderPub_;
 
 public:
     void samplingNodes();
@@ -115,7 +120,7 @@ public:
     void generateRefLine();
     void generateRoadBorder();
 
-    
+
     void ShowRefLineInRviz();
     void ShowObstaclesInRviz();
     void setStart_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& initial);
@@ -140,7 +145,7 @@ private:
     int lateral_num = 9;  // 横向采样个数
     double longitudinal_step = 20.0;
     double lateral_step = 0.5;
-    double lane_width = 3.75;
+    double lane_width_ = 3.75;
     int SampleNumberOnOneSide;    // sampling number on one side of the reference line
     double s0;
     double s_max;
@@ -160,6 +165,8 @@ private:
 
     bool showLatticeFlag=true; 
     bool collisionCheckingFlag=true;
+
+    double roadWidth_;
 
 };
 

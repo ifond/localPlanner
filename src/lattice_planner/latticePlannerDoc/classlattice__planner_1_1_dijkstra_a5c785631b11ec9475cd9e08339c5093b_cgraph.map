@@ -1,0 +1,4 @@
+<map id="lattice_planner::Dijkstra::generateRefLine" name="lattice_planner::Dijkstra::generateRefLine">
+<area shape="rect" id="node2" href="$classlattice__planner_1_1frenet_to_cartesian.html#a2aec7a29759d96caa924e8a521873b68" title="lattice_planner::frenetTo\lCartesian::getReflinePose" alt="" coords="212,5,387,47"/>
+<area shape="rect" id="node3" href="$classlattice__planner_1_1frenet_to_cartesian.html#aeb8f35cb63a36a51d5190c6b76f1d908" title="lattice_planner::frenetTo\lCartesian::binarySearch" alt="" coords="435,5,597,47"/>
+</map>

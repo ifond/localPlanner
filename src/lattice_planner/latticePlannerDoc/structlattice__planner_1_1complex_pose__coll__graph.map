@@ -1,0 +1,4 @@
+<map id="lattice_planner::complexPose" name="lattice_planner::complexPose">
+<area shape="rect" id="node2" href="$structlattice__planner_1_1_cartesian_pose.html" title="lattice_planner::CartesianPose" alt="" coords="5,5,205,32"/>
+<area shape="rect" id="node3" href="$structlattice__planner_1_1_frenet_pose.html" title="lattice_planner::FrenetPose" alt="" coords="229,5,411,32"/>
+</map>

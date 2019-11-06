@@ -1,0 +1,9 @@
+<map id="lattice_planner::dist2" name="lattice_planner::dist2">
+<area shape="rect" id="node2" href="$namespacelattice__planner.html#adac8875ae77bfd0d135d730f90b845ae" title="lattice_planner::dist2" alt="" coords="204,5,347,32"/>
+<area shape="rect" id="node3" href="$classlattice__planner_1_1_k_d_tree.html#a85501257659fd042c224aca2afedd89b" title="lattice_planner::KDTree\l::KDTree" alt="" coords="196,57,355,98"/>
+<area shape="rect" id="node4" href="$classlattice__planner_1_1_k_d_tree.html#a4f219a8a8426efc9457845b1956c5e0c" title="lattice_planner::KDTree\l::nearest_pointIndex" alt="" coords="196,122,355,163"/>
+<area shape="rect" id="node5" href="$classlattice__planner_1_1cartesian_to_frenet.html#aa1322240ed56a3d9ae42b43a5c96bd63" title="lattice_planner::cartesian\lToFrenet::transform" alt="" coords="403,122,569,163"/>
+<area shape="rect" id="node6" href="$classlattice__planner_1_1_dijkstra.html#abd601dc15fbe019c4b1d9e67d0f6d477" title="lattice_planner::Dijkstra\l::setStart_callback" alt="" coords="617,89,776,130"/>
+<area shape="rect" id="node8" href="$classlattice__planner_1_1_dijkstra.html#ae004c7f9a2eee2ab35e6500c8e287a44" title="lattice_planner::Dijkstra\l::defaultStart" alt="" coords="617,154,776,195"/>
+<area shape="rect" id="node7" href="$classlattice__planner_1_1_dijkstra.html#a2436d23267b597de23ae75cf2c7879c1" title="lattice_planner::Dijkstra\l::Dijkstra" alt="" coords="824,122,983,163"/>
+</map>

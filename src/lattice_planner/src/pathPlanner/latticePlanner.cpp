@@ -28,6 +28,8 @@ Dijkstra::Dijkstra(std::vector<CubicCoefficients> &coefficients){
     refLine_pub = nh.advertise<nav_msgs::Path>("ref_line",1, true);
     obss_pub = nh.advertise<visualization_msgs::MarkerArray>("obstacles",100, true);
     pub_vehiclePathInRviz_ = nh.advertise<visualization_msgs::MarkerArray>("vehiclePathInRviz", 1, true);
+    roadLeftBorderPub_ = nh.advertise<sensor_msgs::PointCloud2>("roadLeftBorder", 1, true);
+    roadRightBorderPub_ = nh.advertise<sensor_msgs::PointCloud2>("roadRightBorder", 1, true);
 
     nh.getParam("/lattice_planner/showLatticeFlag", showLatticeFlag);
 	nh.getParam("/lattice_planner/r_circle", r_circle);
@@ -37,7 +39,7 @@ Dijkstra::Dijkstra(std::vector<CubicCoefficients> &coefficients){
 	nh.getParam("/lattice_planner/lateral_num", lateral_num);
 	nh.getParam("/lattice_planner/longitudinal_step", longitudinal_step);
 	nh.getParam("/lattice_planner/lateral_step", lateral_step);
-	nh.getParam("/lattice_planner/lane_width", lane_width);
+	nh.getParam("/lattice_planner/lane_width", lane_width_);
     ROS_INFO("/lattice_planner/longitudinal_num: %d", longitudinal_num);
 
     SampleNumberOnOneSide = lateral_num / 2;    // sampling number on one side of the reference line
@@ -62,6 +64,8 @@ Dijkstra::Dijkstra(std::vector<CubicCoefficients> &coefficients){
     obstacles_.push_back(obs2);
     obstacles_.push_back(obs3);
 
+    roadWidth_ = 10.0;
+
     // 最后一列的编号
     last_column_id = {lateral_num * (longitudinal_num - 1) + 1, lateral_num * longitudinal_num};  
     
@@ -73,6 +77,8 @@ Dijkstra::Dijkstra(std::vector<CubicCoefficients> &coefficients){
     generateRefLine();
     crtToFrt_.setParameters(ref_line_, coefficients_);
 
+    generateRoadBorder();
+    showRoadBorderInRviz();
     defaultStart();
     SubStart_ = nh.subscribe("/initialpose", 100, &Dijkstra::setStart_callback, this);
     ROS_INFO("----lattice planner has been initialized---");
@@ -490,6 +496,39 @@ void Dijkstra::setStart_callback(const geometry_msgs::PoseWithCovarianceStamped:
 }
 
 
+void Dijkstra::generateRoadBorder(){
+
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloudRight(new pcl::PointCloud<pcl::PointXYZ>);
+        
+    for(auto i:ref_line_.poses){
+        pcl::PointXYZ point;
+        
+        double yaw=tf::getYaw(i.pose.orientation);		
+        point.x = i.pose.position.x + roadWidth_/2.0 * cos(yaw + M_PI / 2.0);
+        point.y = i.pose.position.y + roadWidth_/2.0 * sin(yaw + M_PI / 2.0);
+        point.z = 0.0;
+        cloud->points.push_back(point);    
+        
+        pcl::PointXYZ pointRight;
+        pointRight.x = i.pose.position.x - roadWidth_/2.0 * cos(yaw + M_PI / 2.0);
+        pointRight.y = i.pose.position.y - roadWidth_/2.0 * sin(yaw + M_PI / 2.0);
+        pointRight.z = 0.0;
+        cloudRight->points.push_back(pointRight);
+
+    }
+
+    pcl::toROSMsg(*cloud, roadLeftBorder_);
+
+    pcl::toROSMsg(*cloudRight, roadRightBorder_);
+    // output.header.frame_id = "odom";
+
+    roadLeftBorder_.header.stamp = ros::Time::now();
+    roadLeftBorder_.header.frame_id="/map";
+    roadRightBorder_.header.stamp = ros::Time::now();
+    roadRightBorder_.header.frame_id="/map";
+}
+
 void Dijkstra::ShowRefLineInRviz(){
     refLine_pub.publish(ref_line_);
     // return ref_line_;
@@ -655,6 +694,12 @@ void Dijkstra::showVehiclePathInRviz() {
     }
     
     pub_vehiclePathInRviz_.publish(vehiclePathInRviz_);
+}
+
+void Dijkstra::showRoadBorderInRviz(){
+
+    roadLeftBorderPub_.publish(roadLeftBorder_);
+    roadRightBorderPub_.publish(roadRightBorder_);
 }
 
 }   // namespace lattice_planner
