@@ -48,7 +48,7 @@ RefLine::RefLine(){
     std::vector<double > waypoints_y={{0.0, 70.0, 100, 120.0, 120.0, 150.0, 180.0, 150.0, 110.0, 20.0, -80.0, -80.0, -80.0}};
 
     std::ofstream writeFile;    
-    writeFile.open("/home/ustb/coefficients_test.csv", std::ios::ate); // 打开模式可省略 
+    writeFile.open("/home/lizhen/coefficients_test.csv", std::ios::ate); // 打开模式可省略
     writeFile.close();
     std::vector<double > x=waypoints_x;
     std::vector<double > y=waypoints_y;
@@ -79,7 +79,7 @@ void RefLine::SparseWayPoints(std::vector<double > r_x,
                             std::vector<double > r_s){
 
     std::ofstream writeFile;    
-    writeFile.open("/home/ustb/coefficients_test.csv", std::ios::app); // 打开模式可省略 
+    writeFile.open("/home/lizhen/coefficients_test.csv", std::ios::app); // 打开模式可省略
     int step=20;
     for (auto i=0; i < r_x.size(); i=i+step){
         // append the last point to the coefficient_list
@@ -117,7 +117,7 @@ void RefLine::arcLengthRefLine(std::vector<double> pose,
                                 std::ofstream &writeFile){
 
     // std::ofstream writeFile;    
-    // writeFile.open("/home/ustb/coefficients_test.csv", std::ios::app); // 打开模式可省略 
+    // writeFile.open("/home/lizhen/coefficients_test.csv", std::ios::app); // 打开模式可省略
     double x0 = pose[0];
     double y0 = pose[1];
     double theta0 = pose[2];
@@ -245,7 +245,7 @@ nav_msgs::Path RefLine::readCoefficientsFromFile(){
     nav_msgs::Path refline_waypointsTest = refline_waypoints_;
     coefficients_.clear();
     refline_waypoints_.poses.clear();
-    std::ifstream readFile("/home/ustb/coefficients_test.csv");
+    std::ifstream readFile("/home/lizhen/coefficients_test.csv");
     std::string lineStr;
 	while (getline(readFile, lineStr)){
 

@@ -19,7 +19,7 @@
 
 void loadCoefficients(std::vector<lattice_planner::CubicCoefficients> &coefficients){
 	ROS_INFO("begin to load the coefficients lookup table");
-	std::ifstream readFile("/home/ustb/coefficients_test.csv");
+	std::ifstream readFile("/home/lizhen/coefficients_test.csv");
     std::string lineStr;
 
 	// std::vector<lattice_planner::CubicCoefficients> coefficients;

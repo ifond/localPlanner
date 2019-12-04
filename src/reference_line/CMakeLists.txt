@@ -4,6 +4,20 @@ project(reference_line)
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
 
+# Eigen3 FindScript Backward compatibility (ubuntu saucy)
+# Since FindEigen.cmake is deprecated starting from jade.
+if (EXISTS "FindEigen3.cmake")
+    find_package(Eigen3 REQUIRED)
+    set(Eigen_INCLUDE_DIRS ${Eigen3_INCLUDE_DIRS})
+elseif (EXISTS "FindEigen.cmake")
+    find_package(Eigen REQUIRED)
+elseif (EXISTS "FindEigen.cmake")
+    message(WARNING "No findEigen cmake script found. You must provde one of them,
+  e.g. by adding it to ${PROJECT_SOURCE_DIR}/cmake_modules.")
+endif (EXISTS "FindEigen3.cmake")
+set(EXTERNAL_INCLUDE_DIRS ${Eigen_INCLUDE_DIRS} ${SUITESPARSE_INCLUDE_DIRS} ${G2O_INCLUDE_DIR})
+set(EXTERNAL_LIBS ${SUITESPARSE_LIBRARIES} ${G2O_LIBRARIES})
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -12,6 +26,8 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
 )
+find_package(Eigen3 REQUIRED)
+add_definitions(${EIGEN3_DEFINITIONS})
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -104,6 +120,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 INCLUDE_DIRS include
+        INCLUDE_DIRS include ${EXTERNAL_INCLUDE_DIRS}
+        LIBRARIES ${EXTERNAL_LIBS}
+
+        EIGEN3
 #  LIBRARIES reference_line
 #  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
@@ -113,11 +133,16 @@ INCLUDE_DIRS include
 ## Build ##
 ###########
 
+add_definitions(${EIGEN3_DEFINITIONS})
+
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
 include
   ${catkin_INCLUDE_DIRS}
+        ${EIGEN3_INCLUDE_DIRS}
+        ${EXTERNAL_INCLUDE_DIRS}
+
 
 )
 

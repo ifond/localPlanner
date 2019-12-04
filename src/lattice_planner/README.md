@@ -30,7 +30,7 @@ libccd   https://github.com/danfis/libccd
 
 you should change the coefficients.csv's path.
 
-the current path is "/home/ming/coefficients_test.csv"
+the current path is "/home/lizhen/coefficients_test.csv"
 
 roslaunch reference_line refLine.launch 
 
